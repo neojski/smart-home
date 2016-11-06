@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "weather-js": "^1.0.2"
+  },
+  "scripts": {
+    "build": "watchify mirror.js -t [ aliasify --global=true ] -o dist/bundle.js"
+  },
+  "aliasify": {
+    "aliases": {
+      "//" : "querystring is broken",
+      "querystring": "querystring-browser"
+    }
+  },
+  "devDependencies": {
+    "aliasify": "^2.1.0"
+  }
+}
