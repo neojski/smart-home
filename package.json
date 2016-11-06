@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "querystring-browser": "^1.0.4",
     "weather-js": "^1.0.2"
   },
   "scripts": {
@@ -7,11 +8,12 @@
   },
   "aliasify": {
     "aliases": {
-      "//" : "querystring is broken",
+      "//": "querystring is broken",
       "querystring": "querystring-browser"
     }
   },
   "devDependencies": {
-    "aliasify": "^2.1.0"
+    "aliasify": "^2.1.0",
+    "watchify": "^3.7.0"
   }
 }
