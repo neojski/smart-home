@@ -4,7 +4,8 @@
     "weather-js": "^1.0.2"
   },
   "scripts": {
-    "build": "watchify mirror.js -t [ aliasify --global=true ] -o dist/bundle.js"
+    "browserify": "browserify mirror.js -t [ aliasify --global=true ] -o dist/bundle.js",
+    "watchify":   "watchify   mirror.js -t [ aliasify --global=true ] -o dist/bundle.js"
   },
   "aliasify": {
     "aliases": {
