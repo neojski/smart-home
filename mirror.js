@@ -19,8 +19,12 @@ var getTemperature = (function () {
   };
 })();
 
-var clock = document.getElementById('clock');
+var contents = document.getElementById('contents');
 var on = true;
+
+function pad (n) {
+  return n < 10 ? '0' + n : '' + n;
+}
 
 function temp () {
   var temperature = getTemperature();
@@ -35,9 +39,10 @@ function run () {
   on = !on;
   var colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
   var date = new Date();
-  var minutes = date.getMinutes();
-  var minutesStr = minutes < 10 ? '0' + minutes : minutes;
-  clock.innerHTML = '<div>' + date.getHours() + colon + minutesStr + '</div><div>' + temp() + '</div>';
+  var data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
+  data += '<div class="temperature">' + temp() + '</div>';
+
+  contents.innerHTML = data;
 }
 setInterval(run, 1000);
 run();

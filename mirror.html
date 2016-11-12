@@ -6,15 +6,24 @@
     background: #000;
     color: #fff;
   }
-  #clock {
+  .temperature {
+    font-size: 300px;
+    text-align: center;
+  }
+  .clock {
     font-size: 400px;
     margin-top: 500px;
     text-align: center;
   }
+  .clock .secs {
+    font-size: 30%;
+    display: inline-block;
+    transform: translate(0, -30px) rotate(-90deg);
+  }
   </style>
 
   <body>
-    <div id="clock"></div>
+    <div id="contents"></div>
     <script src="dist/bundle.js"></script>
   </body>
 </html>

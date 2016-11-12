@@ -24,22 +24,5 @@
   </head>
   <body>
     <iframe src="mirror.html" class="frame" id="frame0"></iframe>
-    <iframe src="mirror.html" class="frame" id="frame1"></iframe>
-    <script>
-    var visibleIndex = 0;
-    function get(which) {
-      return document.getElementById('frame' + which);
-    }
-    setInterval(function () {
-      visibleIndex = 1 - visibleIndex;
-      invisible = get(1 - visibleIndex);
-      visible = get(visibleIndex);
-
-      visible.style.display = 'block';
-      invisible.style.display = 'none';
-
-      invisible.contentWindow.location.reload();
-    }, 60000);
-    </script>
   </body>
 </html>
