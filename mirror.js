@@ -35,12 +35,43 @@ function temp () {
   }
 }
 
+var getTfl = (function () {
+  var data = [];
+
+  function getData () {
+    var url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        data = JSON.parse(xhr.responseText);
+      }
+    }
+    xhr.open('GET', url, true);
+    xhr.send(null);
+  }
+  getData();
+  setInterval (getData, 10 * 1000);
+
+  return function () {
+    return '<div class="trains">Deparatures to Morden via Bank: <ul>' + data.sort((x, y) => {
+      return x.timeToStation - y.timeToStation;
+    }).filter(x => {
+      return x.towards.indexOf('Bank') > -1;
+    }).map(x => {
+      debugger;
+      var time = x.timeToStation;
+      return '<li>' + Math.floor (time / 60) + 'm ' + (time % 60) + 's</li>';
+    }).join(' ') + '</ul></div>';
+  }
+})();
+
 function run () {
   on = !on;
   var colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
   var date = new Date();
   var data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
   data += '<div class="temperature">' + temp() + '</div>';
+  data += '<div class="">' + getTfl() + '</div>';
 
   contents.innerHTML = data;
 }
