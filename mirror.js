@@ -1,33 +1,49 @@
-var weather = require('weather-js');
+// I'd rather prefer promises...
+function getJSONData(url, callback) {
+  let xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        callback(null, JSON.parse(xhr.responseText));
+      } else {
+        callback({statusText: xhr.statusText});
+      }
+    }
+  }
+  xhr.open('GET', url, true);
+  xhr.send(null);
+}
+
 
 // returns temperature or null if not available
-var getTemperature = (function () {
-  var temperature = null;
+const getTemperature = (function () {
+  //ljs15708@noicd.com
+  //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
+  const url = "http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
+  let temperature = null;
   function updateTemperature () {
-    weather.find({search: 'London, UK, NW3 3LZ', degreeType: 'C'}, function(err, result) {
-      if(err) {
-        console.log(result, err);
-        return;
+    getJSONData(url, function (err, result) {
+      if (!err) {
+        temperature = Math.round(result.main.temp);
       }
-      temperature = result[0].current.temperature;
     });
   }
   updateTemperature();
-  setInterval(updateTemperature, 100 * 1000);
+  setInterval(updateTemperature, 60 * 1000);
   return function () {
     return temperature;
   };
 })();
 
-var contents = document.getElementById('contents');
-var on = true;
+const contents = document.getElementById('contents');
+let on = true;
 
 function pad (n) {
   return n < 10 ? '0' + n : '' + n;
 }
 
 function temp () {
-  var temperature = getTemperature();
+  let temperature = getTemperature();
   if (temperature !== null) {
     return temperature + '°C';
   } else {
@@ -35,22 +51,20 @@ function temp () {
   }
 }
 
-var getTfl = (function () {
-  var data = [];
+let getTfl = (function () {
+  let data = [];
+  const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
   function getData () {
-    var url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        data = JSON.parse(xhr.responseText);
+    // This is race-condition prone
+    getJSONData(url, function (err, json) {
+      if (!err) {
+        data = json;
       }
-    }
-    xhr.open('GET', url, true);
-    xhr.send(null);
+    });
   }
   getData();
-  setInterval (getData, 10 * 1000);
+  setInterval (getData, 30 * 1000);
 
   return function () {
     return '<div class="trains">Deparatures to Morden via Bank: <ul>' + data.sort((x, y) => {
@@ -58,8 +72,7 @@ var getTfl = (function () {
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
     }).map(x => {
-      debugger;
-      var time = x.timeToStation;
+      let time = x.timeToStation;
       return '<li>' + Math.floor (time / 60) + 'm ' + (time % 60) + 's</li>';
     }).join(' ') + '</ul></div>';
   }
@@ -67,9 +80,9 @@ var getTfl = (function () {
 
 function run () {
   on = !on;
-  var colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
-  var date = new Date();
-  var data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
+  let colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
+  let date = new Date();
+  let data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
   data += '<div class="temperature">' + temp() + '</div>';
   data += '<div class="">' + getTfl() + '</div>';
 
