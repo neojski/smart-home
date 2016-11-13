@@ -17,21 +17,46 @@ function getJSONData(url, callback) {
 
 // returns temperature or null if not available
 const getTemperature = (function () {
+  let iconMap = {
+    '01d': 'icon-sun',
+    '02d': 'icon-cloud-sun',
+    '03d': 'icon-cloud',
+    '04d': 'icon-clouds',
+    '09d': 'icon-drizzle',
+    '10d': 'icon-rain',
+    '11d': 'icon-cloud-flash',
+    '13d': 'icon-snow',
+    '50d': 'icon-fog',
+    '01n': 'icon-moon',
+    '02n': 'icon-cloud-moon',
+    '03n': 'icon-cloud',
+    '04n': 'icon-clouds',
+    '09n': 'icon-drizzle',
+    '10n': 'icon-rain',
+    '11n': 'icon-cloud-flash',
+    '13n': 'icon-snow',
+    '50n': 'icon-fog',
+  };
+
   //ljs15708@noicd.com
   //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
   const url = "http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
-  let temperature = null;
+  let data = null;
   function updateTemperature () {
     getJSONData(url, function (err, result) {
       if (!err) {
-        temperature = Math.round(result.main.temp);
+        data = result;
       }
     });
   }
   updateTemperature();
   setInterval(updateTemperature, 60 * 1000);
   return function () {
-    return temperature;
+    if (data) {
+      return Math.round(data.main.temp) + '°C<span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
+    } else {
+      return '';
+    }
   };
 })();
 
@@ -40,15 +65,6 @@ let on = true;
 
 function pad (n) {
   return n < 10 ? '0' + n : '' + n;
-}
-
-function temp () {
-  let temperature = getTemperature();
-  if (temperature !== null) {
-    return temperature + '°C';
-  } else {
-    return '';
-  }
 }
 
 let getTfl = (function () {
@@ -83,7 +99,7 @@ function run () {
   let colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
   let date = new Date();
   let data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
-  data += '<div class="temperature">' + temp() + '</div>';
+  data += '<div class="weather">' + getTemperature() + '</div>';
   data += '<div class="">' + getTfl() + '</div>';
 
   contents.innerHTML = data;
