@@ -95,13 +95,18 @@ let getTfl = (function () {
     if (age > outdated) {
       return '<div>Couldn\'t get deparatured. Last success: ' + Math.floor(age / 60000) + 'm ago</div>';
     }
-    return '<div>Deparatures to Morden via Bank: <ul>' + data.sort((x, y) => {
+    return '<div style="margin: 40px">Morden via Bank: <ul>' + data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
     }).map(x => {
       let time = x.timeToStation;
-      return '<li>' + Math.floor (time / 60) + 'm ' + (time % 60) + 's</li>';
+      let text = Math.floor (time / 60) + ':' + (time % 60);
+      let width = (time / 60) + 'cm';
+      let whiteText = '<div style="color: #fff; position: absolute; left: 0; top: 0">' + text + '</div>';
+      let blackText = '<div style="color: #000; position: absolute; left: 0; top: 0; background: #fff; width: ' + width + '; overflow: hidden; border-radius: 3px">' + text + '</div>';
+
+      return '<li style="position: relative; white-space: nowrap">' + whiteText + blackText + '</li>';
     }).join(' ') + '</ul></div>';
   }
 })();
