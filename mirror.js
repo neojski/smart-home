@@ -68,7 +68,11 @@ function pad (n) {
 }
 
 let getTfl = (function () {
-  let data = [];
+  const interval = 30 * 1000;
+  const outdated = 90 * 1000;
+
+  let data = null;
+  let lastUpdate = null;
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
   function getData () {
@@ -76,14 +80,22 @@ let getTfl = (function () {
     getJSONData(url, function (err, json) {
       if (!err) {
         data = json;
+        lastUpdate = Date.now();
       }
     });
   }
   getData();
-  setInterval (getData, 30 * 1000);
+  setInterval (getData, interval);
 
   return function () {
-    return '<div class="trains">Deparatures to Morden via Bank: <ul>' + data.sort((x, y) => {
+    if (data === null) {
+      return '<div>Deparatures unknown</div>';
+    }
+    let age = Date.now() - lastUpdate;
+    if (age > outdated) {
+      return '<div>Couldn\'t get deparatured. Last success: ' + Math.floor(age / 60000) + 'm ago</div>';
+    }
+    return '<div>Deparatures to Morden via Bank: <ul>' + data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
@@ -100,7 +112,7 @@ function run () {
   let date = new Date();
   let data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
   data += '<div class="weather">' + getTemperature() + '</div>';
-  data += '<div class="">' + getTfl() + '</div>';
+  data += '<div class="trains">' + getTfl() + '</div>';
 
   contents.innerHTML = data;
 }
