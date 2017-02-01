@@ -53,7 +53,7 @@ const getTemperature = (function () {
   setInterval(updateTemperature, 60 * 1000);
   return function () {
     if (data) {
-      return Math.round(data.main.temp) + '°C<span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
+      return '<span style="display: inline-block; margin: 0 50px">' + Math.round(data.main.temp) + '°C</span><span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
     } else {
       return '';
     }

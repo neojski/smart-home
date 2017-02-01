@@ -14,12 +14,12 @@ html {
 }
 .weather .icon {
   display: inline-block;
-  width: 100px;
 }
 .weather .description {
   font-size: 30px;
   display: inline-block;
   transform: rotate(-70deg);
+  transform-origin: top left;
 }
 .clock {
   font-size: 300px;
