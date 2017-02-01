@@ -103,10 +103,10 @@ let getTfl = (function () {
       let time = x.timeToStation;
       let text = Math.floor (time / 60) + ':' + (time % 60);
       let width = (time / 60) + 'cm';
-      let whiteText = '<div style="color: #fff; position: absolute; left: 0; top: 0">' + text + '</div>';
+      let whiteText = '<div style="color: #fff">' + text + '</div>';
       let blackText = '<div style="color: #000; position: absolute; left: 0; top: 0; background: #fff; width: ' + width + '; overflow: hidden; border-radius: 3px">' + text + '</div>';
 
-      return '<li style="position: relative; white-space: nowrap">' + whiteText + blackText + '</li>';
+      return '<li style="position: relative; white-space: nowrap; margin: 0 0 10px">' + whiteText + blackText + '</li>';
     }).join(' ') + '</ul></div>';
   }
 })();
