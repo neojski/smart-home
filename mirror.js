@@ -101,7 +101,7 @@ let getTfl = (function () {
       return x.towards.indexOf('Bank') > -1;
     }).map(x => {
       let time = x.timeToStation;
-      let text = Math.floor (time / 60) + ':' + (time % 60);
+      let text = Math.floor (time / 60) + ':' + pad(time % 60);
       let width = (time / 60) + 'cm';
       let whiteText = '<div style="color: #fff">' + text + '</div>';
       let blackText = '<div style="color: #000; position: absolute; left: 0; top: 0; background: #fff; width: ' + width + '; overflow: hidden; border-radius: 3px">' + text + '</div>';
