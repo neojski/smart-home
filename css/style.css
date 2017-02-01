@@ -9,7 +9,7 @@ html {
   overflow: hidden;
 }
 .weather {
-  font-size: 200px;
+  font-size: 150px;
   text-align: center;
 }
 .weather .icon {
@@ -20,6 +20,7 @@ html {
   display: inline-block;
   transform: rotate(-70deg);
   transform-origin: top left;
+  display: none; /* long descripitons destroy layout */
 }
 .clock {
   font-size: 300px;
