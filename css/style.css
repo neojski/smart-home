@@ -4,12 +4,14 @@
   list-style-type: none;
 }
 html {
+  font-family: 'Roboto', sans-serif;
   background: #000;
   color: #fff;
   overflow: hidden;
 }
 .weather {
-  font-size: 150px;
+  font-size: 140px;
+  font-weight: 300;
   text-align: center;
 }
 .weather .icon {
@@ -24,6 +26,7 @@ html {
 }
 .clock {
   font-size: 300px;
+  font-weight: 300;
   margin-top: 300px;
   text-align: center;
 }
@@ -35,14 +38,14 @@ html {
 .trains {
   font-size: 40px;
 }
-.icon {
-  font-family: meteocons;
-}
 @font-face {
   font-family: 'meteocons';
   src: url('meteocons.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+}
+.icon {
+  font-family: meteocons;
 }
 .icon-windy-rain-inv:before { content: '\21'; } /* '!' */
 .icon-snow-inv:before { content: '\22'; } /* '&quot;' */
