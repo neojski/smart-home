@@ -14,16 +14,15 @@ function getJSONData(url, callback) {
   xhr.send(null);
 }
 
-// keeps calling callback 
 function updater (url, callback) {
-  const outdated = 70000; // ~minute + eps
+  const maxTries = 3;
   const delay = 30000;
 
   let lastUpdate = Date.now();
   function update () {
     let age = Date.now() - lastUpdate;
-    if (outdated < age) {
-      callback('Data out of date. Last success: ' + Math.floor(age / 60000) + 'm ago');
+    if (maxTries * delay < age) {
+      callback('Out of date (' + Math.floor(age / 60000) + 'm)');
     }
     getJSONData(url, function (err, res) {
       if (!err) {
@@ -75,23 +74,22 @@ const getTemperature = (function () {
   let localError = 'Waiting for data';
   const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
   updater(localUrl, function (err, result) {
-    localTemperature = result;
     localError = err;
+    localTemperature = result;
   });
 
   return function () {
     let remote;
     if (remoteError) {
-      remote = 'Couldn\'t get weather data: ' + remoteError;
+      remote = remoteError;
     } else {
       remote = Math.round(remoteTemperature.main.temp) + '°C<span class="icon ' + iconMap[remoteTemperature.weather[0].icon] + '"></span>';
     }
 
     let local;
     if (localError) {
-      local = 'Couldn\'t get indoor temperature: ' + localError;
+      local = localError;
     } else {
- console.log(localTemperature);
       local = Math.round(localTemperature.temperature) + '°C';
     }
 
@@ -110,18 +108,15 @@ let getTfl = (function () {
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
   let data;
-  let error;
-  updater(url, function (err, result2) {
+  let error = 'Waiting for data';
+  updater(url, function (err, result) {
     error = err;
-    data = result2;
+    data = result;
   });
 
   return function () {
-    if (!data) {
-      return '<div>Deparatures unknown</div>';
-    }
     if (error) {
-      return '<div>Couldn\'t get deparatured. ' + error + '</div>';
+      return '<div>' + error + '</div>';
     }
     return '<div style="margin: 40px">Morden via Bank: <ul>' + data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
