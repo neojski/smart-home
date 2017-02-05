@@ -14,6 +14,28 @@ function getJSONData(url, callback) {
   xhr.send(null);
 }
 
+// keeps calling callback 
+function updater (url, callback) {
+  const outdated = 70000; // ~minute + eps
+  const delay = 30000;
+
+  let lastUpdate = Date.now();
+  function update () {
+    let age = Date.now() - lastUpdate;
+    if (outdated < age) {
+      callback('Data out of date. Last success: ' + Math.floor(age / 60000) + 'm ago');
+    }
+    getJSONData(url, function (err, res) {
+      if (!err) {
+        lastUpdate = Date.now();
+        callback(null, res);
+      }
+    });
+  }
+  update();
+  setInterval(update, delay);
+}
+
 
 // returns temperature or null if not available
 const getTemperature = (function () {
@@ -41,38 +63,39 @@ const getTemperature = (function () {
   //ljs15708@noicd.com
   //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
   const url = 'http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric';
-  let data = null;
-  function updateTemperature () {
-    getJSONData(url, function (err, result) {
-      if (!err) {
-        data = result;
-      }
-    });
-  }
 
+  let remoteTemperature;
+  let remoteError = 'Waiting for data';
+  updater(url, function (err, result) {
+    remoteTemperature = result;
+    remoteError = err;
+  });
+
+  let localTemperature;
+  let localError = 'Waiting for data';
   const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
-  let localData = null;
-  function updateLocalTemperature () {
-    getJSONData(localUrl, function (err, result) {
-      if (!err) {
-        localData = result.temperature;
-      }
-    });
-  }
-
-  function update () {
-    updateTemperature();
-    updateLocalTemperature();
-  }
-  update();
-  setInterval(update, 60 * 1000);
+  updater(localUrl, function (err, result) {
+    localTemperature = result;
+    localError = err;
+  });
 
   return function () {
-    if (data) {
-      return '<span style="display: inline-block; margin: 0 50px">' + Math.round(localData) + '°C | ' + Math.round(data.main.temp) + '°C</span><span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
+    let remote;
+    if (remoteError) {
+      remote = 'Couldn\'t get weather data: ' + remoteError;
     } else {
-      return '';
+      remote = Math.round(remoteTemperature.main.temp) + '°C<span class="icon ' + iconMap[remoteTemperature.weather[0].icon] + '"></span>';
     }
+
+    let local;
+    if (localError) {
+      local = 'Couldn\'t get indoor temperature: ' + localError;
+    } else {
+ console.log(localTemperature);
+      local = Math.round(localTemperature.temperature) + '°C';
+    }
+
+    return '<span style="display: inline-block; margin: 0 50px">' + local + ' | ' + remote + '</span>';
   };
 })();
 
@@ -84,32 +107,21 @@ function pad (n) {
 }
 
 let getTfl = (function () {
-  const interval = 30 * 1000;
-  const outdated = 90 * 1000;
-
-  let data = null;
-  let lastUpdate = null;
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
-  function getData () {
-    // This is race-condition prone
-    getJSONData(url, function (err, json) {
-      if (!err) {
-        data = json;
-        lastUpdate = Date.now();
-      }
-    });
-  }
-  getData();
-  setInterval (getData, interval);
+  let data;
+  let error;
+  updater(url, function (err, result2) {
+    error = err;
+    data = result2;
+  });
 
   return function () {
-    if (data === null) {
+    if (!data) {
       return '<div>Deparatures unknown</div>';
     }
-    let age = Date.now() - lastUpdate;
-    if (age > outdated) {
-      return '<div>Couldn\'t get deparatured. Last success: ' + Math.floor(age / 60000) + 'm ago</div>';
+    if (error) {
+      return '<div>Couldn\'t get deparatured. ' + error + '</div>';
     }
     return '<div style="margin: 40px">Morden via Bank: <ul>' + data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
