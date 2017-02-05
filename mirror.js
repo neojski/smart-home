@@ -40,7 +40,7 @@ const getTemperature = (function () {
 
   //ljs15708@noicd.com
   //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
-  const url = "http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
+  const url = 'http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric';
   let data = null;
   function updateTemperature () {
     getJSONData(url, function (err, result) {
@@ -49,11 +49,27 @@ const getTemperature = (function () {
       }
     });
   }
-  updateTemperature();
-  setInterval(updateTemperature, 60 * 1000);
+
+  const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
+  let localData = null;
+  function updateLocalTemperature () {
+    getJSONData(localUrl, function (err, result) {
+      if (!err) {
+        localData = result.temperature;
+      }
+    });
+  }
+
+  function update () {
+    updateTemperature();
+    updateLocalTemperature();
+  }
+  update();
+  setInterval(update, 60 * 1000);
+
   return function () {
     if (data) {
-      return '<span style="display: inline-block; margin: 0 50px">' + Math.round(data.main.temp) + '°C</span><span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
+      return '<span style="display: inline-block; margin: 0 50px">' + Math.round(localData) + '°C | ' + Math.round(data.main.temp) + '°C</span><span class="icon ' + iconMap[data.weather[0].icon] + '"></span><span class="description">' + data.weather[0].description + '</span>';
     } else {
       return '';
     }
