@@ -1,3 +1,5 @@
+const initialError = '↻';
+
 // I'd rather prefer promises...
 function getJSONData(url, callback) {
   let xhr = new XMLHttpRequest();
@@ -22,7 +24,7 @@ function updater (url, callback) {
   function update () {
     let age = Date.now() - lastUpdate;
     if (maxTries * delay < age) {
-      callback('Out of date (' + Math.floor(age / 60000) + 'm)');
+      callback('<span class="error">Out of date (' + Math.floor(age / 60000) + 'm)</span>');
     }
     getJSONData(url, function (err, res) {
       if (!err) {
@@ -64,14 +66,14 @@ const getTemperature = (function () {
   const url = 'http://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric';
 
   let remoteTemperature;
-  let remoteError = 'Waiting for data';
+  let remoteError = initialError;
   updater(url, function (err, result) {
     remoteTemperature = result;
     remoteError = err;
   });
 
   let localTemperature;
-  let localError = 'Waiting for data';
+  let localError = initialError;
   const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
   updater(localUrl, function (err, result) {
     localError = err;
@@ -108,7 +110,7 @@ let getTfl = (function () {
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
   let data;
-  let error = 'Waiting for data';
+  let error = initialError;
   updater(url, function (err, result) {
     error = err;
     data = result;
