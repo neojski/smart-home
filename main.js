@@ -66,5 +66,5 @@ function readAndSend () {
 
 
 // read every half-minute
-setInterval(readAndSend, 10000);
+setInterval(readAndSend, 30000);
 readAndSend();
