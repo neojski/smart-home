@@ -3,7 +3,6 @@
     "start": "node main.js"
   },
   "dependencies": {
-    "node-dht-sensor": "0.0.32",
     "request": "^2.79.0"
   }
 }

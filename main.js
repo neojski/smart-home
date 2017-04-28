@@ -1,5 +1,5 @@
-var sensor = require('node-dht-sensor');
-var request = require('request');
+const fs = require('fs');
+const request = require('request');
 
 const url = 'http://kolodziejski.me/mirror/data/data.php';
 
@@ -15,35 +15,39 @@ function median (arr) {
   }
 }
 
+// https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing?view=all
+function doRead (deviceId) {
+  let filename = '/sys/bus/w1/devices/' + deviceId + '/w1_slave';
+  let result = fs.readFileSync(filename).toString();
+  if (/crc=.*YES/.test(result)) {
+    return (+result.match(/t=(-?\d+)/)[1]) / 1000;
+  } else {
+    throw 'No correct temperature found: ' + filename + '(' + result + ')';
+  }
+}
+
 var read = (function () {
   var temperatures = [];
-  var humidities = [];
 
-  function doRead() {
-    sensor.read(11, 2, function(err, temperature, humidity) {
-      if (!err) {
-        temperatures.push(temperature);
-        humidities.push(humidity);
-      } else {
-        console.log(err);
-      }
-    });
+  function loop() {
+    try {
+      temperatures.push(doRead('28-0216252dbfee'));
+    } catch (e) {
+      console.error(e);
+    }
+    setTimeout(loop, 2000);
   }
-
-  doRead();
-  setInterval(doRead, 2000); // recommended by device data-sheet
+  loop();
 
   function getResult () {
     var data = {
       temperature: median(temperatures),
-      humidity: median(humidities),
       timestamp: Date.now()
     };
 
     temperatures = [];
-    humidities = [];
 
-    if (data.temperature != null && data.humidity != null) {
+    if (data.temperature != null) {
       return data;
     } else {
       return null;
@@ -56,11 +60,12 @@ var read = (function () {
 function readAndSend () {
   var data = read();
   if (data != null) {
+console.log(data);
     request.post({url, form: {data: JSON.stringify(data)}}, function (error, httpResponse, body) {
       // log?
     });
   } else {
-    console.error('Couldn\'t get temperature or humidity');
+    console.error('Couldn\'t get temperature');
   }
 }
 
