@@ -1,18 +1,27 @@
 const miio = require('miio');
 
-const device = miio.createDevice({
-    address: '192.168.0.14',
-    token: 'dc917acca6195b529275a77556b8b352',
-    model: 'zhimi.airpurifier.m1'
-});
+data = null;
 
-miio.device({ address: '192.168.0.14' })
-    .then(device => {
-        console.log('temperature: ' + device.temperature)
-        console.log('humidity: ' + device.humidity)
-        console.log('aqi: ' + device.aqi)
-
-        console.log(device.modes);
-        device.setMode('auto')
-    })
+function update () {
+  miio.device({ address: '192.168.0.14' }).then(device => {
+    data = {
+      aqi: device.aqi,
+      temperature: device.temperature,
+      humidity: device.humidity,
+    };
+  })
     .catch(console.error);
+}
+
+function get_data () {
+  return data;
+}
+
+module.exports = {
+  init: function (span) {
+    setInterval(update, span);
+    update();
+
+    return get_data;
+  }
+};
