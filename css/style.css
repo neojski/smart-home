@@ -27,10 +27,20 @@ html {
   transform-origin: top left;
   display: none; /* long descripitons destroy layout */
 }
+.aqi {
+  font-size: 100px;
+  margin: 300px 0 0 700px;
+  text-align: center;
+}
+.aqi .pm25 {
+  font-size: 20px;
+  transform: translate(20px, 0px) rotate(-90deg);
+  display: inline-block;
+  transform-origin: bottom left;
+}
 .clock {
   font-size: 300px;
   font-weight: 300;
-  margin-top: 300px;
   text-align: center;
 }
 .clock .secs {

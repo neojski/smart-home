@@ -37,6 +37,22 @@ function updater (url, callback) {
   setInterval(update, delay);
 }
 
+const getHomeData = (function () {
+  const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
+  let err;
+  let result;
+  updater(localUrl, function (err2, result2) {
+    err = err2;
+    result = result2;
+  });
+  
+  return function () {
+    if (err != null) {
+      throw err;
+    }
+    return result;
+  };
+})();
 
 // returns temperature or null if not available
 const getTemperature = (function () {
@@ -72,14 +88,6 @@ const getTemperature = (function () {
     remoteError = err;
   });
 
-  let localTemperature;
-  let localError = initialError;
-  const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
-  updater(localUrl, function (err, result) {
-    localError = err;
-    localTemperature = result;
-  });
-
   return function () {
     let remote;
     if (remoteError) {
@@ -89,12 +97,11 @@ const getTemperature = (function () {
     }
 
     let local;
-    if (localError) {
-      local = localError;
-    } else {
-      local = Math.round(localTemperature.temperature) + '°C';
+    try {
+      local = Math.round(getHomeData().temperature) + '°C';
+    } catch (e) {
+      local = e;
     }
-
     return '<span style="display: inline-block; margin: 0 50px">' + local + ' | ' + remote + '</span>';
   };
 })();
@@ -136,13 +143,30 @@ let getTfl = (function () {
   }
 })();
 
+function getAqi () {
+  let local;
+  try {
+    local = Math.round(getHomeData().aqi);
+  } catch (e) {
+    local = e;
+  }
+  return '<div>' + local + ' <span class="pm25">PM2.5</span></div>';
+}
+
+let ticking = true;
 function run () {
+console.log(ticking);
+  if (!ticking) return;
+
   on = !on;
   let colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
   let date = new Date();
-  let data = '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
+  let data = '';
+  data += '<div class="aqi">' + getAqi() + '</div>';
+  data += '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
   data += '<div class="weather">' + getTemperature() + '</div>';
   data += '<div class="trains">' + getTfl() + '</div>';
+
 
   contents.innerHTML = data;
 }
