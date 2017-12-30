@@ -3,6 +3,7 @@
     "start": "node main.js"
   },
   "dependencies": {
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "gpio": "^0.2.7"
   }
 }
