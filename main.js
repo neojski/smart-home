@@ -1,5 +1,6 @@
 const request = require('request');
 const temperature = require('./temperature');
+const controls = require('./controls');
 
 const get_purifier = require('./purifier').init(10000);
 const get_temperature = temperature.init(1000, 5);
@@ -31,3 +32,5 @@ function readAndSend () {
 // read every half-minute
 setInterval(readAndSend, 3000);
 readAndSend();
+
+controls.start();
