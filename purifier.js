@@ -3,7 +3,7 @@ const miio = require('miio');
 data = null;
 
 function update () {
-  miio.device({ address: '192.168.0.14' }).then(device => {
+  miio.device({ address: '192.168.0.4' }).then(device => {
     data = {
       aqi: device.aqi,
       temperature: device.temperature,
