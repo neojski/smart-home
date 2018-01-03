@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 function median (arr) {
+  arr = arr.slice();
   if (arr.length === 0) {
     return null;
   }
@@ -27,6 +28,7 @@ var temperatures = [];
 function loop(samples) {
   try {
     temperatures.push(doRead('28-0216252dbfee'));
+console.log(temperatures);
     temperatures = temperatures.slice(-samples);
   } catch (e) {
     console.error(e);
