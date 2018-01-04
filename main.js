@@ -2,14 +2,14 @@ const request = require('request');
 const temperature = require('./temperature');
 const controls = require('./controls');
 
-const get_purifier = require('./purifier').init(10000);
-const get_temperature = temperature.init(1000, 5);
+const purifier = require('./purifier')('192.168.0.4', 10000);
+const getTemperature = temperature.init(1000, 5);
 
 const url = 'http://kolodziejski.me/mirror/data/data.php';
 
 function readAndSend () {
-  var temperature = get_temperature();
-  var purifier_data = get_purifier();
+  var temperature = getTemperature();
+  var purifierData = purifier.getData();
 
   let data = {
     timestamp: Date.now()
@@ -17,9 +17,12 @@ function readAndSend () {
   if (temperature != null) {
     data.temperature = temperature;
   }
-  if (purifier_data != null) {
-    data.aqi = purifier_data.aqi;
-    data.humidity = purifier_data.humidity;
+  if (purifierData != null) {
+    // TODO: rewrite all purifier fields to have purifier prefix or have separate object
+    data.aqi = purifierData.aqi;
+    data.humidity = purifierData.humidity;
+    data.purifierTemperature = purifierData.temperature;
+    data.mode = purifierData.purifierMode;
   }
   console.log(data);
 
@@ -28,6 +31,18 @@ function readAndSend () {
   });
 }
 
+// Purifier "cron"
+setInterval(function() { 
+  let date = new Date();
+  console.log(date);
+  if (date.getHours() === 23 && date.getMinutes() === 0) {
+    purifier.setMode('silent');
+  }
+
+  if (date.getHours() === 9 && date.getMinutes() === 0) {
+    purifier.setMode('auto');
+  }
+}, 10000);
 
 // read every half-minute
 setInterval(readAndSend, 3000);

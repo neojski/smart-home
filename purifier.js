@@ -1,27 +1,46 @@
 const miio = require('miio');
 
+// TODO: Make sure this data is not too old
 data = null;
 
-function update () {
-  miio.device({ address: '192.168.0.4' }).then(device => {
+function update (getDevice) {
+  getDevice().then(device => {
     data = {
       aqi: device.aqi,
       temperature: device.temperature,
       humidity: device.humidity,
+      mode: device.mode,
     };
   })
     .catch(console.error);
 }
 
-function get_data () {
+function getData () {
   return data;
 }
 
-module.exports = {
-  init: function (span) {
-    setInterval(update, span);
-    update();
+function setMode(getDevice, mode) {
+  return getDevice().then(device => {
+    device.setMode(mode);
+  });
+}
 
-    return get_data;
-  }
+module.exports = function (address, span) {
+  let getDevice = function () {
+    return miio.device({ address: address});
+  };
+
+  getDevice().then(device => {device.setBuzzer(false)});
+
+  setInterval(function () {
+    update(getDevice);
+  }, span);
+  update(getDevice);
+
+  return {
+    getData: getData,
+    setMode: function (mode) {
+      return setMode(getDevice, mode);
+    },
+  };
 };
