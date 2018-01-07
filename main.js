@@ -22,7 +22,7 @@ function readAndSend () {
     data.aqi = purifierData.aqi;
     data.humidity = purifierData.humidity;
     data.purifierTemperature = purifierData.temperature;
-    data.mode = purifierData.purifierMode;
+    data.purifierMode = purifierData.mode;
   }
   console.log(data);
 
