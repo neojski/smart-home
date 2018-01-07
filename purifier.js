@@ -11,8 +11,7 @@ function update (getDevice) {
       humidity: device.humidity,
       mode: device.mode,
     };
-  })
-    .catch(console.error);
+  }).catch(console.error);
 }
 
 function getData () {
@@ -22,7 +21,7 @@ function getData () {
 function setMode(getDevice, mode) {
   return getDevice().then(device => {
     device.setMode(mode);
-  });
+  }).catch(console.error);
 }
 
 module.exports = function (address, span) {
@@ -30,7 +29,7 @@ module.exports = function (address, span) {
     return miio.device({ address: address});
   };
 
-  getDevice().then(device => {device.setBuzzer(false)});
+  getDevice().then(device => {device.setBuzzer(false)}).catch(console.error);
 
   setInterval(function () {
     update(getDevice);
