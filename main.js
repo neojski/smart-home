@@ -45,7 +45,7 @@ setInterval(function() {
 }, 10000);
 
 // read every half-minute
-setInterval(readAndSend, 3000);
+setInterval(readAndSend, 30000);
 readAndSend();
 
 controls.start();
