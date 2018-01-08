@@ -20,13 +20,13 @@ function getData () {
 
 function setMode(getDevice, mode) {
   return getDevice().then(device => {
-    device.setMode(mode);
+    return device.setMode(mode);
   }).catch(console.error);
 }
 
 module.exports = function (address, span) {
   let getDevice = function () {
-    return miio.device({ address: address});
+    return miio.device({address: address, retries: 0});
   };
 
   getDevice().then(device => {device.setBuzzer(false)}).catch(console.error);
