@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "start_pm2": "pm2 start main.js --name smart-home"
   },
   "dependencies": {
     "express": "^4.16.2",
