@@ -1,1 +1,3 @@
 Smart home data upload
+
+I run it via pm2 which is, in turn, started by systemd (http://pm2.keymetrics.io/docs/usage/startup)
