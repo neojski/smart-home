@@ -38,7 +38,7 @@ function updater (url, callback) {
 }
 
 const getHomeData = (function () {
-  const localUrl = 'http://kolodziejski.me/mirror/data/data.php';
+  const localUrl = 'https://kolodziejski.me/mirror/data/data.php';
   let err;
   let result;
   updater(localUrl, function (err2, result2) {
