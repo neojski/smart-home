@@ -5,7 +5,7 @@ const controls = require('./controls');
 const purifier = require('./purifier')('192.168.0.2', 10000);
 const getTemperature = temperature.init(1000, 5);
 
-const url = 'http://kolodziejski.me/mirror/data/data.php';
+const url = 'https://kolodziejski.me/mirror/data/data.php';
 
 function readAndSend () {
   var temperature = getTemperature();
