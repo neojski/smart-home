@@ -12,12 +12,6 @@ if (isset($_POST['data'])) {
   $timestamp = strtotime(substr($res, 0, $index));
   $data = substr($res, $index + 1);
 
-  $age = time() - $timestamp;
-  if ($age > 60) {
-    http_response_code(404);
-    exit('Last record older than ' . $age . ' seconds');
-  }
-
   echo $data;
 }
 
