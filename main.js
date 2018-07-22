@@ -2,7 +2,7 @@ const request = require('request');
 const temperature = require('./temperature');
 const controls = require('./controls');
 
-const purifier = require('./purifier')('192.168.0.2', 10000);
+const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
 
 const url = 'https://kolodziejski.me/mirror/data/data.php';
