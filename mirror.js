@@ -56,6 +56,7 @@ function updater ({url, hasTimestamp}, callback) {
   setInterval(update, maxAcceptableAge / maxTries);
 }
 
+// TODO: home data timestamps should be per device really
 const getHomeData = (function () {
   const url = 'https://kolodziejski.me/mirror/data/data.php';
   let err;
