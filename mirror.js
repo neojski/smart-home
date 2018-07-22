@@ -27,7 +27,6 @@ function updater ({url, hasTimestamp}, callback) {
   const maxTries = 3;
   const maxAcceptableAge = 60000; // in ms
 
-  let lastSuccessDate = Date.now();
   let error = function (e) {
     callback(e);
   };
@@ -36,19 +35,18 @@ function updater ({url, hasTimestamp}, callback) {
   };
   async function update () {
     try {
+      let now = Date.now ();
       let res = await getJSONData(url);
-      let resDate = null;
+      let timestamp = null;
       if (hasTimestamp) {
-        resDate = new Date (res.timestamp);
+        timestamp = new Date (res.timestamp);
       } else {
-        resDate = Date.now();
+        timestamp = now;
       }
-
-      let age = resDate - lastSuccessDate;
+      let age = now - timestamp;
       if (age > maxAcceptableAge) {
-        return error('Out of date (' + Math.floor(age / 60000) + 'm)');
+        return error('Out of date. Last update: ' + timestamp);
       }
-      lastSuccessDate = resDate;
       return ok (res);
     } catch (e) {
       return error(e);
@@ -66,7 +64,6 @@ const getHomeData = (function () {
     err = err2;
     result = result2;
   });
-
   return function () {
     if (err != null) {
       throw err;
