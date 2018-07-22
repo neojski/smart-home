@@ -1,5 +1,9 @@
 const initialError = '↻';
 
+function errorSpan (c) {
+  return '<span class="error">' + c + '</span>';
+}
+
 function getJSONData(url, callback) {
   return new Promise(function (resolve, reject) {
     let xhr = new XMLHttpRequest();
@@ -108,7 +112,7 @@ const getTemperature = (function () {
   return function () {
     let remote;
     if (remoteError) {
-      remote = remoteError;
+      remote = errorSpan(remoteError);
     } else {
       remote = Math.round(remoteTemperature.main.temp) + '°C<span class="icon ' + iconMap[remoteTemperature.weather[0].icon] + '"></span>';
     }
@@ -116,8 +120,8 @@ const getTemperature = (function () {
     let local;
     try {
       local = Math.round(getHomeData().temperature) + '°C';
-    } catch (e) {
-      local = e;
+    } catch (error) {
+      local = errorSpan(error);
     }
     return '<span style="display: inline-block; margin: 0 50px">' + local + ' | ' + remote + '</span>';
   };
@@ -142,7 +146,7 @@ let getTfl = (function () {
 
   return function () {
     if (error) {
-      return '<div>' + error + '</div>';
+      return '<div>' + errorSpan(error) + '</div>';
     }
     return '<div style="margin: 40px">Morden via Bank: <ul>' + data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
@@ -164,8 +168,8 @@ function getAqi () {
   let local;
   try {
     local = Math.round(getHomeData().aqi);
-  } catch (e) {
-    local = e;
+  } catch (error) {
+    local = errorSpan(error);
   }
   return '<div>' + local + ' <span class="pm25">PM2.5</span></div>';
 }
@@ -183,7 +187,6 @@ console.log(ticking);
   data += '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
   data += '<div class="weather">' + getTemperature() + '</div>';
   data += '<div class="trains">' + getTfl() + '</div>';
-
 
   contents.innerHTML = data;
 }
