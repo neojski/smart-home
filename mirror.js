@@ -1,51 +1,68 @@
 const initialError = '↻';
 
-// I'd rather prefer promises...
 function getJSONData(url, callback) {
-  let xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == XMLHttpRequest.DONE) {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    let error = function () {
+      reject ("XMLHttpRequest failed. Status: " + xhr.status + ". statusText: " + xhr.statusText);
+    };
+    xhr.onload = function() {
       if (xhr.status === 200) {
-        callback(null, JSON.parse(xhr.responseText));
+        resolve (JSON.parse(this.responseText));
       } else {
-        callback({statusText: xhr.statusText});
+        error ();
       }
-    }
-  }
-  xhr.open('GET', url, true);
-  xhr.send(null);
+    };
+    xhr.onerror = error;
+    xhr.open('GET', url, true);
+    xhr.send(null);
+  });
 }
 
-function updater (url, callback) {
+function updater ({url, hasTimestamp}, callback) {
   const maxTries = 3;
-  const delay = 30000;
+  const maxAcceptableAge = 60000; // in ms
 
-  let lastUpdate = Date.now();
-  function update () {
-    let age = Date.now() - lastUpdate;
-    if (maxTries * delay < age) {
-      callback('<span class="error">Out of date (' + Math.floor(age / 60000) + 'm)</span>');
-    }
-    getJSONData(url, function (err, res) {
-      if (!err) {
-        lastUpdate = Date.now();
-        callback(null, res);
+  let lastSuccessDate = Date.now();
+  let error = function (e) {
+    callback(e);
+  };
+  let ok = function (res) {
+    callback(null, res);
+  };
+  async function update () {
+    try {
+      let res = await getJSONData(url);
+      let resDate = null;
+      if (hasTimestamp) {
+        resDate = new Date (res.timestamp);
+      } else {
+        resDate = Date.now();
       }
-    });
+
+      let age = resDate - lastSuccessDate;
+      if (age > maxAcceptableAge) {
+        return error('Out of date (' + Math.floor(age / 60000) + 'm)');
+      }
+      lastSuccessDate = resDate;
+      return ok (res);
+    } catch (e) {
+      return error(e);
+    }
   }
   update();
-  setInterval(update, delay);
+  setInterval(update, maxAcceptableAge / maxTries);
 }
 
 const getHomeData = (function () {
-  const localUrl = 'https://kolodziejski.me/mirror/data/data.php';
+  const url = 'https://kolodziejski.me/mirror/data/data.php';
   let err;
   let result;
-  updater(localUrl, function (err2, result2) {
+  updater({url, hasTimestamp: true}, function (err2, result2) {
     err = err2;
     result = result2;
   });
-  
+
   return function () {
     if (err != null) {
       throw err;
@@ -83,7 +100,7 @@ const getTemperature = (function () {
 
   let remoteTemperature;
   let remoteError = initialError;
-  updater(url, function (err, result) {
+  updater({url, hasTimestamp: false}, function (err, result) {
     remoteTemperature = result;
     remoteError = err;
   });
@@ -118,7 +135,7 @@ let getTfl = (function () {
 
   let data;
   let error = initialError;
-  updater(url, function (err, result) {
+  updater({url, hasTimestamp: false}, function (err, result) {
     error = err;
     data = result;
   });

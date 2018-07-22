@@ -4,17 +4,10 @@
     "weather-js": "^1.0.2"
   },
   "scripts": {
-    "browserify": "browserify mirror.js -t [ aliasify --global=true ] -o dist/bundle.js",
-    "watchify":   "watchify   mirror.js -t [ aliasify --global=true ] -o dist/bundle.js"
-  },
-  "aliasify": {
-    "aliases": {
-      "//": "querystring is broken",
-      "querystring": "querystring-browser"
-    }
+    "browserify": "browserify mirror.js -o dist/bundle.js",
+    "watchify": "watchify mirror.js -o dist/bundle.js"
   },
   "devDependencies": {
-    "aliasify": "^2.1.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.11.0"
   }
 }
