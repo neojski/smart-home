@@ -115,13 +115,16 @@ const getTemperature = (function () {
       remote = Math.round(remoteTemperature.main.temp) + '°C<span class="icon ' + iconMap[remoteTemperature.weather[0].icon] + '"></span>';
     }
 
-    let local;
-    try {
-      local = Math.round(getHomeData().temperature) + '°C';
-    } catch (error) {
-      local = errorSpan(error);
+    function getLocal (f) {
+      try {
+        return Math.round(f(getHomeData())) + '°C';
+      } catch (error) {
+        return errorSpan(error);
+      }
     }
-    return '<span style="display: inline-block; margin: 0 50px">' + local + ' | ' + remote + '</span>';
+    let localUp = getLocal(x => x.purifierTemperature);
+    let localDown = getLocal(x => x.temperature);
+    return '<span style="display: inline-block; margin: 0 50px"><span style="display: inline-block; font-size: 60%"><span style="display: block; text-align: right">' + localUp + '</span><span style="display: block; margin-right: 80px">' + localDown + '</span></span> | ' + remote + '</span>';
   };
 })();
 
