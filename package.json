@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "nosleep.js": "^0.7.0",
     "querystring-browser": "^1.0.4",
     "screenfull": "^3.3.2",
     "weather-js": "^1.0.2"

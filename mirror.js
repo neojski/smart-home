@@ -1,6 +1,7 @@
 const initialError = '↻';
 
 const screenfull = require('screenfull');
+const nosleep = require('nosleep.js');
 
 function errorSpan (c) {
   return '<span class="error">' + c + '</span>';
@@ -198,4 +199,6 @@ run();
 
 document.onclick = function () {
   screenfull.request();
+  const noSleep = new nosleep();
+  noSleep.enable();
 };
