@@ -197,8 +197,15 @@ console.log(ticking);
 setInterval(run, 1000);
 run();
 
+let fullscreen = false;
+const noSleep = new nosleep();
 document.onclick = function () {
-  screenfull.request();
-  const noSleep = new nosleep();
-  noSleep.enable();
+  fullscreen = !fullscreen;
+  if (fullscreen) {
+    screenfull.request();
+    noSleep.enable();
+  } else {
+    screenfull.exit();
+    noSleep.disable();
+  }
 };
