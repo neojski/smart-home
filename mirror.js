@@ -1,5 +1,7 @@
 const initialError = '↻';
 
+const screenfull = require('screenfull');
+
 function errorSpan (c) {
   return '<span class="error">' + c + '</span>';
 }
@@ -193,3 +195,7 @@ console.log(ticking);
 }
 setInterval(run, 1000);
 run();
+
+document.onclick = function () {
+  screenfull.request();
+};
