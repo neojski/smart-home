@@ -5,6 +5,8 @@ module.exports = function (address, span) {
   let device = miio.device({address: address, retries: 5});
   let data = {};
   device.then(device => {
+    console.log('got device');
+
     device.setBuzzer(false);
 
     let properties = new Set(['aqi', 'temperature', 'humidity', 'mode']);

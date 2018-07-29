@@ -15,14 +15,20 @@ function readAndSend () {
     timestamp: Date.now()
   };
   if (temperature != null) {
+    console.log('got temperature', temperature);
     data.temperature = temperature;
+  } else {
+    console.error('temperature missing');
   }
   if (purifierData != null) {
+    console.log('got purifier data', purifierData);
     // TODO: rewrite all purifier fields to have purifier prefix or have separate object
     data.aqi = purifierData.aqi;
     data.humidity = purifierData.humidity;
     data.purifierTemperature = purifierData.temperature;
     data.purifierMode = purifierData.mode;
+  } else {
+    console.error('temperature missing');
   }
   console.log('readAndSend: ');
   console.log(data);
