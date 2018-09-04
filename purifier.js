@@ -20,7 +20,9 @@ module.exports = function (address, span) {
         data[e.property] = e.value;
       }
     });
-  }).catch(console.error);
+  }).catch(e => {
+    console.error (new Date(), e);
+  });
 
   return {
     getData: function () {

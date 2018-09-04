@@ -43,8 +43,8 @@ setInterval(function() {
   function setModeAndLog(mode) {
     console.log('trying to set to', mode);
     purifier.setMode(mode)
-      .then(() => console.log('setMode(' + mode +') succeeded'))
-      .catch((e) => console.error('setMode(' + mode + ')', e));
+      .then(() => console.log(new Date(), 'setMode(' + mode +') succeeded'))
+      .catch((e) => console.error(new Date(), 'setMode(' + mode + ')', e));
   }
 
   let date = new Date();
