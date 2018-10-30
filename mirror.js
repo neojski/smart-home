@@ -139,7 +139,9 @@ function pad (n) {
 }
 
 let getTfl = (function () {
-  const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUCFM?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
+  // Chalk Farm: 940GZZLUCFM
+  // Belsize Park: 940GZZLUBZP
+  const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
   let data;
   let error = initialError;
