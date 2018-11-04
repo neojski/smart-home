@@ -127,7 +127,7 @@ const getTemperature = (function () {
       }
     }
     let localUp = getLocal(x => x.purifier.temperature);
-    let localDown = getLocal(x => x.temperature);
+    let localDown = getLocal(x => x.temperature.data);
     return '<span style="display: inline-block; margin: 0 50px"><span style="display: inline-block; font-size: 60%"><span style="display: block; text-align: right">' + localUp + '</span><span style="display: block; margin-right: 80px">' + localDown + '</span></span> | ' + remote + '</span>';
   };
 })();

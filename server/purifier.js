@@ -5,7 +5,7 @@ module.exports = function (address, span) {
   let device = miio.device({address: address, retries: 5});
   let data = {};
   device.then(device => {
-    console.log('got device');
+    console.log('purifier detected');
 
     device.setBuzzer(false);
 
@@ -22,7 +22,7 @@ module.exports = function (address, span) {
       }
     });
   }).catch(e => {
-    console.error (new Date(), e);
+    console.error ('purifier issue', new Date(), e);
   });
 
   return {
