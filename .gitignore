@@ -1,4 +1,4 @@
 dist
 node_modules
 *.swp
-data/data.log
+ui/data/data.log

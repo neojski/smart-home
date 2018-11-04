@@ -3,6 +3,8 @@ const initialError = '↻';
 const screenfull = require('screenfull');
 const nosleep = require('nosleep.js');
 
+const url = require('../shared/url');
+
 function errorSpan (c) {
   return '<span class="error">' + c + '</span>';
 }
@@ -61,10 +63,9 @@ function updater ({url, hasTimestamp}, callback) {
 
 // TODO: home data timestamps should be per device really
 const getHomeData = (function () {
-  const url = 'https://kolodziejski.me/mirror/data/data.php';
   let err;
   let result;
-  updater({url, hasTimestamp: true}, function (err2, result2) {
+  updater({url: url.data, hasTimestamp: true}, function (err2, result2) {
     err = err2;
     result = result2;
   });
