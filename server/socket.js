@@ -2,19 +2,21 @@ const TuyAPI = require('tuyapi');
 const timestamp = require('./timestamp');
 
 module.exports = function ({id, key}) {
-  let data = {};
+  let result = {};
   setInterval(function () {
     const device = new TuyAPI({id, key, persistentConnection: true});
 
     device.resolveId().then(() => {
+      console.log('resolved socket');
 
-      //device.on('connected',() => {});
-      //device.on('disconnected',() => {});
-      //device.on('error',(err) => {});
+      device.on('connected',() => { console.log('connected to socket');});
+      device.on('disconnected',() => { console.log('disconnected from socket');});
+      device.on('error',(err) => { console.error('socket error', err); device.disconnect(); });
 
       device.on('data', data => {
+        console.log('socket data', data);
         const status = data.dps['1'];
-        data = {
+        result = {
           status: status,
           timestamp: timestamp()
         };
@@ -28,7 +30,7 @@ module.exports = function ({id, key}) {
 
   return {
     getData: function () {
-      return data;
+      return result;
     }
   };
 };
