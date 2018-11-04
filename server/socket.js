@@ -19,7 +19,9 @@ module.exports = function ({id, key}) {
   resolveId(() => {
     let resetting = false;
     function reset (reason) {
-      // TODO: I'm not sure this makes any sense with persistent connection. It all seems pretty unstable
+      // TODO: I'm not sure this makes any sense with persistent connection. It
+      // all seems pretty unstable. It looks like running the mobile application
+      // kills the connection to pi.
       if (resetting) {
         return;
       }
