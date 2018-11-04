@@ -9,33 +9,18 @@ const fs = require('fs');
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
 const tvSocket = socket({id: '1274756684f3ebb89107', key: '3a954c5db3c97828'});
+const downHeatingSocket = socket({id: '12747566807d3a493f6c', key: '25005fc4127ac363'});
+const upHeatingSocket = socket({id: '1274756684f3ebb897b5', key: 'da9c77e4545107c9'});
 
 function readAndSend () {
-  var temperature = getTemperature();
-  var purifierData = purifier.getData();
-  var tvSocketData = tvSocket.getData();
-
   let data = {
-    timestamp: timestamp()
+    timestamp: timestamp(),
+    temperature: getTemperature(),
+    purifier: purifier.getData(),
+    tvSocket: tvSocket.getData(),
+    upHeating: upHeatingSocket.getData(),
+    downHeating: downHeatingSocket.getData(),
   };
-  if (temperature != null) {
-    console.log('got temperature', temperature);
-    data.temperature = temperature;
-  } else {
-    console.error('temperature missing');
-  }
-  if (purifierData != null) {
-    console.log('got purifier data', purifierData);
-    data.purifier = purifierData;
-  } else {
-    console.error('temperature missing');
-  }
-  if (tvSocketData != null) {
-    console.log('got tv socket data', tvSocketData);
-    data.tvSocket = tvSocketData;
-  } else {
-    console.error('tv socket data missing');
-  }
   console.log('broadcast', data);
   server.broadcast('data', data);
 
@@ -65,8 +50,8 @@ setInterval(function() {
 setInterval(readAndSend, 30000);
 readAndSend();
 
-tvSocket.on('data', (data) => {
-  readAndSend(); // emit data right away
-});
+tvSocket.on('data', readAndSend);
+upHeatingSocket.on('data', readAndSend);
+downHeatingSocket.on('data', readAndSend);
 
 server.start();

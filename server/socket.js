@@ -37,8 +37,8 @@ module.exports = function ({id, key}) {
       });
       return device.connect();
     } catch(e) {
-      console.error('socket issue, restarting socket connection', e);
-      setup();
+      console.error('Socket issue, restarting socket connection. Retrying in 5s.', e);
+      setTimeout(setup, 5000);
     }
   }
 

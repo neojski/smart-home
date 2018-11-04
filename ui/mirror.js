@@ -125,16 +125,42 @@ const getTemperature = (function () {
       remote = Math.round(remoteTemperature.main.temp) + '°C<span class="icon ' + iconMap[remoteTemperature.weather[0].icon] + '"></span>';
     }
 
-    function getLocal (f) {
+    function getLocalTemperature (f) {
       try {
-        return Math.round(f(getHomeData())) + '°C';
+        let x = f(getHomeData());
+        if (!Number.isFinite(x)) {
+          throw x + ' is not a valid temperature';
+        } else {
+          return Math.round(f(getHomeData())) + '°C';
+        }
       } catch (error) {
         return errorSpan(error);
       }
     }
-    let localUp = getLocal(x => x.purifier.temperature);
-    let localDown = getLocal(x => x.temperature.data);
-    return '<span style="display: inline-block; margin: 0 50px"><span style="display: inline-block; font-size: 60%"><span style="display: block; text-align: right">' + localUp + '</span><span style="display: block; margin-right: 80px">' + localDown + '</span></span> | ' + remote + '</span>';
+    function getLocalHeating (f) {
+      try {
+        return f(getHomeData());
+      } catch (error) {
+        return false;
+      }
+    }
+    function heatingStyle (isOn) {
+      if (isOn) {
+        return 'border-radius:30px; background: #fff; color: #000';
+      } else {
+        return '';
+      }
+    }
+    let upHeating = getLocalHeating(x => x.upHeating.status);
+    let downHeating = getLocalHeating(x => x.downHeating.status);
+    let upTemperature = getLocalTemperature(x => x.purifier.temperature);
+    let downTemperature = getLocalTemperature(x => x.temperature.data);
+    return '<span style="display: inline-block; margin: 0 50px"> \
+              <span style="display: inline-block; font-size: 60%; text-align: right"> \
+                <div><span style="display: inline-block; text-align: right; clear: right; ' + heatingStyle(upHeating) + '">' + upTemperature + '</span></div>\
+                <div><span style="display: inline-block; margin-right: 80px; ' + heatingStyle(downHeating) + '">' + downTemperature + '</span></div>\
+              </span> | ' + remote +
+           '</span>';
   };
 })();
 
@@ -199,9 +225,9 @@ function getTvSocket () {
   return '';
 }
 
-let ticking = true;
+window.ticking = true;
 function run () {
-  if (!ticking) return;
+  if (!window.ticking) return;
 
   on = !on;
   let colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
