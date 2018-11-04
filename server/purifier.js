@@ -1,6 +1,6 @@
 const miio = require('miio');
+const timestamp = require('./timestamp');
 
-// TODO: Make sure this data is not too old
 module.exports = function (address, span) {
   let device = miio.device({address: address, retries: 5});
   let data = {};
@@ -18,6 +18,7 @@ module.exports = function (address, span) {
     device.on('propertyChanged', e => {
       if (properties.has(e.property)) {
         data[e.property] = e.value;
+        data.timestamp = timestamp();
       }
     });
   }).catch(e => {

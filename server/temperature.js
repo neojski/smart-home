@@ -1,4 +1,5 @@
 const fs = require('fs');
+const timestamp = require('./timestamp');
 
 function median (arr) {
   arr = arr.slice();
@@ -25,17 +26,22 @@ function doRead (deviceId) {
 }
 
 var temperatures = [];
+var lastRead;
 function loop(samples) {
   try {
     temperatures.push(doRead('28-0216252dbfee'));
     temperatures = temperatures.slice(-samples);
+    lastRead = timestamp();
   } catch (e) {
     console.error(e);
   }
 }
 
 function getResult () {
-  return median(temperatures);
+  return {
+    timestamp: lastRead,
+    data: median(temperatures)
+  };
 }
 
 module.exports = {

@@ -126,7 +126,7 @@ const getTemperature = (function () {
         return errorSpan(error);
       }
     }
-    let localUp = getLocal(x => x.purifierTemperature);
+    let localUp = getLocal(x => x.purifier.temperature);
     let localDown = getLocal(x => x.temperature);
     return '<span style="display: inline-block; margin: 0 50px"><span style="display: inline-block; font-size: 60%"><span style="display: block; text-align: right">' + localUp + '</span><span style="display: block; margin-right: 80px">' + localDown + '</span></span> | ' + remote + '</span>';
   };
@@ -174,7 +174,7 @@ let getTfl = (function () {
 function getAqi () {
   let local;
   try {
-    local = Math.round(getHomeData().aqi);
+    local = Math.round(getHomeData().purifier.aqi);
   } catch (error) {
     local = errorSpan(error);
   }

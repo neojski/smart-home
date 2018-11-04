@@ -2,6 +2,7 @@ const request = require('request');
 const temperature = require('./temperature');
 const controls = require('./controls');
 const url = require('../shared/url').data;
+const timestamp = require('./timestamp');
 
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
@@ -11,7 +12,7 @@ function readAndSend () {
   var purifierData = purifier.getData();
 
   let data = {
-    timestamp: Date.now()
+    timestamp: timestamp()
   };
   if (temperature != null) {
     console.log('got temperature', temperature);
@@ -21,11 +22,7 @@ function readAndSend () {
   }
   if (purifierData != null) {
     console.log('got purifier data', purifierData);
-    // TODO: rewrite all purifier fields to have purifier prefix or have separate object
-    data.aqi = purifierData.aqi;
-    data.humidity = purifierData.humidity;
-    data.purifierTemperature = purifierData.temperature;
-    data.purifierMode = purifierData.mode;
+    data.purifier = purifierData;
   } else {
     console.error('temperature missing');
   }
