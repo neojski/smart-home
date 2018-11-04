@@ -3,13 +3,16 @@ const temperature = require('./temperature');
 const controls = require('./controls');
 const url = require('../shared/url').data;
 const timestamp = require('./timestamp');
+const socket = require('./socket');
 
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
+const tvSocket = socket({id: '1274756684f3ebb89107', key: '3a954c5db3c97828'});
 
 function readAndSend () {
   var temperature = getTemperature();
   var purifierData = purifier.getData();
+  var tvSocketData = tvSocket.getData();
 
   let data = {
     timestamp: timestamp()
@@ -25,6 +28,12 @@ function readAndSend () {
     data.purifier = purifierData;
   } else {
     console.error('temperature missing');
+  }
+  if (tvSocketData != null) {
+    console.log('got tv socket data', tvSocketData);
+    data.tvSocket = tvSocketData;
+  } else {
+    console.error('tv socket data missing');
   }
   console.log('readAndSend: ');
   console.log(data);
