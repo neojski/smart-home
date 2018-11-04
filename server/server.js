@@ -8,17 +8,15 @@ const child_process = require('child_process');
 app.use(express.static(__dirname + '/../ui'));
 
 function onConnection(socket){
-  console.log('socket.io client connected');
-// TODO: cleanup
-//  socket.on('drawing', (data) => {
-//    let arg = '';
-//    if (data) {
-//      arg += ' 1';
-//    }
-//    let cmd = __dirname + '/onoff.js' + arg;
-//    console.log(cmd);
-//    child_process.exec(cmd);
-//  });
+  socket.on('toggle-power', function (state) {
+    let arg = '';
+    if (state) {
+      arg += ' 1';
+    }
+    let cmd = __dirname + '/onoff.js' + arg;
+    console.log(cmd);
+    child_process.exec(cmd);
+  });
 }
 
 module.exports = {
