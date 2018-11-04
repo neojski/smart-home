@@ -23,12 +23,13 @@ done
 info 'Deploying to github'
 git push git@github.com:neojski/smart-home.git $git_arg
 
-info 'Deploying UI'
-ssh neo@digitalocean 'cd ~/smart-home && git config --local receive.denyCurrentBranch updateInstead'
-git push neo@digitalocean:~/smart-home $git_arg
-ssh neo@digitalocean 'cd ~/smart-home && npm install && npm run browserify'
+# TODO: do we want to continue deploying to digitalocean?
+#info 'Deploying UI'
+#ssh neo@digitalocean 'cd ~/smart-home && git config --local receive.denyCurrentBranch updateInstead'
+#git push neo@digitalocean:~/smart-home $git_arg
+#ssh neo@digitalocean 'cd ~/smart-home && npm install && npm run browserify'
 
-info 'Deploying server'
+info 'Deploying to pi'
 ssh pi 'cd ~/smart-home && git config --local receive.denyCurrentBranch updateInstead'
 git push pi:~/smart-home $git_arg
-ssh pi 'cd ~/smart-home && npm install' 
+ssh pi 'cd ~/smart-home && npm install && npm run browserify' 

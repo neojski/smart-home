@@ -28,6 +28,9 @@ html {
   transform-origin: top left;
   display: none; /* long descripitons destroy layout */
 }
+.tvSocket {
+  text-align:center;
+}
 .aqi {
   font-size: 100px;
   margin: 300px 0 0 700px;

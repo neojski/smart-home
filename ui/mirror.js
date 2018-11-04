@@ -1,9 +1,9 @@
-const initialError = '↻';
-
 const screenfull = require('screenfull');
 const nosleep = require('nosleep.js');
-
 const url = require('../shared/url');
+const io = require('socket.io-client');
+
+const initialError = '↻';
 
 function errorSpan (c) {
   return '<span class="error">' + c + '</span>';
@@ -63,17 +63,16 @@ function updater ({url, hasTimestamp}, callback) {
 
 // TODO: home data timestamps should be per device really
 const getHomeData = (function () {
-  let err;
-  let result;
-  updater({url: url.data, hasTimestamp: true}, function (err2, result2) {
-    err = err2;
-    result = result2;
+  let data;
+
+  const socket = io();
+  socket.on('data', (x) => {
+    data = x;
+    console.log(data);
   });
+
   return function () {
-    if (err != null) {
-      throw err;
-    }
-    return result;
+    return data;
   };
 })();
 
@@ -181,9 +180,20 @@ function getAqi () {
   return '<div>' + local + ' <span class="pm25">PM2.5</span></div>';
 }
 
+function getTvSocket () {
+  let data = getHomeData().tvSocket;
+  if (data.status != null) {
+    if (data.status) {
+      return '<div>on</div>';
+    } else {
+      return '<div>off</div>';
+    }
+  }
+  return '';
+}
+
 let ticking = true;
 function run () {
-console.log(ticking);
   if (!ticking) return;
 
   on = !on;
@@ -192,6 +202,7 @@ console.log(ticking);
   let data = '';
   data += '<div class="aqi">' + getAqi() + '</div>';
   data += '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
+  data += '<div class="tvSocket">' + getTvSocket() + '</div>';
   data += '<div class="weather">' + getTemperature() + '</div>';
   data += '<div class="trains">' + getTfl() + '</div>';
 

@@ -1,9 +1,10 @@
 const request = require('request');
 const temperature = require('./temperature');
-const controls = require('./controls');
+const server = require('./server');
 const url = require('../shared/url').data;
 const timestamp = require('./timestamp');
 const socket = require('./socket');
+const fs = require('fs');
 
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
@@ -35,12 +36,10 @@ function readAndSend () {
   } else {
     console.error('tv socket data missing');
   }
-  console.log('readAndSend: ');
-  console.log(data);
+  console.log('broadcast', data);
+  server.broadcast('data', data);
 
-  request.post({url, form: {data: JSON.stringify(data)}}, function (error, httpResponse, body) {
-    // log?
-  });
+  fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
 }
 
 // Purifier "cron"
@@ -66,4 +65,8 @@ setInterval(function() {
 setInterval(readAndSend, 30000);
 readAndSend();
 
-controls.start();
+tvSocket.on('data', (data) => {
+  readAndSend(); // emit data right away
+});
+
+server.start();

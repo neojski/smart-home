@@ -1,5 +1,6 @@
 'use strict';
 
+// TODO: migrate this
 (function() {
   const socket = io();
   var state = true;
