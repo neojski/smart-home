@@ -37,7 +37,8 @@ module.exports = function ({id, key}) {
 
     device.on('data', data => {
       console.log('socket data', data);
-      if (data.dps['1'] != null) {
+      // sometimes this data is garbage
+      if (data.dps != null && data.dps['1'] != null) {
         status = data.dps['1'];
       }
       result = {
