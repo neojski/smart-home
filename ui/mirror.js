@@ -71,11 +71,9 @@ const getHomeData = (function () {
     console.log(data);
   });
 
-  var state = true;
   document.addEventListener('mouseup', onMouseUp, false);
   function onMouseUp(e){
-    state = !state;
-    socket.emit('toggle-power', state);
+    socket.emit('toggle-power');
   }
 
   return function () {

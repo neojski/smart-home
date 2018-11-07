@@ -32,4 +32,6 @@ git push git@github.com:neojski/smart-home.git $git_arg
 info 'Deploying to pi'
 ssh pi 'cd ~/smart-home && git config --local receive.denyCurrentBranch updateInstead'
 git push pi:~/smart-home $git_arg
+
+info 'Running install on pi'
 ssh pi 'cd ~/smart-home && npm install && npm run browserify' 

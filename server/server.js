@@ -2,20 +2,14 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const monitor = require('./monitor');
 const port = process.env.PORT || 3000;
-const child_process = require('child_process');
 
 app.use(express.static(__dirname + '/../ui'));
 
 function onConnection(socket){
-  socket.on('toggle-power', function (state) {
-    let arg = '';
-    if (state) {
-      arg += ' 1';
-    }
-    let cmd = __dirname + '/onoff.js' + arg;
-    console.log(cmd);
-    child_process.exec(cmd);
+  socket.on('toggle-power', function () {
+    monitor.toggle();
   });
 }
 

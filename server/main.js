@@ -5,6 +5,7 @@ const url = require('../shared/url').data;
 const timestamp = require('./timestamp');
 const socket = require('./socket');
 const fs = require('fs');
+const monitor = require('./monitor');
 
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
@@ -27,7 +28,7 @@ function readAndSend () {
   fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
 }
 
-// Purifier "cron"
+// "cron"
 setInterval(function() {
   function setModeAndLog(mode) {
     console.log('trying to set to', mode);
@@ -39,10 +40,12 @@ setInterval(function() {
   let date = new Date();
   if (date.getHours() === 23 && date.getMinutes() === 0) {
     setModeAndLog('silent');
+    monitor.set(false);
   }
 
   if (date.getHours() === 9 && date.getMinutes() === 0) {
     setModeAndLog('auto');
+    monitor.set(true);
   }
 }, 10000);
 
