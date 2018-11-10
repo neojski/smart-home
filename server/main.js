@@ -45,6 +45,9 @@ setInterval(function() {
 
   if (date.getHours() === 9 && date.getMinutes() === 0) {
     setModeAndLog('auto');
+  }
+
+  if (date.getHours() === 6 && date.getMinutes() === 0) {
     monitor.set(true);
   }
 }, 10000);
