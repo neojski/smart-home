@@ -3,6 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const monitor = require('./monitor');
+const debug = require('debug')('smart-home:server');
 const port = process.env.PORT || 3000;
 
 app.use(express.static(__dirname + '/../ui'));
@@ -16,7 +17,7 @@ function onConnection(socket){
 module.exports = {
   start: function () {
     io.on('connection', onConnection);
-    http.listen(port, () => console.log('listening on port ' + port));
+    http.listen(port, () => debug('listening on port ' + port));
   },
   broadcast: function (event, data) {
     io.emit(event, data);

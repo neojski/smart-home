@@ -6,6 +6,7 @@ const timestamp = require('./timestamp');
 const socket = require('./socket');
 const fs = require('fs');
 const monitor = require('./monitor');
+const debug = require('debug')('smart-home:main');
 
 const purifier = require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
@@ -22,7 +23,7 @@ function readAndSend () {
     upHeating: upHeatingSocket.getData(),
     downHeating: downHeatingSocket.getData(),
   };
-  console.log('broadcast', data);
+  debug('broadcast', data);
   server.broadcast('data', data);
 
   fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
@@ -31,10 +32,10 @@ function readAndSend () {
 // "cron"
 setInterval(function() {
   function setModeAndLog(mode) {
-    console.log('trying to set to', mode);
+    debug('trying to set to', mode);
     purifier.setMode(mode)
-      .then(() => console.log(new Date(), 'setMode(' + mode +') succeeded'))
-      .catch((e) => console.error(new Date(), 'setMode(' + mode + ')', e));
+      .then(() => debug(new Date(), 'setMode(' + mode +') succeeded'))
+      .catch((e) => debug(new Date(), 'setMode(' + mode + ')', e));
   }
 
   let date = new Date();

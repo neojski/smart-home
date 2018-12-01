@@ -1,11 +1,12 @@
 const miio = require('miio');
 const timestamp = require('./timestamp');
+const debug = require('debug')('smart-home:purifier');
 
 module.exports = function (address, span) {
   let device = miio.device({address: address, retries: 5});
   let data = {};
   device.then(device => {
-    console.log('purifier detected');
+    debug('purifier detected');
 
     device.setBuzzer(false);
 
@@ -22,7 +23,7 @@ module.exports = function (address, span) {
       }
     });
   }).catch(e => {
-    console.error ('purifier issue', new Date(), e);
+    debug('purifier issue', new Date(), e);
   });
 
   return {

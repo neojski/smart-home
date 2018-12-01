@@ -1,5 +1,6 @@
 const fs = require('fs');
 const timestamp = require('./timestamp');
+const debug = require('debug')('smart-home:temperature');
 
 function median (arr) {
   arr = arr.slice();
@@ -16,12 +17,16 @@ function median (arr) {
 
 // https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing?view=all
 function doRead (deviceId) {
-  let filename = '/sys/bus/w1/devices/' + deviceId + '/w1_slave';
-  let result = fs.readFileSync(filename).toString();
-  if (/crc=.*YES/.test(result)) {
-    return (+result.match(/t=(-?\d+)/)[1]) / 1000;
-  } else {
-    throw 'No correct temperature found: ' + filename + '(' + result + ')';
+  try {
+    let filename = '/sys/bus/w1/devices/' + deviceId + '/w1_slave';
+    let result = fs.readFileSync(filename).toString();
+    if (/crc=.*YES/.test(result)) {
+      return (+result.match(/t=(-?\d+)/)[1]) / 1000;
+    } else {
+      throw 'No correct temperature found: ' + filename + '(' + result + ')';
+    }
+  } catch (e) {
+    debug(e);
   }
 }
 
