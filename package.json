@@ -6,6 +6,7 @@
     "watchify": "watchify ui/mirror.js -o ui/dist/bundle.js"
   },
   "dependencies": {
+    "debug": "^4.1.0",
     "express": "^4.16.2",
     "gpio": "^0.2.10",
     "miio": "^0.14.0",
@@ -15,7 +16,7 @@
     "screenfull": "^3.3.2",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
-    "tuyapi": "^3.1.2",
+    "tuyapi": "github:neojski/tuyapi#fix-parallel-bind",
     "weather-js": "^1.0.2"
   },
   "devDependencies": {

@@ -17,20 +17,22 @@ module.exports = function ({id, key}) {
     });
   }
 
+  let isOn;
+
   resolveId(() => {
     let resetting = false;
 
     device.on('connected', () => { debug('connected'); });
-    device.on('disconnected', () => { debug('disconnected'); });
+    device.on('disconnected', () => { isOn = null; debug('disconnected'); });
     device.on('error', (e) => { debug('error', e); });
 
     device.on('data', data => {
       // sometimes this data is garbage
       if (data.dps != null && data.dps['1'] != null) {
-        status = data.dps['1'];
+        isOn = data.dps['1'];
       }
       result = {
-        status: status,
+        status: isOn,
         timestamp: timestamp()
       };
       debug('socket data', result, data);
