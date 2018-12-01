@@ -81,6 +81,14 @@ const getHomeData = (function () {
   };
 })();
 
+function heatingStyle (isOn) {
+  if (isOn) {
+    return 'border-radius:30px; background: #fff; color: #000';
+  } else {
+    return '';
+  }
+}
+
 // returns temperature or null if not available
 const getTemperature = (function () {
   let iconMap = {
@@ -140,13 +148,6 @@ const getTemperature = (function () {
         return f(getHomeData());
       } catch (error) {
         return false;
-      }
-    }
-    function heatingStyle (isOn) {
-      if (isOn) {
-        return 'border-radius:30px; background: #fff; color: #000';
-      } else {
-        return '';
       }
     }
     let upHeating = getLocalHeating(x => x.upHeating.status);
@@ -213,12 +214,8 @@ function getAqi () {
 
 function getTvSocket () {
   let data = getHomeData().tvSocket;
-  if (data.status != null) {
-    if (data.status) {
-      return '<div>on</div>';
-    } else {
-      return '<div>off</div>';
-    }
+  if (data != null && data.status != null) {
+    return '<div style="display: inline-block; width: 30px; height: 30px; line-height: 30px; text-align:center;' + heatingStyle(data.status) + '">⏻</div>';
   }
   return '';
 }
