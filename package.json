@@ -16,7 +16,7 @@
     "screenfull": "^3.3.2",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
-    "tuyapi": "github:neojski/tuyapi#fix-parallel-bind",
+    "tuyapi": "^3.1.5",
     "weather-js": "^1.0.2"
   },
   "devDependencies": {
