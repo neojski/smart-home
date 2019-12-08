@@ -9,18 +9,18 @@ module.exports = function ({id, key}) {
 
   let result = {};
 
-  function resolveId (done) {
+  function find (done) {
     // This fails when one tries to discover multiple devices at the same time
-    device.resolveId().then(done).catch((error) => {
-      debug('Could not resolveId. Trying again in 5s', error);
-      setTimeout(() => { resolveId(done); }, 5000);
+    device.find().then(done).catch((error) => {
+      debug('Could not find device. Trying again in 5s', {id, key}, error);
+      setTimeout(() => { find(done); }, 5000);
     });
   }
 
   let isOn;
 
-  resolveId(() => {
-    let resetting = false;
+  find(() => {
+    debug('Device found', {id, key});
 
     device.on('connected', () => { debug('connected'); });
     device.on('disconnected', () => { isOn = null; debug('disconnected'); });
