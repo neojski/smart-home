@@ -14,7 +14,7 @@ process.on('uncaughtException', function (exception) {
 setInterval(function () {}, 1000);
 
 (async function () {
-const monitor = await require('./monitor')();
+const monitor = await require('./monitor');
 const purifier = await require('./purifier')('192.168.0.22', 10000);
 const getTemperature = temperature.init(1000, 5);
 const tvSocket = await socket({id: '1274756684f3ebb89107', key: '3a954c5db3c97828'});
@@ -51,7 +51,7 @@ setInterval(async function() {
   let date = new Date();
   if (date.getHours() === 23 && date.getMinutes() === 0) {
     await setModeAndLog('silent');
-    monitor.set(false);
+    await monitor.set(false);
   }
 
   if (date.getHours() === 9 && date.getMinutes() === 0) {
@@ -59,7 +59,7 @@ setInterval(async function() {
   }
 
   if (date.getHours() === 6 && date.getMinutes() === 0) {
-    monitor.set(true);
+    await monitor.set(true);
   }
 }, 10000);
 
