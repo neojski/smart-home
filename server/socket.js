@@ -3,23 +3,28 @@ const timestamp = require('./timestamp');
 const EventEmitter = require('events');
 const debug = require('debug')('smart-home:socket');
 
-module.exports = function ({id, key}) {
+function sleep (ms) {
+  return new Promise((resolve) => { setTimeout(ms, resolve); });
+}
+
+module.exports = async function ({id, key}) {
   const emitter = new EventEmitter();
-  const device = new TuyAPI({id, key, persistentConnection: true});
+  const device = new TuyAPI({id, key, persistentConnection: true, version: '3.3'});
 
   let result = {};
 
-  function find (done) {
-    // This fails when one tries to discover multiple devices at the same time
-    device.find().then(done).catch((error) => {
+  while (true) {
+    try {
+      await device.find();
+      break;
+    } catch (e) {
       debug('Could not find device. Trying again in 5s', {id, key}, error);
-      setTimeout(() => { find(done); }, 5000);
-    });
+      await sleep(5000);
+    }
   }
 
   let isOn;
 
-  find(() => {
     debug('Device found', {id, key});
 
     device.on('connected', () => { debug('connected'); });
@@ -37,7 +42,6 @@ module.exports = function ({id, key}) {
       };
       debug('socket data', result, data);
       emitter.emit('data', result);
-    });
 
     device.connect();
   });
