@@ -6,21 +6,26 @@ module.exports = function (address, span) {
   let device = miio.device({address: address, retries: 5});
   let data = {};
   device.then(device => {
-    debug('purifier detected');
+    debug('purifier detected', device);
 
     device.setBuzzer(false);
 
-    let properties = new Set(['aqi', 'temperature', 'humidity', 'mode']);
-
-    for (let p of properties) {
-      data[p] = device[p];
+    function setData(property, value) {
+      debug(property, value);
+      data[property] = value;
+      data.timestamp = timestamp();
     }
 
-    device.on('propertyChanged', e => {
-      if (properties.has(e.property)) {
-        data[e.property] = e.value;
-        data.timestamp = timestamp();
-      }
+    device.on('temperatureChanged', v => {
+      setData('temperature', v.value);
+    });
+
+    device.on('pm2.5Changed', v => {
+      setData('aqi', v);
+    });
+
+    device.on('relativeHumidityChanged', v => {
+      setData('humidity', v);
     });
   }).catch(e => {
     debug('purifier issue', new Date(), e);
