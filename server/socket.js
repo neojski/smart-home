@@ -4,7 +4,7 @@ const EventEmitter = require('events');
 const debug0 = require('debug')('smart-home:socket');
 
 function sleep (ms) {
-  return new Promise((resolve) => { setTimeout(ms, resolve); });
+  return new Promise((resolve) => { setTimeout(resolve, ms); });
 }
 
 module.exports = async function ({id, key}) {
