@@ -9,23 +9,10 @@ function errorSpan (c) {
   return '<span class="error">' + c + '</span>';
 }
 
-function getJSONData(url, callback) {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    let error = function () {
-      reject ("XMLHttpRequest failed. Status: " + xhr.status + ". statusText: " + xhr.statusText);
-    };
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        resolve (JSON.parse(this.responseText));
-      } else {
-        error ();
-      }
-    };
-    xhr.onerror = error;
-    xhr.open('GET', url, true);
-    xhr.send(null);
-  });
+async function getJSONData(url) {
+  // around 2019-12-11 tfl started sending stale responses so we add this ugly cache busting URL param
+  const response = await fetch(url + ('&cache' + Date.now()));
+  return await response.json();
 }
 
 function updater ({url, hasTimestamp}, callback) {
@@ -63,7 +50,7 @@ function updater ({url, hasTimestamp}, callback) {
 
 // TODO: home data timestamps should be per device really
 const getHomeData = (function () {
-  let data;
+  let data = {};
 
   const socket = io();
   socket.on('data', (x) => {
