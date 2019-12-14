@@ -9,7 +9,7 @@ export default async function (address: string) {
   let device = await miio.device({ address: address, retries: 5 });
   debug('purifier detected', device);
 
-  let data: Purifier;
+  let data: Purifier = {};
   device.setBuzzer(false);
 
   function setData(property: "aqi" | "temperature" | "humidity", value: number) {
@@ -29,6 +29,7 @@ export default async function (address: string) {
   device.on('relativeHumidityChanged', v => {
     setData('humidity', v);
   });
+
 
   return {
     getData: function () {

@@ -188,9 +188,9 @@ let getTfl = (function () {
 function getAqi() {
   let local;
 
-  let purifier = getHomeData().purifier;
-  if (purifier) {
-    local = Math.round(purifier.aqi);
+  let aqi = getHomeData().purifier?.aqi;
+  if (aqi !== undefined) {
+    local = Math.round(aqi);
   } else {
     local = errorSpan("purifier undefined");
   }
