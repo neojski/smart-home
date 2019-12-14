@@ -18,7 +18,7 @@ setInterval(function () { }, 1000);
 (async function () {
   // TODO: Seems like a bad idea to await module before starting processing the next
   const monitor = await require('./monitor');
-  const purifier = await purifier0('192.168.0.22', 10000);
+  const purifier = await purifier0('192.168.0.22');
   const getTemperature = temperature.init(1000, 5);
   const tvSocket = await socket({ id: '1274756684f3ebb89107', key: '3a954c5db3c97828' });
   const downHeatingSocket = await socket({ id: '12747566807d3a493f6c', key: '25005fc4127ac363' });

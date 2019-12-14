@@ -5,7 +5,7 @@ import { Purifier } from '../shared/Purifier';
 const debug = require('debug')('smart-home:purifier');
 
 
-export default async function (address: string, span: number) {
+export default async function (address: string) {
   let device = await miio.device({ address: address, retries: 5 });
   debug('purifier detected', device);
 

@@ -1,17 +1,21 @@
 {
-    "compileOnSave": true,
-    "compilerOptions": {
-        "strict": true,
-        "strictNullChecks": true,
-        "alwaysStrict": true,
-        "esModuleInterop": true,
-        "lib": [
-            "es5",
-            "es6",
-            "dom"
-        ],
-        "module": "system",
-        "outFile": "./dist/bundle.js",
-        "moduleResolution": "node",
-    }
+  "compileOnSave": true,
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "module": "system",
+    "outFile": "./dist/bundle.js",
+    "moduleResolution": "node",
+  }
 }
