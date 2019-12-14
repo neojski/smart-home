@@ -1,6 +1,6 @@
 declare module 'nosleep.js' {
-    export default class {
-        enable: { (): void }
-        disable: { (): void }
-    }
+  export default class {
+    enable: { (): void }
+    disable: { (): void }
+  }
 }

@@ -1,15 +1,18 @@
-const miio = require('miio');
-const timestamp = require('./timestamp');
+import miio, { mode } from 'miio';
+import timestamp from './timestamp';
+import { Purifier } from '../shared/Purifier';
+
 const debug = require('debug')('smart-home:purifier');
 
-module.exports = async function (address, span) {
-  let device = await miio.device({address: address, retries: 5});
+
+export default async function (address: string, span: number) {
+  let device = await miio.device({ address: address, retries: 5 });
   debug('purifier detected', device);
 
-  let data = {};
+  let data: Purifier;
   device.setBuzzer(false);
 
-  function setData(property, value) {
+  function setData(property: "aqi" | "temperature" | "humidity", value: number) {
     debug(property, value);
     data[property] = value;
     data.timestamp = timestamp();
@@ -31,10 +34,8 @@ module.exports = async function (address, span) {
     getData: function () {
       return data;
     },
-    setMode: function (mode) {
-      return device.then(device => {
-        return device.setMode(mode);
-      });
+    setMode: function (mode: mode) {
+      return device.setMode(mode);
     }
   };
 };

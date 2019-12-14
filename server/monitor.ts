@@ -1,9 +1,9 @@
 const debug = require('debug')('smart-home:monitor');
 
-const gpio = require('gpio');
+import gpio, { Gpio } from 'gpio';
 const pin = 3;
 
-const gpio3 = new Promise(function (resolve, reject) {
+const gpio3: Promise<Gpio> = new Promise(function (resolve) {
   const result = gpio.export(pin, {
     direction: 'out',
     ready: function () {
@@ -13,13 +13,13 @@ const gpio3 = new Promise(function (resolve, reject) {
   });
 });
 
-module.exports = {
+export default {
   toggle: async function () {
     debug('toggle');
     const gpio = await gpio3;
     gpio.set(!gpio.value);
   },
-  set: async function (b) {
+  set: async function (b: boolean) {
     debug('set', b);
     const gpio = await gpio3;
     gpio.set(b);

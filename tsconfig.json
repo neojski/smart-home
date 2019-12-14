@@ -12,6 +12,6 @@
         ],
         "module": "system",
         "outFile": "./dist/bundle.js",
-        "moduleResolution": "node"
-    },
+        "moduleResolution": "node",
+    }
 }

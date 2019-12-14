@@ -1,6 +1,7 @@
 import screenfull0, { Screenfull } from 'screenfull';
 import nosleep from 'nosleep.js';
 import io from 'socket.io-client';
+import { Data } from '../shared/Data';
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
@@ -48,33 +49,11 @@ function updater({ url, hasTimestamp }: { url: string; hasTimestamp: boolean; },
   setInterval(update, maxAcceptableAge / maxTries);
 }
 
-interface Socket {
-  status: boolean
-}
-
-interface Purifier {
-  aqi: number;
-  temperature: number;
-}
-
-interface Temperature {
-  data: number
-}
-
-// TODO: home data timestamps should be per device really
 const getHomeData = (function () {
-  // TODO: this should be an interface common with the server 
-  let data: {
-    tvSocket?: Socket,
-    purifier?: Purifier,
-    upHeating?: Socket,
-    downHeating?: Socket,
-    temperature?: Temperature,
-  } = {
-  };
+  let data: Data = {};
 
   const socket = io();
-  socket.on('data', (x: any) => {
+  socket.on('data', (x: Data) => {
     data = x;
     console.log(data);
   });

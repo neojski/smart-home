@@ -1,21 +1,23 @@
-const TuyAPI = require('tuyapi');
-const timestamp = require('./timestamp');
-const EventEmitter = require('events');
+import TuyAPI from 'tuyapi';
+import timestamp from './timestamp';
+import EventEmitter from 'events';
+import { sleep } from './sleep';
+import { Socket } from '../shared/Socket';
+
 const debug0 = require('debug')('smart-home:socket');
 
-function sleep (ms) {
-  return new Promise((resolve) => { setTimeout(resolve, ms); });
-}
 
-module.exports = async function ({id, key}) {
-  const emitter = new EventEmitter();
-  const device = new TuyAPI({id, key, persistentConnection: true, version: '3.3'});
+export default async function ({ id, key }: { id: string, key: string }) {
+  let result: Socket = {};
 
-  function debug (...args) {
-    debug0({id, key}, ...args);
+  const emitter = Object.assign(new EventEmitter(), { getData: function () { return result } })
+
+  const device = new TuyAPI({ id, key, persistentConnection: true, version: '3.3' });
+
+  function debug(...args: any) {
+    debug0({ id, key }, ...args);
   }
 
-  let result = {};
 
   while (true) {
     try {
@@ -28,19 +30,17 @@ module.exports = async function ({id, key}) {
     }
   }
 
-  let isOn;
+  let isOn: boolean | undefined = undefined;
 
   debug('Device found');
 
   device.on('connected', () => { debug('connected'); });
-  device.on('disconnected', () => { isOn = null; debug('disconnected'); });
+  device.on('disconnected', () => { isOn = undefined; debug('disconnected'); });
   device.on('error', (e) => { debug('error', e); });
 
   device.on('data', data => {
     // sometimes this data is garbage
-    if (data.dps != null && data.dps['1'] != null) {
-      isOn = data.dps['1'];
-    }
+    isOn = data?.dps?.[1];
     result = {
       status: isOn,
       timestamp: timestamp()
@@ -50,9 +50,6 @@ module.exports = async function ({id, key}) {
   });
   device.connect();
 
-  emitter.getData = function () {
-    return result;
-  };
 
   return emitter;
 };
