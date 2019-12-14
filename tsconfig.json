@@ -1,0 +1,17 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "strict": true,
+        "strictNullChecks": true,
+        "alwaysStrict": true,
+        "esModuleInterop": true,
+        "lib": [
+            "es5",
+            "es6",
+            "dom"
+        ],
+        "module": "system",
+        "outFile": "./dist/bundle.js",
+        "moduleResolution": "node"
+    },
+}
