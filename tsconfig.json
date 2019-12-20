@@ -14,8 +14,6 @@
       "es6",
       "dom"
     ],
-    "module": "system",
-    "outFile": "./dist/bundle.js",
     "moduleResolution": "node",
   }
 }

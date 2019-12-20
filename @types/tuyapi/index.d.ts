@@ -1,7 +1,10 @@
 declare module 'tuyapi' {
   export default class {
+    device: {
+      ip?: string
+    };
     connect(): void
-    constructor({ id, key, persistentConnection, version }: { id: string, key: string, persistentConnection: boolean, version: string })
+    constructor({ id, key, version }: { id: string, key: string, version: string })
     find: { (): Promise<void> }
     on(event: "connected", callback: { (): void }): void
     on(event: "disconnected", callback: { (): void }): void

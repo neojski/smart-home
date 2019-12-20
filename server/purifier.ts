@@ -1,42 +1,53 @@
-import miio, { mode } from 'miio';
+import miio, { mode, Device } from 'miio';
 import timestamp from './timestamp';
 import { Purifier } from '../shared/Purifier';
 
 const debug = require('debug')('smart-home:purifier');
 
 
-export default async function (address: string) {
-  let device = await miio.device({ address: address, retries: 5 });
-  debug('purifier detected', device);
+export default class {
+  device: Promise<Device>;
+  data: Purifier;
 
-  let data: Purifier = {};
-  device.setBuzzer(false);
+  constructor(address: string) {
+    this.device = miio.device({ address: address, retries: 5 });
 
-  function setData(property: "aqi" | "temperature" | "humidity", value: number) {
-    debug(property, value);
-    data[property] = value;
-    data.timestamp = timestamp();
+    this.data = {};
+
+    this.init()
   }
 
-  device.on('temperatureChanged', v => {
-    setData('temperature', v.value);
-  });
+  async init() {
+    let device = await this.device;
 
-  device.on('pm2.5Changed', v => {
-    setData('aqi', v);
-  });
+    debug('purifier detected', device);
+    device.setBuzzer(false);
 
-  device.on('relativeHumidityChanged', v => {
-    setData('humidity', v);
-  });
-
-
-  return {
-    getData: function () {
-      return data;
-    },
-    setMode: function (mode: mode) {
-      return device.setMode(mode);
+    const setData = (property: "aqi" | "temperature" | "humidity", value: number) => {
+      debug(property, value);
+      this.data[property] = value;
+      this.data.timestamp = timestamp();
     }
-  };
+
+    device.on('temperatureChanged', v => {
+      setData('temperature', v.value);
+    });
+
+    device.on('pm2.5Changed', v => {
+      setData('aqi', v);
+    });
+
+    device.on('relativeHumidityChanged', v => {
+      setData('humidity', v);
+    });
+  }
+
+  getData() {
+    return this.data;
+  }
+
+  async setMode(mode: mode) {
+    let device = await this.device;
+    return device.setMode(mode);
+  }
 };

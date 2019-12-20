@@ -1,11 +1,12 @@
 {
   "scripts": {
-    "start": "node server/main.js",
-    "start_pm2": "pm2 start server/main.js --name smart-home",
-    "browserify": "browserify ui/mirror.js -o ui/dist/bundle.js",
-    "watchify": "watchify ui/mirror.js -o ui/dist/bundle.js"
+    "start": "DEBUG=smart-home:* node dist/server/main.js",
+    "compile-ui": "tsc -w -p tsconfig.ui.json",
+    "compile-server": "tsc -w -p tsconfig.server.json",
+    "start_pm2": "pm2 start server/main.js --name smart-home"
   },
   "dependencies": {
+    "@tuyapi/driver": "0.0.6",
     "debug": "^4.1.0",
     "express": "^4.16.2",
     "gpio": "^0.2.10",
@@ -16,7 +17,6 @@
     "screenfull": "^5.0.0",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
-    "tuyapi": "^5.1.3",
     "weather-js": "^2.0.0"
   },
   "devDependencies": {
@@ -26,7 +26,6 @@
     "@types/screenfull": "^4.1.0",
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
-    "typescript": "^3.7.3",
-    "watchify": "^3.11.1"
+    "typescript": "^3.7.3"
   }
 }

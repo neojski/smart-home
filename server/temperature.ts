@@ -5,40 +5,47 @@ import { Temperature } from "../shared/Temperature";
 
 const debug = require('debug')('smart-home:temperature');
 
-// https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing?view=all
-function doRead(deviceId: string) {
-  let filename = '/sys/bus/w1/devices/' + deviceId + '/w1_slave';
-  let result = fs.readFileSync(filename).toString();
-  if (/crc=.*YES/.test(result)) {
-    return (+result.match(/t=(-?\d+)/)![1]) / 1000;
-  } else {
-    throw 'No correct temperature found: ' + filename + '(' + result + ')';
+export default class {
+  temperatures: number[]
+  lastRead: string
+  id: string;
+  samples: number;
+
+  constructor(id: string, span: number, samples: number) {
+    this.temperatures = [];
+    this.id = id;
+    this.lastRead = timestamp();
+    this.samples = samples;
+
+    setInterval(() => this.loop, span);
+    this.loop();
   }
-}
 
-let temperatures: number[] = [];
-let lastRead: string = timestamp();
-function loop(samples: number) {
-  try {
-    temperatures.push(doRead('28-0216252dbfee'));
-    temperatures = temperatures.slice(-samples);
-    lastRead = timestamp();
-  } catch (e) {
-    debug(e);
+  // https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing?view=all
+  doRead() {
+    let filename = '/sys/bus/w1/devices/' + this.id + '/w1_slave';
+    let result = fs.readFileSync(filename).toString();
+    if (/crc=.*YES/.test(result)) {
+      return (+result.match(/t=(-?\d+)/)![1]) / 1000;
+    } else {
+      throw 'No correct temperature found: ' + filename + '(' + result + ')';
+    }
   }
-}
 
-function getResult(): Temperature {
-  return {
-    timestamp: lastRead,
-    data: median(temperatures)
-  };
-}
+  loop() {
+    try {
+      this.temperatures.push(this.doRead());
+      this.temperatures = this.temperatures.slice(-this.samples);
+      this.lastRead = timestamp();
+    } catch (e) {
+      debug(e);
+    }
+  }
 
-export default {
-  init: function (span: number, samples: number) {
-    setInterval(() => loop(samples), span);
-    loop(samples);
-    return getResult;
+  get(): Temperature {
+    return {
+      timestamp: this.lastRead,
+      data: median(this.temperatures)
+    };
   }
 }

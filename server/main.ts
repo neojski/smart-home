@@ -1,78 +1,90 @@
-import temperature from './temperature';
-import server from './server';
+import Temperature from './temperature';
 import timestamp from './timestamp';
-import socket from './socket';
+import Socket from './socket';
 import fs from 'fs';
-import purifier0 from './purifier'
+import Purifier from './purifier'
 import { mode } from 'miio';
 import { Data } from '../shared/Data';
+import Monitor from "./monitor"
+import express from 'express';
+import socket_io from 'socket.io';
+import http0 from 'http';
 
 const debug = require('debug')('smart-home:main');
+
+const app = express();
+const http = new http0.Server(app);
+const io = socket_io(http);
+const port = process.env.PORT || 3000;
 
 process.on('uncaughtException', function (exception) {
   console.log(exception);
 });
 
-setInterval(function () { }, 1000);
+app.use(express.static(__dirname + '/../ui'));
 
-(async function () {
-  // TODO: Seems like a bad idea to await module before starting processing the next
-  const monitor = await require('./monitor');
-  const purifier = await purifier0('192.168.0.22');
-  const getTemperature = temperature.init(1000, 5);
-  const tvSocket = await socket({ id: '1274756684f3ebb89107', key: '3a954c5db3c97828' });
-  const downHeatingSocket = await socket({ id: '12747566807d3a493f6c', key: '25005fc4127ac363' });
-  const upHeatingSocket = await socket({ id: '1274756684f3ebb897b5', key: 'da9c77e4545107c9' });
+const monitor = new Monitor(3);
+const purifier = new Purifier('192.168.0.22');
+const temperature = new Temperature('28-0216252dbfee', 1000, 5);
+const tvSocket = new Socket({ id: '1274756684f3ebb89107', key: '3a954c5db3c97828', ip: "192.168.0.40" });
+const downHeatingSocket = new Socket({ id: '12747566807d3a493f6c', key: '25005fc4127ac363', ip: "192.168.0.34" });
+const upHeatingSocket = new Socket({ id: '1274756684f3ebb897b5', key: 'da9c77e4545107c9', ip: "192.168.0.44" });
 
-  function readAndSend() {
-    let data: Data = {
-      timestamp: timestamp(),
-      temperature: getTemperature(),
-      purifier: purifier.getData(),
-      tvSocket: tvSocket.getData(),
-      upHeating: upHeatingSocket.getData(),
-      downHeating: downHeatingSocket.getData(),
-    };
-    debug('broadcast', data);
-    server.broadcast('data', data);
+function readAndSend() {
+  let data: Data = {
+    timestamp: timestamp(),
+    temperature: temperature.get(),
+    purifier: purifier.getData(),
+    tvSocket: tvSocket.getData(),
+    upHeating: upHeatingSocket.getData(),
+    downHeating: downHeatingSocket.getData(),
+  };
+  debug('broadcast', data);
 
-    fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
+  io.emit('broadcast', data);
+
+  fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
+}
+
+// "cron"
+setInterval(async function () {
+  async function setModeAndLog(mode: mode) {
+    debug('trying to set to', mode);
+    try {
+      await purifier.setMode(mode);
+      debug(new Date(), 'setMode(' + mode + ') succeeded');
+    } catch (e) {
+      debug(new Date(), 'setMode(' + mode + ')', e);
+    }
   }
 
-  // "cron"
-  setInterval(async function () {
-    async function setModeAndLog(mode: mode) {
-      debug('trying to set to', mode);
-      try {
-        await purifier.setMode(mode);
-        debug(new Date(), 'setMode(' + mode + ') succeeded');
-      } catch (e) {
-        debug(new Date(), 'setMode(' + mode + ')', e);
-      }
-    }
+  let date = new Date();
+  if (date.getHours() === 23 && date.getMinutes() === 0) {
+    await setModeAndLog('silent');
+    await monitor.set(false);
+  }
 
-    let date = new Date();
-    if (date.getHours() === 23 && date.getMinutes() === 0) {
-      await setModeAndLog('silent');
-      await monitor.set(false);
-    }
+  if (date.getHours() === 9 && date.getMinutes() === 0) {
+    await setModeAndLog('auto');
+  }
 
-    if (date.getHours() === 9 && date.getMinutes() === 0) {
-      await setModeAndLog('auto');
-    }
+  if (date.getHours() === 6 && date.getMinutes() === 0) {
+    await monitor.set(true);
+  }
+}, 10000);
 
-    if (date.getHours() === 6 && date.getMinutes() === 0) {
-      await monitor.set(true);
-    }
-  }, 10000);
+// read every half-minute
+setInterval(readAndSend, 30000);
+readAndSend();
 
-  // read every half-minute
-  setInterval(readAndSend, 30000);
-  readAndSend();
+tvSocket.onData(readAndSend);
+upHeatingSocket.onData(readAndSend);
+downHeatingSocket.onData(readAndSend);
 
-  tvSocket.on('data', readAndSend);
-  upHeatingSocket.on('data', readAndSend);
-  downHeatingSocket.on('data', readAndSend);
-
-  server.start();
-})();
+io.on('connection', function (socket: socket_io.Socket) {
+  // TODO: better type to match UI
+  socket.on('toggle-power', function () {
+    monitor.toggle();
+  });
+});
+http.listen(port, () => debug('listening on port ' + port));
