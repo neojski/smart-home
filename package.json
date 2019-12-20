@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "DEBUG=smart-home:* node dist/server/main.js",
+    "compile": "tsc -p tsconfig.ui.json && tsc -p tsconfig.server.json",
     "compile-ui": "tsc -w -p tsconfig.ui.json",
     "compile-server": "tsc -w -p tsconfig.server.json",
     "start_pm2": "pm2 start server/main.js --name smart-home"
