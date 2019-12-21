@@ -1,6 +1,6 @@
 export interface Socket {
   status?: boolean,
-  ip?: string,
+  ip: string | undefined,
   timestamp?: string,
   connected: boolean
 }
