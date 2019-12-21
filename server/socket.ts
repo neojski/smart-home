@@ -7,41 +7,6 @@ import { sleep } from './sleep';
 
 const debug0 = require('debug')('smart-home:socket');
 
-let finder = Promise.resolve("");
-async function find(id: string, key: string) {
-  await finder; // wait for previous find to finish because finder binds on port 6666
-  debug0({ id, key }, "starting find");
-  finder = new Promise(function (resolve, reject) {
-    const find = new Find();
-
-    function stop() {
-      find.removeAllListeners();
-      find.stop();
-    }
-
-    find.on('broadcast', function (data) {
-      const ip = data.ip;
-      if (data.gwId === id) {
-        debug0({ id, key }, "ip found", { ip });
-
-        stop();
-        resolve(ip);
-      } else {
-        debug0({ id, key }, "different device found", { data });
-      }
-    })
-
-    find.on('error', function (error) {
-      debug0({ id, key }, "find error");
-      stop();
-      reject(error);
-    });
-
-    find.start();
-  });
-  return finder;
-}
-
 export default class {
   data: Socket
   emitter: EventEmitter
@@ -59,7 +24,7 @@ export default class {
     let ip;
     while (true) {
       try {
-        ip = await find(id, key);
+        ip = await Find.find(id, key);
         break;
       } catch (e) {
         // TODO: return this to user as device general error
