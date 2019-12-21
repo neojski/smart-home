@@ -26,9 +26,9 @@ app.use(express.static(__dirname + '/../ui'));
 const monitor = new Monitor(3);
 const purifier = new Purifier('192.168.0.22');
 const temperature = new Temperature('28-0216252dbfee', 1000, 5);
-const tvSocket = new Socket({ id: '1274756684f3ebb89107', key: '3a954c5db3c97828', ip: "192.168.0.40" });
-const downHeatingSocket = new Socket({ id: '12747566807d3a493f6c', key: '25005fc4127ac363', ip: "192.168.0.34" });
-const upHeatingSocket = new Socket({ id: '1274756684f3ebb897b5', key: 'da9c77e4545107c9', ip: "192.168.0.44" });
+const tvSocket = new Socket({ id: '1274756684f3ebb89107', key: '3a954c5db3c97828' });
+const downHeatingSocket = new Socket({ id: '12747566807d3a493f6c', key: '25005fc4127ac363' });
+const upHeatingSocket = new Socket({ id: '1274756684f3ebb897b5', key: 'da9c77e4545107c9' });
 
 function readAndSend() {
   let data: Data = {

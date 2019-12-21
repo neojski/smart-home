@@ -1,24 +1,75 @@
 import timestamp from './timestamp';
 import EventEmitter from 'events';
 
-import { Device } from "@tuyapi/driver"
+import { Device, Find } from "@tuyapi/driver"
 import { Socket } from '../shared/Socket';
+import { sleep } from './sleep';
 
 const debug0 = require('debug')('smart-home:socket');
+
+let finder = Promise.resolve("");
+async function find(id: string, key: string) {
+  await finder; // wait for previous find to finish because finder binds on port 6666
+  debug0({ id, key }, "starting find");
+  finder = new Promise(function (resolve, reject) {
+    const find = new Find();
+
+    function stop() {
+      find.removeAllListeners();
+      find.stop();
+    }
+
+    find.on('broadcast', function (data) {
+      const ip = data.ip;
+      if (data.gwId === id) {
+        debug0({ id, key }, "ip found", { ip });
+
+        stop();
+        resolve(ip);
+      } else {
+        debug0({ id, key }, "different device found", { data });
+      }
+    })
+
+    find.on('error', function (error) {
+      debug0({ id, key }, "find error");
+      stop();
+      reject(error);
+    });
+
+    find.start();
+  });
+  return finder;
+}
 
 export default class {
   data: Socket
   emitter: EventEmitter
 
-  constructor({ id, key, ip }: { id: string, key: string, ip: string }) {
+  constructor({ id, key }: { id: string, key: string }) {
     this.emitter = new EventEmitter();
-    this.data = {};
+    this.data = {
+      connected: false
+    };
 
-    this.initialize({ id, key, ip });
+    this.initialize({ id, key });
   }
 
-  async initialize({ id, key, ip }: { id: string, key: string, ip: string }) {
-    let device = new Device({ id, key, ip });
+  async initialize({ id, key }: { id: string, key: string }) {
+    let ip;
+    while (true) {
+      try {
+        ip = await find(id, key);
+        break;
+      } catch (e) {
+        // TODO: return this to user as device general error
+        this.data.ip = e;
+        await sleep(10000);
+      }
+    }
+    this.data.ip = ip;
+
+    let device = new Device({ id, key, ip, heartbeatInterval: 5000 });
 
     function debug(...args: any) {
       debug0({ id, key }, ...args);
@@ -26,9 +77,15 @@ export default class {
 
     let isOn: boolean | undefined = undefined;
 
-    device.on('connected', () => { debug('connected'); });
+    device.on('connect', () => {
+      this.data.connected = true;
+
+      debug('connected');
+    });
 
     device.on('disconnected', () => {
+      this.data.connected = false;
+
       const reconnectTimeout = 10000;
       isOn = undefined; debug('disconnected; reconnecting in', { reconnectTimeout });
 
@@ -46,11 +103,9 @@ export default class {
 
       // sometimes this data is garbage
       isOn = raw[1] ?? isOn;
-      const data = {
-        status: isOn,
-        timestamp: timestamp()
-      };
-      this.data = data;
+      this.data.status = isOn;
+      this.data.timestamp = timestamp();
+      const data = this.getData();
       debug('socket data', { data, raw });
       this.emitter.emit('data', data);
     });
