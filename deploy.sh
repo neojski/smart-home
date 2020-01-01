@@ -20,12 +20,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-info 'Deploying to github'
+info 'Pushing to github'
 git push git@github.com:neojski/smart-home.git $git_arg
 
-info 'Deploying to pi'
-ssh pi 'cd ~/smart-home && git config --local receive.denyCurrentBranch updateInstead'
-git push pi:~/smart-home $git_arg
+info 'Running pull on pi'
+ssh pi 'cd ~/smart-home && git pull'
 
-info 'Running install on pi'
-ssh pi 'cd ~/smart-home && npm install && npm run compile' 
+info 'Deploying to pi'
+rsync -avz dist pi:~/smart-home
+
+info 'Restarting smart-home on pi'
+ssh pi 'pm2 restart smart-home'
