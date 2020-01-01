@@ -1,13 +1,8 @@
 {
   "scripts": {
     "start": "node dist/server/main.js",
-    "compile": "tsc -p tsconfig.ui.json && tsc -p tsconfig.server.json",
-    "compile-ui": "tsc -w -p tsconfig.ui.json",
-    "compile-server": "tsc -w -p tsconfig.server.json",
     "server-dev": "tsc -w -p tsconfig.server.json & nodemon dist/server/main.js",
-    "start_pm2": "pm2 start server/main.js --name smart-home",
-    "browserify": "browserify dist/ui/mirror.js -o dist/bundle.js",
-    "watchify": "watchify dist/ui/mirror.js -o dist/bundle.js"
+    "ui-dev": "tsc -w -p tsconfig.ui.json & watchify dist/ui/mirror.js -o dist/bundle.js"
   },
   "dependencies": {
     "@tuyapi/driver": "github:neojski/driver#fix-prepack",
