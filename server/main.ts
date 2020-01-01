@@ -21,8 +21,9 @@ process.on('uncaughtException', function (exception) {
   console.log(exception);
 });
 
-app.use(express.static(__dirname + '/../../ui'));
-app.use(express.static(__dirname + '/../../dist'));
+console.log(__dirname + "/../")
+app.use(express.static(__dirname + "/../"));
+app.use(express.static(__dirname + "/../../ui"));
 
 const monitor = new Monitor(3);
 const purifier = new Purifier('192.168.0.22');
