@@ -2,6 +2,7 @@ import screenfull0, { Screenfull } from 'screenfull';
 import nosleep from 'nosleep.js';
 import io from 'socket.io-client';
 import { Data } from '../shared/Data';
+import { broadcast } from '../shared/const';
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
@@ -53,7 +54,7 @@ const getHomeData = (function () {
   let data: Data = {};
 
   const socket = io();
-  socket.on('data', (x: Data) => {
+  socket.on(broadcast, (x: Data) => {
     data = x;
     console.log(data);
   });

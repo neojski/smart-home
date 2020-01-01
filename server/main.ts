@@ -9,6 +9,7 @@ import Monitor from "./monitor"
 import express from 'express';
 import socket_io from 'socket.io';
 import http0 from 'http';
+import { broadcast } from '../shared/const';
 
 const debug = require('debug')('smart-home:main');
 
@@ -41,9 +42,9 @@ function readAndSend() {
     upHeating: upHeatingSocket.getData(),
     downHeating: downHeatingSocket.getData(),
   };
-  debug('broadcast', data);
+  debug(broadcast, data);
 
-  io.emit('broadcast', data);
+  io.emit(broadcast, data);
 
   fs.appendFileSync('data.log', JSON.stringify(data) + '\n');
 }
