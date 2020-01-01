@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outFile": "./dist/ui.js",
-    "module": "system"
+    "outDir": "dist",
+    "module": "CommonJS"
   },
   "include": [
     "ui",

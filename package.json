@@ -4,7 +4,9 @@
     "compile": "tsc -p tsconfig.ui.json && tsc -p tsconfig.server.json",
     "compile-ui": "tsc -w -p tsconfig.ui.json",
     "compile-server": "tsc -w -p tsconfig.server.json",
-    "start_pm2": "pm2 start server/main.js --name smart-home"
+    "start_pm2": "pm2 start server/main.js --name smart-home",
+    "browserify": "browserify dist/ui/mirror.js -o dist/bundle.js",
+    "watchify": "watchify dist/ui/mirror.js -o dist/bundle.js"
   },
   "dependencies": {
     "@tuyapi/driver": "github:neojski/driver#fix-prepack",
@@ -27,6 +29,8 @@
     "@types/screenfull": "^4.1.0",
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
-    "typescript": "^3.7.3"
+    "browserify": "^16.5.0",
+    "typescript": "^3.7.3",
+    "watchify": "^3.11.1"
   }
 }
