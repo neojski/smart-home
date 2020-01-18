@@ -7,7 +7,7 @@ const debug = require('debug')('smart-home:temperature');
 
 export default class {
   temperatures: number[]
-  lastRead: string
+  lastRead?: string
   id: string;
   samples: number;
 

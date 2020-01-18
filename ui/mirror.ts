@@ -19,9 +19,25 @@ async function getJSONData(url: string) {
   return await response.json();
 }
 
-function updater({ url, hasTimestamp }: { url: string; hasTimestamp: boolean; }, callback: { (err: string | null, result?: any): void }) {
+const maxAcceptableAge = 60000; // in ms
+
+// TODO: all fields should have an age check
+function checkAge(lastUpdate?: Date) {
+  if (lastUpdate) {
+    const now = new Date();
+    const ageInMs = now.getTime() - lastUpdate.getTime();
+
+    if (ageInMs > maxAcceptableAge) {
+      return "last update " + Math.floor(ageInMs / 1000 / 60) + "m ago";
+    }
+    return false;
+  } else {
+    return "no timestamp";
+  }
+}
+
+function updater(url: string, callback: { (err: string | null, result?: any): void }) {
   const maxTries = 3;
-  const maxAcceptableAge = 60000; // in ms
 
   let error = function (e: string) {
     callback(e);
@@ -31,16 +47,7 @@ function updater({ url, hasTimestamp }: { url: string; hasTimestamp: boolean; },
   };
   async function update() {
     try {
-      let now = Date.now();
       let res = await getJSONData(url);
-      let timestamp = now;
-      if (hasTimestamp) {
-        timestamp = +new Date(res.timestamp);
-      }
-      let age = now - timestamp;
-      if (age > maxAcceptableAge) {
-        return error('Out of date. Last update: ' + timestamp);
-      }
       return ok(res);
     } catch (e) {
       return error("" + e);
@@ -106,7 +113,7 @@ const getTemperature = (function () {
 
   let remoteTemperature: { main: { temp: number; }; weather: { icon: string }[]; };
   let remoteError: null | string = initialError;
-  updater({ url, hasTimestamp: false }, function (err, result) {
+  updater(url, function (err, result) {
     remoteTemperature = result;
     remoteError = err;
   });
@@ -122,22 +129,34 @@ const getTemperature = (function () {
       remote = Math.round(remoteTemperature.main.temp) + '°C' + iconEl;
     }
 
-    function getLocalTemperature(temperature?: number) {
-      if (temperature !== undefined) {
-        if (!Number.isFinite(temperature)) {
-          throw temperature + ' is not a valid temperature';
+    function deserialiseDate(timestamp?: string) {
+      if (timestamp) {
+        return new Date(timestamp);
+      }
+      return undefined;
+    }
+
+    function getLocalTemperature(temperature?: number, timestamp?: Date) {
+      const error = checkAge(timestamp);
+      if (error === false) {
+        if (temperature !== undefined) {
+          if (!Number.isFinite(temperature)) {
+            throw temperature + ' is not a valid temperature';
+          } else {
+            return Math.round(temperature) + '°C';
+          }
         } else {
-          return Math.round(temperature) + '°C';
+          return errorSpan("no temperature");
         }
       } else {
-        return errorSpan("temperature undefined");
+        return errorSpan(error);
       }
     }
     // TODO: default to error not false
     let upHeating = getHomeData().upHeating?.status ?? false;
     let downHeating = getHomeData().downHeating?.status ?? false;
-    let upTemperature = getLocalTemperature(getHomeData().purifier?.temperature);
-    let downTemperature = getLocalTemperature(getHomeData().temperature?.data);
+    let upTemperature = getLocalTemperature(getHomeData().purifier?.temperature, deserialiseDate(getHomeData().purifier?.timestamp));
+    let downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp));
     return '<span style="display: inline-block; margin: 0 50px"> \
               <span style="display: inline-block; font-size: 60%; text-align: right"> \
                 <div><span style="display: inline-block; text-align: right; clear: right; ' + heatingStyle(upHeating) + '">' + upTemperature + '</span></div>\
@@ -161,7 +180,7 @@ let getTfl = (function () {
 
   let data: { timeToStation: number; towards: string }[];
   let error: string | null = initialError;
-  updater({ url, hasTimestamp: false }, function (err, result) {
+  updater(url, function (err, result) {
     error = err;
     data = result;
   });

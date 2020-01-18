@@ -8,7 +8,4 @@ export interface Data {
   upHeating?: Socket;
   downHeating?: Socket;
   temperature?: Temperature;
-
-  // TODO: home data timestamps should be per device really and they already mostly are
-  timestamp?: string;
 }

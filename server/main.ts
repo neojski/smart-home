@@ -1,5 +1,4 @@
 import Temperature from './temperature';
-import timestamp from './timestamp';
 import Socket from './socket';
 import fs from 'fs';
 import Purifier from './purifier'
@@ -35,7 +34,6 @@ const upHeatingSocket = new Socket({ id: '1274756684f3ebb897b5', key: 'da9c77e45
 
 function readAndSend() {
   let data: Data = {
-    timestamp: timestamp(),
     temperature: temperature.get(),
     purifier: purifier.getData(),
     tvSocket: tvSocket.getData(),
@@ -78,7 +76,6 @@ setInterval(async function () {
 
 // read every half-minute
 setInterval(readAndSend, 30000);
-readAndSend();
 
 tvSocket.onData(readAndSend);
 upHeatingSocket.onData(readAndSend);
@@ -89,5 +86,7 @@ io.on('connection', function (socket: socket_io.Socket) {
   socket.on('toggle-power', function () {
     monitor.toggle();
   });
+
+  readAndSend();
 });
 http.listen(port, () => debug('listening on port ' + port));
