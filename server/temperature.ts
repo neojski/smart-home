@@ -16,7 +16,7 @@ export default class {
     this.id = id;
     this.samples = samples;
 
-    setInterval(() => this.loop, span);
+    setInterval(() => this.loop(), span);
     this.loop();
   }
 
