@@ -14,7 +14,6 @@ export default class {
   constructor(id: string, span: number, samples: number) {
     this.temperatures = [];
     this.id = id;
-    this.lastRead = timestamp();
     this.samples = samples;
 
     setInterval(() => this.loop, span);
