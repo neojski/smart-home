@@ -19,15 +19,15 @@ async function getJSONData(url: string) {
   return await response.json();
 }
 
-const maxAcceptableAge = 60000; // in ms
+const maxAcceptableAgeMS = 60000;
 
 // TODO: all fields should have an age check
-function checkAge(lastUpdate?: Date) {
+function checkAge(lastUpdate: Date | undefined, maxAcceptableAgeMS: number) {
   if (lastUpdate) {
     const now = new Date();
     const ageInMs = now.getTime() - lastUpdate.getTime();
 
-    if (ageInMs > maxAcceptableAge) {
+    if (ageInMs > maxAcceptableAgeMS) {
       return "last update " + Math.floor(ageInMs / 1000 / 60) + "m ago";
     }
     return false;
@@ -54,7 +54,7 @@ function updater(url: string, callback: { (err: string | null, result?: any): vo
     }
   }
   update();
-  setInterval(update, maxAcceptableAge / maxTries);
+  setInterval(update, maxAcceptableAgeMS / maxTries);
 }
 
 const getHomeData = (function () {
@@ -136,8 +136,8 @@ const getTemperature = (function () {
       return undefined;
     }
 
-    function getLocalTemperature(temperature?: number, timestamp?: Date) {
-      const error = checkAge(timestamp);
+    function getLocalTemperature(temperature: number | undefined, timestamp: Date | undefined, maxAcceptableAgeMS: number) {
+      const error = checkAge(timestamp, maxAcceptableAgeMS);
       if (error === false) {
         if (temperature !== undefined) {
           if (!Number.isFinite(temperature)) {
@@ -155,8 +155,10 @@ const getTemperature = (function () {
     // TODO: default to error not false
     let upHeating = getHomeData().upHeating?.status ?? false;
     let downHeating = getHomeData().downHeating?.status ?? false;
-    let upTemperature = getLocalTemperature(getHomeData().purifier?.temperature, deserialiseDate(getHomeData().purifier?.timestamp));
-    let downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp));
+    let upTemperature =
+      // I don't actually know how long it takes for purifier to send updates
+      getLocalTemperature(getHomeData().purifier?.temperature, deserialiseDate(getHomeData().purifier?.timestamp), 30 * 60 * 1000);
+    let downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp), 60 * 1000);
     return '<span style="display: inline-block; margin: 0 50px"> \
               <span style="display: inline-block; font-size: 60%; text-align: right"> \
                 <div><span style="display: inline-block; text-align: right; clear: right; ' + heatingStyle(upHeating) + '">' + upTemperature + '</span></div>\
