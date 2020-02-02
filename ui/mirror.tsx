@@ -6,6 +6,8 @@ import { broadcast } from "../shared/const";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Socket } from "../shared/Socket";
+import { Clock } from "./Clock";
+import { pad } from "./pad";
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
@@ -225,10 +227,6 @@ const getTemperature = (function() {
   };
 })();
 
-function pad(n: number) {
-  return n < 10 ? "0" + n : "" + n;
-}
-
 const getTfl = (function() {
   // Chalk Farm: 940GZZLUCFM
   // Belsize Park: 940GZZLUBZP
@@ -357,47 +355,6 @@ const TvSocket = ({ data }: { data?: Socket }) => {
     return <div style={style}>⏻</div>;
   }
   return null;
-};
-
-const Clock = () => {
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const date = new Date();
-      setDate(date);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div
-      style={{
-        fontSize: "300px",
-        fontWeight: 300,
-        textAlign: "center"
-      }}
-    >
-      {pad(date.getHours())}
-      <span
-        style={{
-          visibility: date.getSeconds() % 2 === 0 ? "hidden" : "visible"
-        }}
-      >
-        :
-      </span>
-      {pad(date.getMinutes())}
-      <span
-        style={{
-          fontSize: "30%",
-          display: "inline-block",
-          transform: "translate(0, -30px) rotate(-90deg)"
-        }}
-      >
-        {pad(date.getSeconds())}
-      </span>
-    </div>
-  );
 };
 
 function Main() {
