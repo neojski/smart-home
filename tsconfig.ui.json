@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "CommonJS",
+    "jsx": "react",
   },
   "include": [
     "ui",

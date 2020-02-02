@@ -179,16 +179,29 @@ const getTfl = (function () {
   // Belsize Park: 940GZZLUBZP
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
-  let data: { timeToStation: number; towards: string, vehicleId: string }[];
+  type vehicle = { timeToStation: number; towards: string, vehicleId: string };
+
+  let data: vehicle[] | undefined;
+  let previousData: vehicle[] | undefined;
   let error: string | null = initialError;
   updater(url, function (err, result) {
     error = err;
+    previousData = data;
     data = result;
   });
+
+  function isNewVehicle(vehicle: vehicle) {
+    return previousData && !(previousData.findIndex((vehicle2) => {
+      return vehicle2.vehicleId === vehicle.vehicleId;
+    }) > -1);
+  }
 
   return function () {
     if (error) {
       return <div>{errorSpan(error)}</div>;
+    }
+    if (!data) {
+      return <div>{errorSpan("No data from API")}</div>;
     }
     return <div style={{ margin: "40px" }}>Morden via Bank: <ul style={{ position: "relative" }}>{data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
@@ -214,9 +227,17 @@ const getTfl = (function () {
         {text}
       </div>;
 
+      const top = (() => {
+        if (isNewVehicle(x)) {
+          return window.screen.height + "px";
+        } else {
+          return i * 58 + "px";
+        }
+      })();
+
       return <li key={x.vehicleId} style={{
         position: "absolute",
-        top: i * 58 + "px",
+        top: top,
         whiteSpace: "nowrap",
         margin: "0 0 10px",
         ...transition
