@@ -42,15 +42,15 @@ function checkAge(lastUpdate: Date | undefined, maxAcceptableAgeMS: number) {
 function updater(url: string, callback: { (err: string | null, result?: any): void }) {
   const maxTries = 3;
 
-  let error = function (e: string) {
+  const error = function (e: string) {
     callback(e);
   };
-  let ok = function (res: any) {
+  const ok = function (res: any) {
     callback(null, res);
   };
   async function update() {
     try {
-      let res = await getJSONData(url);
+      const res = await getJSONData(url);
       return ok(res);
     } catch (e) {
       return error("" + e);
@@ -156,12 +156,12 @@ const getTemperature = (function () {
       }
     }
     // TODO: default to error not false
-    let upHeating = getHomeData().upHeating?.status ?? false;
-    let downHeating = getHomeData().downHeating?.status ?? false;
-    let upTemperature =
+    const upHeating = getHomeData().upHeating?.status ?? false;
+    const downHeating = getHomeData().downHeating?.status ?? false;
+    const upTemperature =
       // I don't actually know how long it takes for purifier to send updates
       getLocalTemperature(getHomeData().purifier?.temperature, deserialiseDate(getHomeData().purifier?.timestamp), 30 * 60 * 1000);
-    let downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp), 60 * 1000);
+    const downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp), 60 * 1000);
     return <span style={{ display: "inline-block", margin: "0 50px" }}>
       <span style={{ display: "inline-block", fontSize: "60%", textAlign: "right" }}>
         <div><span style={{ display: "inline-block", textAlign: "right", clear: "right", ...heatingStyle(upHeating) }}>{upTemperature}</span></div>
@@ -170,13 +170,11 @@ const getTemperature = (function () {
   };
 })();
 
-let on = true;
-
 function pad(n: number) {
   return n < 10 ? '0' + n : '' + n;
 }
 
-let getTfl = (function () {
+const getTfl = (function () {
   // Chalk Farm: 940GZZLUCFM
   // Belsize Park: 940GZZLUBZP
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
@@ -197,12 +195,12 @@ let getTfl = (function () {
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
     }).map((x, i) => {
-      let time = x.timeToStation;
-      let text = Math.floor(time / 60) + ':' + pad(time % 60);
-      let width = (time / 60) + 'cm';
-      let transition = { transition: "1s" };
-      let whiteText = <div style={{ color: "#fff" }}>{text}</div>;
-      let blackText = <div style={{
+      const time = x.timeToStation;
+      const text = Math.floor(time / 60) + ':' + pad(time % 60);
+      const width = (time / 60) + 'cm';
+      const transition = { transition: "1s" };
+      const whiteText = <div style={{ color: "#fff" }}>{text}</div>;
+      const blackText = <div style={{
         color: "#000",
         position: "absolute",
         left: 0,
@@ -251,6 +249,8 @@ const TvSocket = ({ data }: { data?: Socket }) => {
   }
   return null;
 }
+
+let on = true;
 
 (window as any).ticking = true;
 function run() {
