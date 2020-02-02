@@ -273,13 +273,11 @@ const TvSocket = ({ data }: { data?: Socket }) => {
 
 const Clock = () => {
   const [date, setDate] = useState(new Date());
-  const [on, setOn] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
       const date = new Date();
       setDate(date)
-      setOn(!on);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -290,7 +288,7 @@ const Clock = () => {
     textAlign: "center"
   }}>
     {pad(date.getHours())}
-    <span style={{ visibility: on ? "hidden" : "visible" }}>:</span>
+    <span style={{ visibility: date.getSeconds() % 2 === 0 ? "hidden" : "visible" }}>:</span>
     {pad(date.getMinutes())}
     <span style={{
       fontSize: "30%",
