@@ -3,6 +3,9 @@ import nosleep from 'nosleep.js';
 import io from 'socket.io-client';
 import { Data } from '../shared/Data';
 import { broadcast } from '../shared/const';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Socket } from '../shared/Socket';
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
@@ -10,7 +13,7 @@ const screenfull = screenfull0 as Screenfull;
 const initialError = '↻';
 
 function errorSpan(c: string) {
-  return '<span class="error">' + c + '</span>';
+  return <span className="error">{c}</span>;
 }
 
 async function getJSONData(url: string) {
@@ -78,9 +81,9 @@ const getHomeData = (function () {
 
 function heatingStyle(isOn: boolean) {
   if (isOn) {
-    return 'border-radius:30px; background: #fff; color: #000';
+    return { borderRadius: "30px", background: "#fff", color: "#000" }
   } else {
-    return '';
+    return {};
   }
 }
 
@@ -125,8 +128,8 @@ const getTemperature = (function () {
     } else {
       const iconKey = remoteTemperature.weather[0].icon;
       const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
-      const iconEl = icon !== undefined ? '<span class="icon ' + icon + '"></span>' : '?';
-      remote = Math.round(remoteTemperature.main.temp) + '°C' + iconEl;
+      const iconEl = icon !== undefined ? <span className={"icon" + icon}></span> : '?';
+      remote = <span>{Math.round(remoteTemperature.main.temp)}°C{iconEl}</span>;
     }
 
     function deserialiseDate(timestamp?: string) {
@@ -159,16 +162,14 @@ const getTemperature = (function () {
       // I don't actually know how long it takes for purifier to send updates
       getLocalTemperature(getHomeData().purifier?.temperature, deserialiseDate(getHomeData().purifier?.timestamp), 30 * 60 * 1000);
     let downTemperature = getLocalTemperature(getHomeData().temperature?.data, deserialiseDate(getHomeData().temperature?.timestamp), 60 * 1000);
-    return '<span style="display: inline-block; margin: 0 50px"> \
-              <span style="display: inline-block; font-size: 60%; text-align: right"> \
-                <div><span style="display: inline-block; text-align: right; clear: right; ' + heatingStyle(upHeating) + '">' + upTemperature + '</span></div>\
-                <div><span style="display: inline-block; margin-right: 80px; ' + heatingStyle(downHeating) + '">' + downTemperature + '</span></div>\
-              </span> | ' + remote +
-      '</span>';
+    return <span style={{ display: "inline-block", margin: "0 50px" }}>
+      <span style={{ display: "inline-block", fontSize: "60%", textAlign: "right" }}>
+        <div><span style={{ display: "inline-block", textAlign: "right", clear: "right", ...heatingStyle(upHeating) }}>{upTemperature}</span></div>
+        <div><span style={{ display: "inline-block", marginRight: "80px", ...heatingStyle(downHeating) }}>{downTemperature}</span></div >
+      </span> | {remote}</span>;
   };
 })();
 
-const contents = document.getElementById('contents');
 let on = true;
 
 function pad(n: number) {
@@ -180,7 +181,7 @@ let getTfl = (function () {
   // Belsize Park: 940GZZLUBZP
   const url = 'https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804';
 
-  let data: { timeToStation: number; towards: string }[];
+  let data: { timeToStation: number; towards: string, vehicleId: string }[];
   let error: string | null = initialError;
   updater(url, function (err, result) {
     error = err;
@@ -189,9 +190,9 @@ let getTfl = (function () {
 
   return function () {
     if (error) {
-      return '<div>' + errorSpan(error) + '</div>';
+      return <div>{errorSpan(error)}</div>;
     }
-    return '<div style="margin: 40px">Morden via Bank: <ul>' + data.sort((x, y) => {
+    return <div style={{ margin: "40px" }}>Morden via Bank: <ul>{data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
@@ -199,49 +200,63 @@ let getTfl = (function () {
       let time = x.timeToStation;
       let text = Math.floor(time / 60) + ':' + pad(time % 60);
       let width = (time / 60) + 'cm';
-      let whiteText = '<div style="color: #fff">' + text + '</div>';
-      let blackText = '<div style="color: #000; position: absolute; left: 0; top: 0; background: #fff; width: ' + width + '; overflow: hidden; border-radius: 3px">' + text + '</div>';
+      let whiteText = <div style={{ color: "#fff" }}>{text}</div>;
+      let blackText = <div style={{ color: "#000", position: "absolute", left: 0, top: 0, background: "#fff", width: width, overflow: "hidden", borderRadius: "3px" }}>
+        {text}
+      </div>;
 
-      return '<li style="position: relative; white-space: nowrap; margin: 0 0 10px">' + whiteText + blackText + '</li>';
-    }).join(' ') + '</ul></div>';
+      return <li key={x.vehicleId} style={{ position: "relative", whiteSpace: "nowrap", margin: "0 0 10px" }}>{whiteText}{blackText}</li>;
+    })}</ul></div>;
   }
 })();
 
-function getAqi() {
+const Aqi = ({ aqi }: { aqi: number | undefined }) => {
   let local;
-
-  let aqi = getHomeData().purifier?.aqi;
   if (aqi !== undefined) {
     local = Math.round(aqi);
   } else {
     local = errorSpan("purifier undefined");
   }
-  return '<div>' + local + ' <span class="pm25">PM2.5</span></div>';
-}
+  return <div>{local}<span className="pm25">PM2.5</span></div>;
+};
 
-function getTvSocket() {
-  let data = getHomeData().tvSocket;
+const TvSocket = ({ data }: { data?: Socket }) => {
   if (data != null && data.status != null) {
-    return '<div style="display: inline-block; width: 30px; height: 30px; line-height: 30px; text-align:center;' + heatingStyle(data.status) + '">⏻</div>';
+    const style = {
+      ...heatingStyle(data.status),
+      display: "inline-block",
+      width: "30px",
+      height: "30px",
+      lineHeight: "30px",
+      textAlign: "center",
+    } as const;
+    return <div style={style}>⏻</div >;
   }
-  return '';
+  return null;
 }
 
 (window as any).ticking = true;
 function run() {
+  const contents = document.getElementById('contents');
   if (!(window as any).ticking) return;
 
   on = !on;
-  let colon = '<span style="visibility:' + (on ? "hidden" : "visible") + '">:</span>';
-  let date = new Date();
-  let data = '';
-  data += '<div class="aqi">' + getAqi() + '</div>';
-  data += '<div class="clock">' + pad(date.getHours()) + colon + pad(date.getMinutes()) + '<span class="secs">' + pad(date.getSeconds()) + '</span></div>';
-  data += '<div class="tvSocket">' + getTvSocket() + '</div>';
-  data += '<div class="weather">' + getTemperature() + '</div>';
-  data += '<div class="trains">' + getTfl() + '</div>';
 
-  contents!.innerHTML = data;
+  const date = new Date();
+
+  const element = <div>
+    <div className="aqi"><Aqi aqi={getHomeData().purifier?.aqi} /></div>
+    <div className="clock">
+      {pad(date.getHours())}
+      <span style={{ visibility: on ? "hidden" : "visible" }}>:</span>
+      {pad(date.getMinutes())}<span className="secs">{pad(date.getSeconds())}</span>
+    </div>
+    <div className="tvSocket"><TvSocket data={getHomeData().tvSocket} /></div>
+    <div className="weather">{getTemperature()}</div>
+    <div className="trains">{getTfl()}</div>
+  </div>;
+
+  ReactDOM.render(element, contents);
 }
 setInterval(run, 1000);
 run();
@@ -258,3 +273,6 @@ document.onclick = function () {
     noSleep.disable();
   }
 };
+
+
+
