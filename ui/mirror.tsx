@@ -201,7 +201,17 @@ let getTfl = (function () {
       let text = Math.floor(time / 60) + ':' + pad(time % 60);
       let width = (time / 60) + 'cm';
       let whiteText = <div style={{ color: "#fff" }}>{text}</div>;
-      let blackText = <div style={{ color: "#000", position: "absolute", left: 0, top: 0, background: "#fff", width: width, overflow: "hidden", borderRadius: "3px" }}>
+      let blackText = <div style={{
+        color: "#000",
+        position: "absolute",
+        left: 0,
+        top: 0,
+        background: "#fff",
+        width: width,
+        overflow: "hidden",
+        borderRadius: "3px",
+        transition: "1s"
+      }}>
         {text}
       </div>;
 
