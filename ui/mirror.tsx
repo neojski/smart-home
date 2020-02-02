@@ -192,14 +192,15 @@ let getTfl = (function () {
     if (error) {
       return <div>{errorSpan(error)}</div>;
     }
-    return <div style={{ margin: "40px" }}>Morden via Bank: <ul>{data.sort((x, y) => {
+    return <div style={{ margin: "40px" }}>Morden via Bank: <ul style={{ position: "relative" }}>{data.sort((x, y) => {
       return x.timeToStation - y.timeToStation;
     }).filter(x => {
       return x.towards.indexOf('Bank') > -1;
-    }).map(x => {
+    }).map((x, i) => {
       let time = x.timeToStation;
       let text = Math.floor(time / 60) + ':' + pad(time % 60);
       let width = (time / 60) + 'cm';
+      let transition = { transition: "1s" };
       let whiteText = <div style={{ color: "#fff" }}>{text}</div>;
       let blackText = <div style={{
         color: "#000",
@@ -210,12 +211,18 @@ let getTfl = (function () {
         width: width,
         overflow: "hidden",
         borderRadius: "3px",
-        transition: "1s"
+        ...transition
       }}>
         {text}
       </div>;
 
-      return <li key={x.vehicleId} style={{ position: "relative", whiteSpace: "nowrap", margin: "0 0 10px" }}>{whiteText}{blackText}</li>;
+      return <li key={x.vehicleId} style={{
+        position: "absolute",
+        top: i * 58 + "px",
+        whiteSpace: "nowrap",
+        margin: "0 0 10px",
+        ...transition
+      }}>{whiteText}{blackText}</li>;
     })}</ul></div>;
   }
 })();
