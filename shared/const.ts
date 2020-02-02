@@ -1,1 +1,1 @@
-export const broadcast = 'broadcast';
+export const broadcast = "broadcast";

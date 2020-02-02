@@ -9,12 +9,10 @@
     "noFallthroughCasesInSwitch": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
-    "lib": [
-      "es5",
-      "es6",
-      "dom"
-    ],
+    "lib": ["es5", "es6", "dom"],
+
     "moduleResolution": "node",
-    "jsx": "react",
+
+    "jsx": "react"
   }
 }

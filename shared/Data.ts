@@ -1,6 +1,6 @@
-import { Purifier } from './Purifier';
-import { Temperature } from './Temperature';
-import { Socket } from './Socket';
+import { Purifier } from "./Purifier";
+import { Temperature } from "./Temperature";
+import { Socket } from "./Socket";
 
 export interface Data {
   tvSocket?: Socket;

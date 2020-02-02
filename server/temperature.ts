@@ -1,13 +1,13 @@
-import fs from 'fs';
-import timestamp from './timestamp';
-import { median } from './median';
+import fs from "fs";
+import timestamp from "./timestamp";
+import { median } from "./median";
 import { Temperature } from "../shared/Temperature";
 
-const debug = require('debug')('smart-home:temperature');
+const debug = require("debug")("smart-home:temperature");
 
 export default class {
-  temperatures: number[]
-  lastRead?: string
+  temperatures: number[];
+  lastRead?: string;
   id: string;
   samples: number;
 
@@ -22,12 +22,12 @@ export default class {
 
   // https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing?view=all
   doRead() {
-    let filename = '/sys/bus/w1/devices/' + this.id + '/w1_slave';
+    let filename = "/sys/bus/w1/devices/" + this.id + "/w1_slave";
     let result = fs.readFileSync(filename).toString();
     if (/crc=.*YES/.test(result)) {
-      return (+result.match(/t=(-?\d+)/)![1]) / 1000;
+      return +result.match(/t=(-?\d+)/)![1] / 1000;
     } else {
-      throw 'No correct temperature found: ' + filename + '(' + result + ')';
+      throw "No correct temperature found: " + filename + "(" + result + ")";
     }
   }
 
