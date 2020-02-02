@@ -3,7 +3,7 @@ import nosleep from 'nosleep.js';
 import io from 'socket.io-client';
 import { Data } from '../shared/Data';
 import { broadcast } from '../shared/const';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Socket } from '../shared/Socket';
 
@@ -271,33 +271,77 @@ const TvSocket = ({ data }: { data?: Socket }) => {
   return null;
 }
 
-let on = true;
+const Clock = () => {
+  const [date, setDate] = useState(new Date());
+  const [on, setOn] = useState(true);
 
-(window as any).ticking = true;
-function run() {
-  const contents = document.getElementById('contents');
-  if (!(window as any).ticking) return;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date();
+      setDate(date)
+      setOn(!on);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  on = !on;
+  return <div style={{
+    fontSize: "300px",
+    fontWeight: 300,
+    textAlign: "center"
+  }}>
+    {pad(date.getHours())}
+    <span style={{ visibility: on ? "hidden" : "visible" }}>:</span>
+    {pad(date.getMinutes())}
+    <span style={{
+      fontSize: "30%",
+      display: "inline-block",
+      transform: "translate(0, -30px) rotate(-90deg)"
+    }}>{pad(date.getSeconds())}</span>
+  </div>
+};
 
-  const date = new Date();
+function Main() {
+  function computeAqi() {
+    return getHomeData().purifier?.aqi;
+  }
 
-  const element = <div>
-    <div className="aqi"><Aqi aqi={getHomeData().purifier?.aqi} /></div>
-    <div className="clock">
-      {pad(date.getHours())}
-      <span style={{ visibility: on ? "hidden" : "visible" }}>:</span>
-      {pad(date.getMinutes())}<span className="secs">{pad(date.getSeconds())}</span>
-    </div>
-    <div className="tvSocket"><TvSocket data={getHomeData().tvSocket} /></div>
-    <div className="weather">{getTemperature()}</div>
-    <div className="trains">{getTfl()}</div>
+  function computeTvSocket() {
+    return getHomeData().tvSocket;
+  }
+
+  function computeTemperature() {
+    return getTemperature();
+  }
+
+  function computeTfl() {
+    return getTfl();
+  }
+
+  let [aqi, setAqi] = useState(computeAqi());
+  let [tvSocket, setTvSocket] = useState(computeTvSocket());
+  let [temperature, setTemperature] = useState(computeTemperature());
+  let [tfl, setTfl] = useState(computeTfl());
+
+  useEffect(() => {
+    const interval = setInterval(function () {
+      setAqi(computeAqi());
+      setTvSocket(computeTvSocket());
+      setTemperature(computeTemperature());
+      setTfl(computeTfl());
+    }, 1000);
+    return () => { clearInterval(interval) }
+  }, []);
+
+  return <div>
+    <div className="aqi"><Aqi aqi={aqi} /></div>
+    <div><Clock /></div>
+    <div className="tvSocket"><TvSocket data={tvSocket} /></div>
+    <div className="weather">{temperature}</div>
+    <div className="trains">{tfl}</div>
   </div>;
-
-  ReactDOM.render(element, contents);
 }
-setInterval(run, 1000);
-run();
+
+ReactDOM.render(<Main />, document.getElementById('contents'));
 
 let fullscreen = false;
 const noSleep = new nosleep();

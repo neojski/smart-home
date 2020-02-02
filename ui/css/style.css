@@ -42,16 +42,6 @@ html {
   display: inline-block;
   transform-origin: bottom left;
 }
-.clock {
-  font-size: 300px;
-  font-weight: 300;
-  text-align: center;
-}
-.clock .secs {
-  font-size: 30%;
-  display: inline-block;
-  transform: translate(0, -30px) rotate(-90deg);
-}
 .trains {
   font-size: 40px;
 }
