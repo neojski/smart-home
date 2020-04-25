@@ -7,25 +7,18 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Socket } from "../shared/Socket";
 import { Clock } from "./Clock";
-import { pad } from "./pad";
+import { Aqi } from "./Aqi";
+import { getJSONData } from "./getJSONData";
+import { errorSpan } from "./errorSpan";
+import { Tfl } from "./Tfl";
+import { heatingStyle } from "./heatingStyle";
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
 
-const initialError = "↻";
-
-function errorSpan(c: string) {
-  return <span className="error">{c}</span>;
-}
-
-async function getJSONData(url: string) {
-  // around 2019-12-11 tfl started sending stale responses so we add this ugly cache busting URL param
-  const response = await fetch(url + ("&cache" + Date.now()));
-  return await response.json();
-}
+export const initialError = "↻";
 
 const maxAcceptableAgeMS = 60000;
-
 // TODO: all fields should have an age check
 function checkAge(lastUpdate: Date | undefined, maxAcceptableAgeMS: number) {
   if (lastUpdate) {
@@ -83,14 +76,6 @@ const getHomeData = (function() {
     return data;
   };
 })();
-
-function heatingStyle(isOn: boolean) {
-  if (isOn) {
-    return { borderRadius: "30px", background: "#fff", color: "#000" };
-  } else {
-    return {};
-  }
-}
 
 // returns temperature or null if not available
 const getTemperature = (function() {
@@ -227,122 +212,7 @@ const getTemperature = (function() {
   };
 })();
 
-const getTfl = (function() {
-  // Chalk Farm: 940GZZLUCFM
-  // Belsize Park: 940GZZLUBZP
-  const url =
-    "https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804";
-
-  type vehicle = { timeToStation: number; towards: string; vehicleId: string };
-
-  let data: vehicle[] | undefined;
-  let previousData: vehicle[] | undefined;
-  let error: string | null = initialError;
-  updater(url, function(err, result) {
-    error = err;
-    previousData = data;
-    data = result;
-  });
-
-  function isNewVehicle(vehicle: vehicle) {
-    return (
-      previousData &&
-      !(
-        previousData.findIndex(vehicle2 => {
-          return vehicle2.vehicleId === vehicle.vehicleId;
-        }) > -1
-      )
-    );
-  }
-
-  return function() {
-    if (error) {
-      return <div>{errorSpan(error)}</div>;
-    }
-    if (!data) {
-      return <div>{errorSpan("No data from API")}</div>;
-    }
-    return (
-      <div style={{ margin: "40px" }}>
-        Morden via Bank:{" "}
-        <ul style={{ position: "relative" }}>
-          {data
-            .sort((x, y) => {
-              return x.timeToStation - y.timeToStation;
-            })
-            .filter(x => {
-              return x.towards.indexOf("Bank") > -1;
-            })
-            .map((x, i) => {
-              const time = x.timeToStation;
-              const text = Math.floor(time / 60) + ":" + pad(time % 60);
-              const width = time / 60 + "cm";
-              const transition = { transition: "1s" };
-              const whiteText = <div style={{ color: "#fff" }}>{text}</div>;
-              const blackText = (
-                <div
-                  style={{
-                    color: "#000",
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    background: "#fff",
-                    width: width,
-                    overflow: "hidden",
-                    borderRadius: "3px",
-                    ...transition
-                  }}
-                >
-                  {text}
-                </div>
-              );
-
-              const top = (() => {
-                if (isNewVehicle(x)) {
-                  return window.screen.height + "px";
-                } else {
-                  return i * 58 + "px";
-                }
-              })();
-
-              return (
-                <li
-                  key={x.vehicleId}
-                  style={{
-                    position: "absolute",
-                    top: top,
-                    whiteSpace: "nowrap",
-                    margin: "0 0 10px",
-                    ...transition
-                  }}
-                >
-                  {whiteText}
-                  {blackText}
-                </li>
-              );
-            })}
-        </ul>
-      </div>
-    );
-  };
-})();
-
-const Aqi = ({ aqi }: { aqi: number | undefined }) => {
-  let local;
-  if (aqi !== undefined) {
-    local = Math.round(aqi);
-  } else {
-    local = errorSpan("purifier undefined");
-  }
-  return (
-    <div>
-      {local}
-      <span className="pm25">PM2.5</span>
-    </div>
-  );
-};
-
-const TvSocket = ({ data }: { data?: Socket }) => {
+function TvSocket({ data }: { data?: Socket }) {
   if (data != null && data.status != null) {
     const style = {
       ...heatingStyle(data.status),
@@ -355,7 +225,7 @@ const TvSocket = ({ data }: { data?: Socket }) => {
     return <div style={style}>⏻</div>;
   }
   return null;
-};
+}
 
 function Main() {
   function computeAqi() {
@@ -370,21 +240,15 @@ function Main() {
     return getTemperature();
   }
 
-  function computeTfl() {
-    return getTfl();
-  }
-
   let [aqi, setAqi] = useState(computeAqi());
   let [tvSocket, setTvSocket] = useState(computeTvSocket());
   let [temperature, setTemperature] = useState(computeTemperature());
-  let [tfl, setTfl] = useState(computeTfl());
 
   useEffect(() => {
     const interval = setInterval(function() {
       setAqi(computeAqi());
       setTvSocket(computeTvSocket());
       setTemperature(computeTemperature());
-      setTfl(computeTfl());
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -403,7 +267,9 @@ function Main() {
         <TvSocket data={tvSocket} />
       </div>
       <div className="weather">{temperature}</div>
-      <div className="trains">{tfl}</div>
+      <div className="trains">
+        <Tfl />
+      </div>
     </div>
   );
 }
