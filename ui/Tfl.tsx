@@ -30,7 +30,7 @@ export function Tfl() {
       }
     }
     update();
-    const interval = setInterval(update, 1000);
+    const interval = setInterval(update, 10000);
     return () => clearInterval(interval);
   }, []);
 
