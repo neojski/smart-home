@@ -1,5 +1,5 @@
 import timestamp from "./timestamp";
-import EventEmitter from "events";
+import { EventEmitter } from "events";
 
 import { Device, Find } from "@tuyapi/driver";
 import { sleep } from "./sleep";
