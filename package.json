@@ -6,7 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@tuyapi/driver": "0.0.6",
+    "@tuyapi/driver": "github:neojski/driver#fix-prepack",
     "debug": "^4.1.0",
     "express": "^4.16.2",
     "gpio": "^0.2.10",
