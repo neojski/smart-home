@@ -17,7 +17,7 @@ const http = new http0.Server(app);
 const io = socket_io(http);
 const port = process.env.PORT || 3000;
 
-process.on("uncaughtException", function(exception) {
+process.on("uncaughtException", function (exception) {
   console.log(exception);
 });
 
@@ -30,15 +30,15 @@ const purifier = new Purifier("192.168.0.22");
 const temperature = new Temperature("28-0216252dbfee", 1000, 5);
 const tvSocket = new Socket({
   id: "1274756684f3ebb89107",
-  key: "3a954c5db3c97828"
+  key: "3a954c5db3c97828",
 });
 const downHeatingSocket = new Socket({
   id: "12747566807d3a493f6c",
-  key: "25005fc4127ac363"
+  key: "25005fc4127ac363",
 });
 const upHeatingSocket = new Socket({
   id: "1274756684f3ebb897b5",
-  key: "da9c77e4545107c9"
+  key: "da9c77e4545107c9",
 });
 
 function readAndSend() {
@@ -47,7 +47,7 @@ function readAndSend() {
     purifier: purifier.getData(),
     tvSocket: tvSocket.getData(),
     upHeating: upHeatingSocket.getData(),
-    downHeating: downHeatingSocket.getData()
+    downHeating: downHeatingSocket.getData(),
   };
   debug(broadcast, data);
 
@@ -57,7 +57,7 @@ function readAndSend() {
 }
 
 // "cron"
-setInterval(async function() {
+setInterval(async function () {
   async function setModeAndLog(mode: mode) {
     debug("trying to set to", mode);
     try {
@@ -90,9 +90,9 @@ tvSocket.onData(readAndSend);
 upHeatingSocket.onData(readAndSend);
 downHeatingSocket.onData(readAndSend);
 
-io.on("connection", function(socket: socket_io.Socket) {
+io.on("connection", function (socket: socket_io.Socket) {
   // TODO: better type to match UI
-  socket.on("toggle-power", function() {
+  socket.on("toggle-power", function () {
     monitor.toggle();
   });
 

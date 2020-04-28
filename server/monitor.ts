@@ -5,13 +5,13 @@ import gpio, { Gpio } from "gpio";
 export default class {
   gpio: Promise<Gpio>;
   constructor(pin: number) {
-    this.gpio = new Promise(function(resolve) {
+    this.gpio = new Promise(function (resolve) {
       const result = gpio.export(pin, {
         direction: "out",
-        ready: function() {
+        ready: function () {
           result.set(true);
           resolve(result);
-        }
+        },
       });
     });
   }

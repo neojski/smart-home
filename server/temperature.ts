@@ -44,7 +44,7 @@ export default class {
   get(): Temperature {
     return {
       timestamp: this.lastRead,
-      data: median(this.temperatures)
+      data: median(this.temperatures),
     };
   }
 }

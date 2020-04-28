@@ -66,7 +66,7 @@ export default class {
   handleDisconnected(device: Device, error?: Error) {
     this.debug("disconnected; cleaning up and reconnecting", {
       reconnectTimeout,
-      error
+      error,
     });
 
     this.setError(error);
@@ -104,7 +104,7 @@ export default class {
       id: this.id,
       key: this.key,
       ip: this.ip,
-      heartbeatInterval: 5000
+      heartbeatInterval: 5000,
     });
 
     device.on("connect", () => {
@@ -115,11 +115,11 @@ export default class {
     device.on("disconnected", () => {
       this.handleDisconnected(device);
     });
-    device.on("error", e => {
+    device.on("error", (e) => {
       this.handleDisconnected(device, e);
     });
 
-    device.on("data", _frame => {
+    device.on("data", (_frame) => {
       this.handleHeartbeat();
 
       const raw: { 1?: any } = device.get();
@@ -143,7 +143,7 @@ export default class {
       status: this.status,
       timestamp: this.timestamp,
       connected: this.connected,
-      ip: this.ip
+      ip: this.ip,
     };
   }
 }

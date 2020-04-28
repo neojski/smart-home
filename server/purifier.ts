@@ -31,15 +31,15 @@ export default class {
       this.data.timestamp = timestamp();
     };
 
-    device.on("temperatureChanged", v => {
+    device.on("temperatureChanged", (v) => {
       setData("temperature", v.value);
     });
 
-    device.on("pm2.5Changed", v => {
+    device.on("pm2.5Changed", (v) => {
       setData("aqi", v);
     });
 
-    device.on("relativeHumidityChanged", v => {
+    device.on("relativeHumidityChanged", (v) => {
       setData("humidity", v);
     });
   }
