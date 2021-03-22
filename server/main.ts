@@ -71,7 +71,7 @@ setInterval(async function () {
   let date = new Date();
   if (date.getHours() === 23 && date.getMinutes() === 0) {
     await setModeAndLog("silent");
-    await monitor.set(false);
+//    await monitor.set(false);
   }
 
   if (date.getHours() === 9 && date.getMinutes() === 0) {
@@ -79,7 +79,7 @@ setInterval(async function () {
   }
 
   if (date.getHours() === 6 && date.getMinutes() === 0) {
-    await monitor.set(true);
+//    await monitor.set(true);
   }
 }, 10000);
 
