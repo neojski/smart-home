@@ -41,6 +41,17 @@ const upHeatingSocket = new Socket({
   key: "da9c77e4545107c9",
 });
 
+// API for home assistant
+app.get("/temperature", function (_req, res) {
+  const result = temperature.get();
+  if (result.data !== undefined) {
+    // Round to half a degree
+    result.data = Math.round(result.data * 2) / 2;
+  }
+  res.send(result);
+  res.sendStatus(200);
+});
+
 function readAndSend() {
   let data: Data = {
     temperature: temperature.get(),
@@ -71,7 +82,7 @@ setInterval(async function () {
   let date = new Date();
   if (date.getHours() === 23 && date.getMinutes() === 0) {
     await setModeAndLog("silent");
-//    await monitor.set(false);
+    //    await monitor.set(false);
   }
 
   if (date.getHours() === 9 && date.getMinutes() === 0) {
@@ -79,7 +90,7 @@ setInterval(async function () {
   }
 
   if (date.getHours() === 6 && date.getMinutes() === 0) {
-//    await monitor.set(true);
+    //    await monitor.set(true);
   }
 }, 10000);
 
