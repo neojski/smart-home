@@ -1,9 +1,12 @@
 import fs from "fs";
 import timestamp from "./timestamp";
-import { median } from "./median";
 import { Temperature } from "../shared/Temperature";
 
 const debug = require("debug")("smart-home:temperature");
+
+function average(xs: number[]) {
+  return xs.reduce((acc, x) => acc + x) / xs.length;
+}
 
 export default class {
   temperatures: number[];
@@ -44,7 +47,7 @@ export default class {
   get(): Temperature {
     return {
       timestamp: this.lastRead,
-      data: median(this.temperatures),
+      data: average(this.temperatures),
     };
   }
 }
