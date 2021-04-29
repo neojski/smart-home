@@ -27,7 +27,7 @@ app.use(express.static(__dirname + "/../../ui"));
 
 const monitor = new Monitor(3);
 const purifier = new Purifier("192.168.0.22");
-const temperature = new Temperature("28-0216252dbfee", 1000, 60);
+const temperature = new Temperature("28-0216252dbfee", 1000, 300);
 const tvSocket = new Socket({
   id: "1274756684f3ebb89107",
   key: "3a954c5db3c97828",
