@@ -10,11 +10,11 @@ export function Tfl() {
   // Belsize Park: 940GZZLUBZP
 
   const url =
-    "https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804";
+    "https://api.tfl.gov.uk/Line/metropolitan/Arrivals/940GZZLUAMS?app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804&direction=all";
   type vehicle = {
     timeToStation: number;
-    towards: string;
     vehicleId: string;
+    platformName: string;
   };
   let previousData: vehicle[] | undefined;
 
@@ -50,12 +50,12 @@ export function Tfl() {
   }
 
   let vehicles = allVehicles.filter((x) => {
-    return x.towards.indexOf("Bank") > -1;
+    return x.platformName.indexOf("Southbound") > -1;
   });
 
   return (
     <div style={{ margin: "40px" }}>
-      Morden via Bank: {vehicles.length === 0 ? "no trains" : ""}
+      Amersham Station: {vehicles.length === 0 ? "no trains" : ""}
       <ul style={{ position: "relative" }}>
         {vehicles
           .sort((x, y) => {
