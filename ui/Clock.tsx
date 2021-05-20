@@ -9,18 +9,32 @@ export function Clock() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-  return <div style={{
-    fontSize: "300px",
-    fontWeight: 300,
-    textAlign: "center"
-  }}>
-    {pad(date.getHours())}
-    <span style={{ visibility: date.getSeconds() % 2 === 0 ? "hidden" : "visible" }}>:</span>
-    {pad(date.getMinutes())}
-    <span style={{
-      fontSize: "30%",
-      display: "inline-block",
-      transform: "translate(0, -30px) rotate(-90deg)"
-    }}>{pad(date.getSeconds())}</span>
-  </div>;
+  return (
+    <div
+      style={{
+        fontSize: "300px",
+        fontWeight: 300,
+        textAlign: "center",
+      }}
+    >
+      {pad(date.getHours())}
+      <span
+        style={{
+          visibility: date.getSeconds() % 2 === 0 ? "hidden" : "visible",
+        }}
+      >
+        :
+      </span>
+      {pad(date.getMinutes())}
+      <span
+        style={{
+          fontSize: "30%",
+          display: "inline-block",
+          transform: "translate(0, -30px) rotate(-90deg)",
+        }}
+      >
+        {pad(date.getSeconds())}
+      </span>
+    </div>
+  );
 }

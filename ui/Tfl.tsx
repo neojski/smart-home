@@ -8,6 +8,7 @@ import { getJSONData } from "./getJSONData";
 export function Tfl() {
   // Chalk Farm: 940GZZLUCFM
   // Belsize Park: 940GZZLUBZP
+
   const url =
     "https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUBZP?direction=inbound&app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804";
   type vehicle = {
@@ -38,7 +39,7 @@ export function Tfl() {
     return (
       previousData &&
       !(
-        previousData.findIndex(vehicle2 => {
+        previousData.findIndex((vehicle2) => {
           return vehicle2.vehicleId === vehicle.vehicleId;
         }) > -1
       )
@@ -48,7 +49,7 @@ export function Tfl() {
     return <div>{errorSpan(allVehicles)}</div>;
   }
 
-  let vehicles = allVehicles.filter(x => {
+  let vehicles = allVehicles.filter((x) => {
     return x.towards.indexOf("Bank") > -1;
   });
 
@@ -77,7 +78,7 @@ export function Tfl() {
                   width: width,
                   overflow: "hidden",
                   borderRadius: "3px",
-                  ...transition
+                  ...transition,
                 }}
               >
                 {text}
@@ -98,7 +99,7 @@ export function Tfl() {
                   top: top,
                   whiteSpace: "nowrap",
                   margin: "0 0 10px",
-                  ...transition
+                  ...transition,
                 }}
               >
                 {whiteText}

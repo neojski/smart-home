@@ -40,10 +40,10 @@ function updater(
 ) {
   const maxTries = 3;
 
-  const error = function(e: string) {
+  const error = function (e: string) {
     callback(e);
   };
-  const ok = function(res: any) {
+  const ok = function (res: any) {
     callback(null, res);
   };
   async function update() {
@@ -58,7 +58,7 @@ function updater(
   setInterval(update, maxAcceptableAgeMS / maxTries);
 }
 
-const getHomeData = (function() {
+const getHomeData = (function () {
   let data: Data = {};
 
   const socket = io();
@@ -72,13 +72,13 @@ const getHomeData = (function() {
     socket.emit("toggle-power");
   }
 
-  return function() {
+  return function () {
     return data;
   };
 })();
 
 // returns temperature or null if not available
-const getTemperature = (function() {
+const getTemperature = (function () {
   const iconMap = {
     "01d": "icon-sun",
     "02d": "icon-cloud-sun",
@@ -97,7 +97,7 @@ const getTemperature = (function() {
     "10n": "icon-rain",
     "11n": "icon-cloud-flash",
     "13n": "icon-snow",
-    "50n": "icon-fog"
+    "50n": "icon-fog",
   } as const;
 
   //ljs15708@noicd.com
@@ -110,12 +110,12 @@ const getTemperature = (function() {
     weather: { icon: string }[];
   };
   let remoteError: null | string = initialError;
-  updater(url, function(err, result) {
+  updater(url, function (err, result) {
     remoteTemperature = result;
     remoteError = err;
   });
 
-  return function() {
+  return function () {
     let remote;
     if (remoteError) {
       remote = errorSpan(remoteError);
@@ -179,7 +179,7 @@ const getTemperature = (function() {
           style={{
             display: "inline-block",
             fontSize: "60%",
-            textAlign: "right"
+            textAlign: "right",
           }}
         >
           <div>
@@ -188,7 +188,7 @@ const getTemperature = (function() {
                 display: "inline-block",
                 textAlign: "right",
                 clear: "right",
-                ...heatingStyle(upHeating)
+                ...heatingStyle(upHeating),
               }}
             >
               {upTemperature}
@@ -199,7 +199,7 @@ const getTemperature = (function() {
               style={{
                 display: "inline-block",
                 marginRight: "80px",
-                ...heatingStyle(downHeating)
+                ...heatingStyle(downHeating),
               }}
             >
               {downTemperature}
@@ -220,7 +220,7 @@ function TvSocket({ data }: { data?: Socket }) {
       width: "30px",
       height: "30px",
       lineHeight: "30px",
-      textAlign: "center"
+      textAlign: "center",
     } as const;
     return <div style={style}>⏻</div>;
   }
@@ -245,7 +245,7 @@ function Main() {
   let [temperature, setTemperature] = useState(computeTemperature());
 
   useEffect(() => {
-    const interval = setInterval(function() {
+    const interval = setInterval(function () {
       setAqi(computeAqi());
       setTvSocket(computeTvSocket());
       setTemperature(computeTemperature());
@@ -278,7 +278,7 @@ ReactDOM.render(<Main />, document.getElementById("contents"));
 
 let fullscreen = false;
 const noSleep = new nosleep();
-document.onclick = function() {
+document.onclick = function () {
   fullscreen = !fullscreen;
   if (fullscreen) {
     screenfull.request();

@@ -9,7 +9,7 @@ export function TvSocket({ data }: { data?: Socket }) {
       width: "30px",
       height: "30px",
       lineHeight: "30px",
-      textAlign: "center"
+      textAlign: "center",
     } as const;
     return <div style={style}>⏻</div>;
   }

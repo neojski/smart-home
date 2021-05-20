@@ -4,7 +4,7 @@
     "server-dev": "tsc -w -p tsconfig.server.json & nodemon dist/server/main.js",
     "ui-dev": "tsc -w -p tsconfig.ui.json & watchify dist/ui/mirror.js -o dist/bundle.js",
     "test": "jest",
-    "prettier": "prettier --write **/*.ts"
+    "prettier": "prettier --write **/*.ts*"
   },
   "dependencies": {
     "@tuyapi/driver": "github:neojski/driver#fix-prepack",
