@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@tuyapi/driver": "github:neojski/driver#fix-prepack",
+    "body-parser": "^1.20.0",
     "debug": "^4.1.0",
     "express": "^4.16.2",
     "gpio": "^0.2.10",

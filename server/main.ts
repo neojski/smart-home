@@ -9,11 +9,12 @@ import express from "express";
 import socket_io from "socket.io";
 import http0 from "http";
 import { broadcast } from "../shared/const";
-import timestamp from "./timestamp";
 
 const debug = require("debug")("smart-home:main");
 
 const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.text());
 const http = new http0.Server(app);
 const io = socket_io(http);
 const port = process.env.PORT || 3000;
@@ -50,13 +51,16 @@ app.get("/temperature", function (_req, res) {
     result.data = Math.round(result.data * 2) / 2;
   }
   res.send(result);
-  res.sendStatus(200);
 });
 
 app.get("/monitor", async function (_req, res) {
-  const state = await monitor.gpio;
-  res.send({ timestamp: timestamp(), state });
-  res.sendStatus(200);
+  const is_on = await monitor.get();
+  res.send(is_on ? "ON" : "OFF");
+});
+
+app.post("/monitor", async function (req, _res) {
+  const is_on = req.body === "ON";
+  monitor.set(is_on);
 });
 
 function readAndSend() {

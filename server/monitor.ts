@@ -3,7 +3,7 @@ const debug = require("debug")("smart-home:monitor");
 import gpio, { Gpio } from "gpio";
 
 export default class {
-  gpio: Promise<Gpio>;
+  private gpio: Promise<Gpio>;
   constructor(pin: number) {
     this.gpio = new Promise(function (resolve) {
       const result = gpio.export(pin, {
