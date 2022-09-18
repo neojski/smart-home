@@ -25,4 +25,8 @@ export default class {
     const gpio = await this.gpio;
     gpio.set(b);
   }
+  async get() {
+    const gpio = await this.gpio;
+    return gpio.value;
+  }
 }

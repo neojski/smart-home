@@ -9,6 +9,7 @@ import express from "express";
 import socket_io from "socket.io";
 import http0 from "http";
 import { broadcast } from "../shared/const";
+import timestamp from "./timestamp";
 
 const debug = require("debug")("smart-home:main");
 
@@ -49,6 +50,12 @@ app.get("/temperature", function (_req, res) {
     result.data = Math.round(result.data * 2) / 2;
   }
   res.send(result);
+  res.sendStatus(200);
+});
+
+app.get("/monitor", async function (_req, res) {
+  const state = await monitor.gpio;
+  res.send({ timestamp: timestamp(), state });
   res.sendStatus(200);
 });
 
