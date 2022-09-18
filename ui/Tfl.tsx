@@ -6,8 +6,12 @@ import { errorSpan } from "./errorSpan";
 import { getJSONData } from "./getJSONData";
 
 export function Tfl() {
+  // https://api.tfl.gov.uk/Line/metropolitan/StopPoints
   // Chalk Farm: 940GZZLUCFM
   // Belsize Park: 940GZZLUBZP
+  // Amersham: 940GZZLUAMS
+  // Liverpool Street: 940GZZLULVT
+  // timetable: https://api.tfl.gov.uk/Line/metropolitan/Timetable/940GZZLUAMS/to/940GZZLULVT
 
   const url =
     "https://api.tfl.gov.uk/Line/metropolitan/Arrivals/940GZZLUAMS?app_id=8268063a&app_key=14f7f5ff5d64df2e88701cef2049c804&direction=all";
