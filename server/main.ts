@@ -9,6 +9,7 @@ import express from "express";
 import socket_io from "socket.io";
 import http0 from "http";
 import { broadcast } from "../shared/const";
+import Octopus from "./octopus";
 
 const debug = require("debug")("smart-home:main");
 
@@ -42,6 +43,7 @@ const upHeatingSocket = new Socket({
   id: "1274756684f3ebb897b5",
   key: "da9c77e4545107c9",
 });
+const octopus = new Octopus();
 
 // API for home assistant
 app.get("/temperature", function (_req, res) {
@@ -70,6 +72,7 @@ function readAndSend() {
     tvSocket: tvSocket.getData(),
     upHeating: upHeatingSocket.getData(),
     downHeating: downHeatingSocket.getData(),
+    octopus: octopus.getData(),
   };
   debug(broadcast, data);
 

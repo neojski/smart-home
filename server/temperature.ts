@@ -5,6 +5,9 @@ import { Temperature } from "../shared/Temperature";
 const debug = require("debug")("smart-home:temperature");
 
 function average(xs: number[]) {
+  if (xs.length === 0) {
+    return null;
+  }
   return xs.reduce((acc, x) => acc + x) / xs.length;
 }
 
@@ -47,7 +50,7 @@ export default class {
   get(): Temperature {
     return {
       timestamp: this.lastRead,
-      data: average(this.temperatures),
+      data: average(this.temperatures) || undefined,
     };
   }
 }

@@ -12,6 +12,7 @@ import { getJSONData } from "./getJSONData";
 import { errorSpan } from "./errorSpan";
 import { Tfl } from "./Tfl";
 import { heatingStyle } from "./heatingStyle";
+import { Octopus } from "./Octopus";
 
 // TODO: not sure why this casting is needed
 const screenfull = screenfull0 as Screenfull;
@@ -240,15 +241,21 @@ function Main() {
     return getTemperature();
   }
 
+  function computeOctopus() {
+    return getHomeData().octopus;
+  }
+
   let [aqi, setAqi] = useState(computeAqi());
   let [tvSocket, setTvSocket] = useState(computeTvSocket());
   let [temperature, setTemperature] = useState(computeTemperature());
+  let [octopus, setOctopus] = useState(computeOctopus());
 
   useEffect(() => {
     const interval = setInterval(function () {
       setAqi(computeAqi());
       setTvSocket(computeTvSocket());
       setTemperature(computeTemperature());
+      setOctopus(computeOctopus());
     }, 1000);
     return () => {
       clearInterval(interval);
@@ -267,6 +274,9 @@ function Main() {
         <TvSocket data={tvSocket} />
       </div>
       <div className="weather">{temperature}</div>
+      <div className="octopus">
+        <Octopus data={octopus} />
+      </div>
       <div className="trains">
         <Tfl />
       </div>

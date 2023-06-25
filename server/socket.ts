@@ -50,7 +50,9 @@ export default class {
         break;
       } catch (error) {
         this.debug("discoverIp failed; retrying", { reconnectTimeout, error });
-        this.setError(new Error(error));
+        this.setError(
+          error instanceof Error ? error : new Error(String(error))
+        );
         await sleep(reconnectTimeout);
       }
     }
