@@ -1,5 +1,3 @@
-import Screenfull from "screenfull";
-import nosleep from "nosleep.js";
 import io from "socket.io-client";
 import { Data } from "../shared/Data";
 import { broadcast } from "../shared/const";
@@ -282,16 +280,3 @@ function Main() {
 }
 
 ReactDOM.render(<Main />, document.getElementById("contents"));
-
-let fullscreen = false;
-const noSleep = new nosleep();
-document.onclick = function () {
-  fullscreen = !fullscreen;
-  if (fullscreen) {
-    Screenfull.request();
-    noSleep.enable();
-  } else {
-    Screenfull.exit();
-    noSleep.disable();
-  }
-};
