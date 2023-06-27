@@ -1,4 +1,4 @@
-import screenfull0, { Screenfull } from "screenfull";
+import Screenfull from "screenfull";
 import nosleep from "nosleep.js";
 import io from "socket.io-client";
 import { Data } from "../shared/Data";
@@ -13,9 +13,6 @@ import { errorSpan } from "./errorSpan";
 import { Tfl } from "./Tfl";
 import { heatingStyle } from "./heatingStyle";
 import { Octopus } from "./Octopus";
-
-// TODO: not sure why this casting is needed
-const screenfull = screenfull0 as Screenfull;
 
 export const initialError = "↻";
 
@@ -291,10 +288,10 @@ const noSleep = new nosleep();
 document.onclick = function () {
   fullscreen = !fullscreen;
   if (fullscreen) {
-    screenfull.request();
+    Screenfull.request();
     noSleep.enable();
   } else {
-    screenfull.exit();
+    Screenfull.exit();
     noSleep.disable();
   }
 };

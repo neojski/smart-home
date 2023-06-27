@@ -31,7 +31,7 @@ export function Tfl() {
         const data = (await getJSONData(url)) as vehicle[];
         setAllVehicles(data);
       } catch (e) {
-        setAllVehicles(new Error(e.toString()));
+        setAllVehicles(new Error(String(e)));
       }
     }
     update();

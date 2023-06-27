@@ -5,5 +5,5 @@
     "module": "CommonJS",
     "jsx": "react"
   },
-  "include": ["ui", "@types"]
+  "include": ["ui", "@types"],
 }
