@@ -16,3 +16,11 @@ UI displays the data:
 - tube deparatures
 
 The server is run using pm2 that's, in turn, started by systemd (http://pm2.keymetrics.io/docs/usage/startup).
+
+# Dev notes
+
+- useful commands are in package.json
+
+# Raspberry PI
+
+On raspberry pi I use `n` for managing node version.
