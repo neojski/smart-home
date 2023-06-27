@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e -u -o pipefail
 
 function info {
   RED="\033[0;32m"
@@ -6,6 +7,7 @@ function info {
   echo -e "${RED}${1}${NC}"
 }
 
+git_arg=""
 while [[ $# -gt 0 ]]; do
   key="$1"
   case "$key" in
