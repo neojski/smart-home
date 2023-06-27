@@ -10,7 +10,6 @@ export default class {
   }
 
   async poll() {
-    console.log("loop");
     try {
       const url =
         "http://192.168.0.176:8123/api/states/sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand";
@@ -23,7 +22,7 @@ export default class {
         },
       });
       const json = await response.json();
-      this.power = Number(((json as any) as { state: Number }).state);
+      this.power = Number((json as any as { state: Number }).state);
     } catch (e) {
       this.power = String(e);
     }
