@@ -55,7 +55,7 @@ function updater(
 }
 
 const getHomeData = (function () {
-  let data: Data = {};
+  let data: Data | undefined;
 
   const socket = io();
   socket.on(broadcast, (x: Data) => {
@@ -73,8 +73,19 @@ const getHomeData = (function () {
   };
 })();
 
+type remoteTemperature = {
+  main: { temp: number };
+  weather: { icon: string }[];
+};
+
 // returns temperature or null if not available
-const getTemperature = (function () {
+function Temperature({
+  data,
+  remoteTemperature,
+}: {
+  data: Data;
+  remoteTemperature: remoteTemperature | string;
+}) {
   const iconMap = {
     "01d": "icon-sun",
     "02d": "icon-cloud-sun",
@@ -96,117 +107,100 @@ const getTemperature = (function () {
     "50n": "icon-fog",
   } as const;
 
-  //ljs15708@noicd.com
-  //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
-  const url =
-    "https://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
-
-  let remoteTemperature: {
-    main: { temp: number };
-    weather: { icon: string }[];
-  };
-  let remoteError: null | string = initialError;
-  updater(url, function (err, result) {
-    remoteTemperature = result;
-    remoteError = err;
-  });
-
-  return function () {
-    let remote;
-    if (remoteError) {
-      remote = errorSpan(remoteError);
-    } else {
-      const iconKey = remoteTemperature.weather[0].icon;
-      const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
-      const iconEl =
-        icon !== undefined ? <span className={"icon" + icon}></span> : "?";
-      remote = (
-        <span>
-          {Math.round(remoteTemperature.main.temp)}°C{iconEl}
-        </span>
-      );
-    }
-
-    function deserialiseDate(timestamp?: string) {
-      if (timestamp) {
-        return new Date(timestamp);
-      }
-      return undefined;
-    }
-
-    function getLocalTemperature(
-      temperature: number | undefined,
-      timestamp: Date | undefined,
-      maxAcceptableAgeMS: number
-    ) {
-      const error = checkAge(timestamp, maxAcceptableAgeMS);
-      if (error === false) {
-        if (temperature !== undefined) {
-          if (!Number.isFinite(temperature)) {
-            throw temperature + " is not a valid temperature";
-          } else {
-            return Math.round(temperature) + "°C";
-          }
-        } else {
-          return errorSpan("no temperature");
-        }
-      } else {
-        return errorSpan(error);
-      }
-    }
-    // TODO: default to error not false
-    const upHeating = getHomeData().upHeating?.status ?? false;
-    const downHeating = getHomeData().downHeating?.status ?? false;
-    const upTemperature =
-      // I don't actually know how long it takes for purifier to send updates
-      getLocalTemperature(
-        getHomeData().purifier?.temperature,
-        deserialiseDate(getHomeData().purifier?.timestamp),
-        30 * 60 * 1000
-      );
-    const downTemperature = getLocalTemperature(
-      getHomeData().temperature?.data,
-      deserialiseDate(getHomeData().temperature?.timestamp),
-      60 * 1000
-    );
-    return (
-      <span style={{ display: "inline-block", margin: "0 50px" }}>
-        <span
-          style={{
-            display: "inline-block",
-            fontSize: "60%",
-            textAlign: "right",
-          }}
-        >
-          <div>
-            <span
-              style={{
-                display: "inline-block",
-                textAlign: "right",
-                clear: "right",
-                ...heatingStyle(upHeating),
-              }}
-            >
-              {upTemperature}
-            </span>
-          </div>
-          <div>
-            <span
-              style={{
-                display: "inline-block",
-                marginRight: "80px",
-                ...heatingStyle(downHeating),
-              }}
-            >
-              {downTemperature}
-            </span>
-          </div>
-        </span>{" "}
-        | {remote}
+  let remote;
+  if (typeof remoteTemperature === "string") {
+    remote = errorSpan(remoteTemperature);
+  } else {
+    const iconKey = remoteTemperature.weather[0].icon;
+    const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
+    const iconEl =
+      icon !== undefined ? <span className={"icon" + icon}></span> : "?";
+    remote = (
+      <span>
+        {Math.round(remoteTemperature.main.temp)}°C{iconEl}
       </span>
     );
-  };
-})();
+  }
+
+  function deserialiseDate(timestamp?: string) {
+    if (timestamp) {
+      return new Date(timestamp);
+    }
+    return undefined;
+  }
+
+  function getLocalTemperature(
+    temperature: number | undefined,
+    timestamp: Date | undefined,
+    maxAcceptableAgeMS: number
+  ) {
+    const error = checkAge(timestamp, maxAcceptableAgeMS);
+    if (error === false) {
+      if (temperature !== undefined) {
+        if (!Number.isFinite(temperature)) {
+          throw temperature + " is not a valid temperature";
+        } else {
+          return Math.round(temperature) + "°C";
+        }
+      } else {
+        return errorSpan("no temperature");
+      }
+    } else {
+      return errorSpan(error);
+    }
+  }
+  // TODO: default to error not false
+  const upHeating = data.upHeating?.status ?? false;
+  const downHeating = data.downHeating?.status ?? false;
+  const upTemperature =
+    // I don't actually know how long it takes for purifier to send updates
+    getLocalTemperature(
+      data.purifier?.temperature,
+      deserialiseDate(data.purifier?.timestamp),
+      30 * 60 * 1000
+    );
+  const downTemperature = getLocalTemperature(
+    data.temperature?.data,
+    deserialiseDate(data.temperature?.timestamp),
+    60 * 1000
+  );
+  return (
+    <span style={{ display: "inline-block", margin: "0 50px" }}>
+      <span
+        style={{
+          display: "inline-block",
+          fontSize: "60%",
+          textAlign: "right",
+        }}
+      >
+        <div>
+          <span
+            style={{
+              display: "inline-block",
+              textAlign: "right",
+              clear: "right",
+              ...heatingStyle(upHeating),
+            }}
+          >
+            {upTemperature}
+          </span>
+        </div>
+        <div>
+          <span
+            style={{
+              display: "inline-block",
+              marginRight: "80px",
+              ...heatingStyle(downHeating),
+            }}
+          >
+            {downTemperature}
+          </span>
+        </div>
+      </span>{" "}
+      | {remote}
+    </span>
+  );
+}
 
 function TvSocket({ data }: { data?: Socket }) {
   if (data != null && data.status != null) {
@@ -223,54 +217,21 @@ function TvSocket({ data }: { data?: Socket }) {
   return null;
 }
 
-function Main() {
-  function computeAqi() {
-    return getHomeData().purifier?.aqi;
-  }
-
-  function computeTvSocket() {
-    return getHomeData().tvSocket;
-  }
-
-  function computeTemperature() {
-    return getTemperature();
-  }
-
-  function computeOctopus() {
-    return getHomeData().octopus;
-  }
-
-  let [aqi, setAqi] = useState(computeAqi());
-  let [tvSocket, setTvSocket] = useState(computeTvSocket());
-  let [temperature, setTemperature] = useState(computeTemperature());
-  let [octopus, setOctopus] = useState(computeOctopus());
-
-  useEffect(() => {
-    const interval = setInterval(function () {
-      setAqi(computeAqi());
-      setTvSocket(computeTvSocket());
-      setTemperature(computeTemperature());
-      setOctopus(computeOctopus());
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
+function Main({ data, temperature }: { data: Data; temperature: JSX.Element }) {
   return (
     <div>
       <div className="aqi">
-        <Aqi aqi={aqi} />
+        <Aqi aqi={data.purifier.aqi} />
       </div>
       <div>
         <Clock />
       </div>
       <div className="tvSocket">
-        <TvSocket data={tvSocket} />
+        <TvSocket data={data.tvSocket} />
       </div>
       <div className="weather">{temperature}</div>
       <div className="octopus">
-        <Octopus data={octopus} />
+        <Octopus data={data.octopus} />
       </div>
       <div className="trains">
         <Tfl />
@@ -279,4 +240,41 @@ function Main() {
   );
 }
 
-ReactDOM.render(<Main />, document.getElementById("contents"));
+function Wrapper() {
+  const [data, setData] = useState<Data | undefined>(undefined);
+  const [remoteTemperature, setRemoteTemperature] = useState<
+    remoteTemperature | string
+  >(initialError);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData(getHomeData());
+    }, 1000);
+
+    //ljs15708@noicd.com
+    //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
+    const url =
+      "https://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
+
+    updater(url, function (err, result) {
+      if (err) {
+        setRemoteTemperature(err);
+      } else {
+        setRemoteTemperature(result);
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  if (data) {
+    const x = <Temperature data={data} remoteTemperature={remoteTemperature} />;
+    return <Main data={data} temperature={x} />;
+  } else {
+    return <div>Waiting for data</div>;
+  }
+}
+
+ReactDOM.render(<Wrapper />, document.getElementById("contents"));
