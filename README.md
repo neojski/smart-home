@@ -21,6 +21,18 @@ The server is run using pm2 that's, in turn, started by systemd (http://pm2.keym
 
 - useful commands are in package.json
 
+# Purifier
+
+I got token using these instructions:
+
+https://www.home-assistant.io/integrations/xiaomi_miio/#retrieving-the-access-token
+
+aka
+
+https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor
+
 # Raspberry PI
 
-On raspberry pi I use `n` for managing node version.
+- On raspberry pi I use `n` for managing node version.
+- Enabled auto-login through `sudo raspi-config` -> `Boot Options` -> `Desktop / CLI` -> `Console Autologin`
+- Copied over `node_modules/@tuyapi/driver/` to raspberry pi. This seems really bad

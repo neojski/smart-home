@@ -9,7 +9,11 @@ export default class {
   data: Purifier;
 
   constructor(address: string) {
-    this.device = miio.device({ address: address, retries: 5 });
+    this.device = miio.device({
+      address,
+      retries: 5,
+      token: "c20040c5ad31333f9f0441ce80fe709e",
+    });
 
     this.data = {};
 
@@ -50,6 +54,7 @@ export default class {
 
   async setMode(mode: mode) {
     let device = await this.device;
+
     return device.setMode(mode);
   }
 }

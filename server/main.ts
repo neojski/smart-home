@@ -6,7 +6,7 @@ import { mode } from "miio";
 import { Data } from "../shared/Data";
 import Monitor from "./monitor";
 import express from "express";
-import socket_io from "socket.io";
+import { Server } from "socket.io";
 import http0 from "http";
 import { broadcast } from "../shared/const";
 import Octopus from "./octopus";
@@ -17,7 +17,7 @@ const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.text());
 const http = new http0.Server(app);
-const io = socket_io(http);
+const io = new Server(http);
 const port = process.env.PORT || 3000;
 
 process.on("uncaughtException", function (exception) {
@@ -29,7 +29,7 @@ app.use(express.static(__dirname + "/../"));
 app.use(express.static(__dirname + "/../../ui"));
 
 const monitor = new Monitor(3);
-const purifier = new Purifier("192.168.0.22");
+const purifier = new Purifier("192.168.0.155");
 const temperature = new Temperature("28-0216252dbfee", 1000, 300);
 const tvSocket = new Socket({
   id: "1274756684f3ebb89107",
@@ -115,7 +115,7 @@ tvSocket.onData(readAndSend);
 upHeatingSocket.onData(readAndSend);
 downHeatingSocket.onData(readAndSend);
 
-io.on("connection", function (socket: socket_io.Socket) {
+io.on("connection", function (socket) {
   // TODO: better type to match UI
   socket.on("toggle-power", function () {
     monitor.toggle();

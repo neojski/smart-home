@@ -25,7 +25,11 @@ declare module "miio" {
 
   export default class {
     static device: {
-      (opts: { address: string; retries: number }): Promise<Device>;
+      (opts: {
+        address: string;
+        retries: number;
+        token: string;
+      }): Promise<Device>;
     };
   }
 }
