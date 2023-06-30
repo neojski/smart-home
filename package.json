@@ -19,7 +19,8 @@
     "request": "^2.88.2",
     "socket.io": "^4.7.0",
     "socket.io-client": "^4.7.0",
-    "weather-js": "^2.0.0"
+    "weather-js": "^2.0.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.8",
@@ -32,6 +33,7 @@
     "@types/screenfull": "^4.1.0",
     "@types/socket.io": "^3.0.1",
     "@types/socket.io-client": "^1.4.36",
+    "@types/ws": "^8.5.5",
     "browserify": "^17.0.0",
     "jest-date-mock": "^1.0.8",
     "nodemon": "^2.0.22",
