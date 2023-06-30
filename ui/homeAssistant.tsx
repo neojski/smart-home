@@ -31,7 +31,7 @@ export default class {
       downTemperature: undefined,
       weather: "undefined",
     };
-    this.next = 0;
+    this.next = 1;
 
     const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
     const HA_ACCESS_TOKEN =
@@ -41,30 +41,30 @@ export default class {
     this.socket.addEventListener("open", () => {
       console.log("Connected to Home Assistant WebSocket API");
 
-      // Authenticate with Home Assistant
-      this.send(
-        { type: "auth", access_token: HA_ACCESS_TOKEN },
-        // auth forbids ids
-        { suppressId: true }
-      );
-
-      // Configuration
       this.socket.addEventListener("message", (event: any) => {
         const message = JSON.parse(event.data);
 
-        if (message.type === "auth_ok") {
+        if (message.type === "auth_required") {
+          // Authenticate with Home Assistant
+          this.send(
+            { type: "auth", access_token: HA_ACCESS_TOKEN },
+            // auth forbids ids
+            { suppressId: true }
+          );
+        } else if (message.type === "auth_ok") {
           console.log("Authentication successful");
-
-          // Also subscribe to events
-          this.send({ type: "subscribe_events" });
 
           // This should cause message.type "result". We do it to get initial snapshot of events
           this.send({ type: "get_states" });
+
+          // Also subscribe to events
+          //this.send({ type: "subscribe_events" });
         } else if (message.type === "message") {
           // CR this is untested
           this.refresh(message);
         } else if (message.type === "result") {
           if (message.result) {
+            console.log(message.result);
             this.refresh(message.result);
           } else {
             console.warn("message.result is falsy", message);
@@ -85,7 +85,7 @@ export default class {
   // CR-someday: sad types
   refresh(results: any[]) {
     for (const result of results) {
-      if (result.entity_id === "ensor.openweathermap_temperature") {
+      if (result.entity_id === "sensor.openweathermap_temperature") {
         this.data.weather = {
           main: {
             temp: Number(result.state),
