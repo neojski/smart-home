@@ -5,6 +5,8 @@ import { Aqi } from "./Aqi";
 import { Tfl } from "./Tfl";
 import { Octopus } from "./Octopus";
 import { RemoteTemperature } from "./RemoteTemperature";
+import HomeAssistant from "./homeAssistant";
+import { Data } from "./Data";
 
 export const initialError = "↻";
 
@@ -14,31 +16,13 @@ export type remoteTemperature = {
 };
 
 function Main() {
-  type Data = {
-    aqi: number | undefined;
-    power: number | undefined;
-    upTemperature: number | undefined;
-    downTemperature: number | undefined;
-    weather: remoteTemperature | string;
-  };
   const [data, setData] = useState<Data | undefined>(undefined);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // CR: actually read websockets
-      //
-      // For weather also do home assistant, maybe both ldn + amersham? App_id: 5dd85d48cb8bb2c9cc6e656e359bc1b2
-      setData({
-        aqi: 999,
-        power: 999,
-        upTemperature: 999,
-        downTemperature: 999,
-        weather: { main: { temp: 999 }, weather: [{ icon: "01d" }] },
-      });
-    }, 1000);
+    const homeAssistant = new HomeAssistant(setData);
 
     return () => {
-      clearInterval(interval);
+      homeAssistant.destroy();
     };
   }, []);
 

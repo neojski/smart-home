@@ -1,5 +1,22 @@
 /* Module for fetching data from home assistant */
 
+import { Data } from "./Data";
+
+export default class {
+  constructor(f: { (data: Data): void }) {
+    // CR: actually read data from websockets
+    f({
+      aqi: 999,
+      power: 999,
+      upTemperature: 999,
+      downTemperature: 999,
+      weather: { main: { temp: 999 }, weather: [{ icon: "01d" }] },
+    });
+  }
+
+  destroy() {}
+}
+
 // Configuration
 const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
 const HA_ACCESS_TOKEN =
