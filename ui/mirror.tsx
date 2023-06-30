@@ -2,95 +2,39 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Clock } from "./Clock";
 import { Aqi } from "./Aqi";
-import { errorSpan } from "./errorSpan";
 import { Tfl } from "./Tfl";
 import { Octopus } from "./Octopus";
+import { RemoteTemperature } from "./RemoteTemperature";
 
 export const initialError = "↻";
 
-type remoteTemperature = {
+export type remoteTemperature = {
   main: { temp: number };
   weather: { icon: string }[];
 };
 
-function RemoteTemperature({
-  remoteTemperature,
-}: {
-  remoteTemperature: remoteTemperature | string;
-}) {
-  const iconMap = {
-    "01d": "icon-sun",
-    "02d": "icon-cloud-sun",
-    "03d": "icon-cloud",
-    "04d": "icon-clouds",
-    "09d": "icon-drizzle",
-    "10d": "icon-rain",
-    "11d": "icon-cloud-flash",
-    "13d": "icon-snow",
-    "50d": "icon-fog",
-    "01n": "icon-moon",
-    "02n": "icon-cloud-moon",
-    "03n": "icon-cloud",
-    "04n": "icon-clouds",
-    "09n": "icon-drizzle",
-    "10n": "icon-rain",
-    "11n": "icon-cloud-flash",
-    "13n": "icon-snow",
-    "50n": "icon-fog",
-  } as const;
-
-  if (typeof remoteTemperature === "string") {
-    return errorSpan(remoteTemperature);
-  } else {
-    const iconKey = remoteTemperature.weather[0].icon;
-    const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
-    const iconEl =
-      icon !== undefined ? <span className={"icon" + icon}></span> : "?";
-    return (
-      <span>
-        {Math.round(remoteTemperature.main.temp)}°C{iconEl}
-      </span>
-    );
-  }
-}
-
-function Wrapper() {
+function Main() {
   type Data = {
     aqi: number | undefined;
     power: number | undefined;
     upTemperature: number | undefined;
     downTemperature: number | undefined;
+    weather: remoteTemperature | string;
   };
   const [data, setData] = useState<Data | undefined>(undefined);
-  const [remoteTemperature, setRemoteTemperature] = useState<
-    remoteTemperature | string
-  >(initialError);
 
   useEffect(() => {
     const interval = setInterval(() => {
       // CR: actually read websockets
+      //
+      // For weather also do home assistant, maybe both ldn + amersham? App_id: 5dd85d48cb8bb2c9cc6e656e359bc1b2
       setData({
         aqi: 999,
         power: 999,
         upTemperature: 999,
         downTemperature: 999,
+        weather: { main: { temp: 999 }, weather: [{ icon: "01d" }] },
       });
-
-      // CR: fix this
-
-      //ljs15708@noicd.com
-      //const url = "http://api.openweathermap.org/data/2.5/forecast/city?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2";
-      //const url =
-      //  "https://api.openweathermap.org/data/2.5/weather?id=2643743&APPID=5dd85d48cb8bb2c9cc6e656e359bc1b2&units=metric";
-      //
-      //updater(url, function (err, result) {
-      //  if (err) {
-      //    setRemoteTemperature(err);
-      //  } else {
-      //    setRemoteTemperature(result);
-      //  }
-      //});
-      setRemoteTemperature({ main: { temp: 999 }, weather: [{ icon: "01d" }] });
     }, 1000);
 
     return () => {
@@ -138,7 +82,7 @@ function Wrapper() {
                 </span>
               </div>
             </span>{" "}
-            | <RemoteTemperature remoteTemperature={remoteTemperature} />
+            | <RemoteTemperature remoteTemperature={data.weather} />
           </span>
         </div>
         <div className="octopus">
@@ -154,7 +98,7 @@ function Wrapper() {
   }
 }
 
-ReactDOM.render(<Wrapper />, document.getElementById("contents"));
+ReactDOM.render(<Main />, document.getElementById("contents"));
 
 ////////
 ////////
