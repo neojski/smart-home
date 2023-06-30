@@ -20,7 +20,6 @@ function Main() {
 
   useEffect(() => {
     const homeAssistant = new HomeAssistant(setData);
-
     return () => {
       homeAssistant.destroy();
     };
