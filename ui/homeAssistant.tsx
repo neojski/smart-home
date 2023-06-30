@@ -3,18 +3,32 @@
 import { Data } from "./Data";
 
 export default class {
-  constructor(f: { (data: Data): void }) {
+  interval;
+  update: { (data: Data): void };
+
+  constructor(update: { (data: Data): void }) {
     // CR: actually read data from websockets
-    f({
+    this.update = update;
+    this.interval = setInterval(this.refresh.bind(this), 5000);
+    this.refresh();
+  }
+
+  refresh() {
+    function noise(n: number) {
+      return n + Math.floor(100 * Math.random());
+    }
+    this.update({
       aqi: 999,
-      power: 999,
+      power: noise(500),
       upTemperature: 999,
       downTemperature: 999,
       weather: { main: { temp: 999 }, weather: [{ icon: "01d" }] },
     });
   }
 
-  destroy() {}
+  destroy() {
+    clearInterval(this.interval);
+  }
 }
 
 // Configuration
