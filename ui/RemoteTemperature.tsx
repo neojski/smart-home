@@ -33,14 +33,19 @@ export function RemoteTemperature({
   } as const;
 
   if (remoteTemperature === undefined) {
-    return errorSpan(remoteTemperature);
+    return errorSpan();
   } else {
     const iconKey = remoteTemperature.icon;
     const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
-    const iconEl = icon !== undefined ? <span className={icon}></span> : "?";
+    const iconEl =
+      icon !== undefined ? (
+        <span className={icon} style={{ fontFamily: "meteocons" }}></span>
+      ) : (
+        "?"
+      );
     return (
       <span>
-        {Math.round(remoteTemperature.temp)}°C{iconEl}
+        {Math.round(remoteTemperature.temp)}°C {iconEl}
       </span>
     );
   }
