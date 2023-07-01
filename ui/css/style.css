@@ -26,9 +26,6 @@ html {
   font-weight: normal;
   font-style: normal;
 }
-.icon {
-  font-family: meteocons;
-}
 .icon-windy-rain-inv:before {
   content: "\21";
 } /* '!' */
