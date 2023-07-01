@@ -37,8 +37,7 @@ export function RemoteTemperature({
   } else {
     const iconKey = remoteTemperature.weather[0].icon;
     const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
-    const iconEl =
-      icon !== undefined ? <span className={"icon" + icon}></span> : "?";
+    const iconEl = icon !== undefined ? <span className={icon}></span> : "?";
     return (
       <span>
         {Math.round(remoteTemperature.main.temp)}°C{iconEl}
