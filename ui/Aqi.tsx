@@ -1,16 +1,15 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
 export function Aqi({ aqi }: { aqi: number | undefined }) {
-  let local;
+  let content;
   if (aqi !== undefined) {
-    local = Math.round(aqi);
+    content = Math.round(aqi);
   } else {
-    local = errorSpan();
+    content = errorSpan();
   }
-
   return (
     <div>
-      {local}
+      {content}
       <span
         style={{
           fontSize: "16px",
