@@ -1,4 +1,4 @@
-import { remoteTemperature } from "./RemoteTemperature";
+import { remoteTemperature } from "./Weather";
 
 export type Data = {
   aqi: number | undefined;
