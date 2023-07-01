@@ -5,12 +5,22 @@ export function Aqi({ aqi }: { aqi: number | undefined }) {
   if (aqi !== undefined) {
     local = Math.round(aqi);
   } else {
-    local = errorSpan("purifier undefined");
+    local = errorSpan();
   }
+
   return (
     <div>
       {local}
-      <span className="pm25">PM2.5</span>
+      <span
+        style={{
+          fontSize: "16px",
+          transform: "translate(16px, 0px) rotate(-90deg)",
+          display: "inline-block",
+          transformOrigin: "bottom left",
+        }}
+      >
+        PM2.5
+      </span>
     </div>
   );
 }

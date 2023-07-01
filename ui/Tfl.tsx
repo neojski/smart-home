@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { pad } from "./pad";
-import { initialError } from "./mirror";
+import { initialError } from "./const";
 import { errorSpan } from "./errorSpan";
 
 import { getJSONData } from "./getJSONData";

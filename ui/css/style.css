@@ -9,9 +9,6 @@ html {
   color: #fff;
   overflow: hidden;
 }
-.error {
-  font-size: 30%;
-}
 .weather {
   font-size: 140px;
   font-weight: 300;
@@ -34,12 +31,6 @@ html {
   font-size: 100px;
   margin: 300px 0 0 700px;
   text-align: center;
-}
-.aqi .pm25 {
-  font-size: 20px;
-  transform: translate(20px, 0px) rotate(-90deg);
-  display: inline-block;
-  transform-origin: bottom left;
 }
 .trains {
   font-size: 40px;
