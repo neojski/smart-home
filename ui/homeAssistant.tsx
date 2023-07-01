@@ -2,6 +2,10 @@
 
 import { Data } from "./Data";
 
+const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
+const HA_ACCESS_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiM2IxYzI1ZmViOGI0YzE5OTM2ZDYyZWQwM2E4OTNmYyIsImlhdCI6MTY4ODE1NzA5NywiZXhwIjoyMDAzNTE3MDk3fQ.O6sL-X2bB7ztsEitEhkGtzW6z-O_f75JlVee8dUDq24";
+
 export default class {
   update: { (data: Data): void };
   socket: WebSocket;
@@ -26,67 +30,64 @@ export default class {
 
     this.entityStates = new Map();
 
-    const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
-    const HA_ACCESS_TOKEN =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiM2IxYzI1ZmViOGI0YzE5OTM2ZDYyZWQwM2E4OTNmYyIsImlhdCI6MTY4ODE1NzA5NywiZXhwIjoyMDAzNTE3MDk3fQ.O6sL-X2bB7ztsEitEhkGtzW6z-O_f75JlVee8dUDq24";
     // Connect to Home Assistant WebSocket API
     this.socket = new WebSocket(HA_WS_API_URL);
     this.socket.addEventListener("open", () => {
       console.log("Connected to Home Assistant WebSocket API");
-
-      this.socket.addEventListener("message", (event: any) => {
-        const message = JSON.parse(event.data);
-
-        if (message.type === "auth_required") {
-          // Authenticate with Home Assistant
-          this.send(
-            { type: "auth", access_token: HA_ACCESS_TOKEN },
-            // auth forbids ids
-            { suppressId: true }
-          );
-        } else if (message.type === "auth_ok") {
-          console.log("Authentication successful");
-
-          // This should cause message.type "result". We do it to get initial snapshot of events
-          this.send({ type: "get_states" });
-
-          // Subscribe to events
-          this.send({ type: "subscribe_events" });
-        } else if (message.type === "event") {
-          if (message.event.event_type === "state_changed") {
-            this.entityStates.set(
-              message.event.data.entity_id,
-              message.event.data.new_state.state
-            );
-            this.refresh();
-          } else {
-            console.warn("ignored event", message);
-          }
-        } else if (message.type === "result") {
-          if (message.result) {
-            console.log(message.result);
-            const results: { entity_id: string; state: string }[] =
-              message.result;
-
-            this.entityStates = new Map(
-              results.map((result) => [result.entity_id, result.state])
-            );
-
-            this.refresh();
-          } else {
-            console.warn("message.result is falsy", message);
-          }
-        } else {
-          console.warn("ignored message kind", message);
-        }
-      });
-      this.socket.addEventListener("close", () => {
-        console.log("Disconnected from Home Assistant WebSocket API");
-      });
-      this.socket.addEventListener("error", (error) => {
-        console.error("WebSocket error:", error);
-      });
+      this.socket.addEventListener("message", this.onMessage.bind(this));
     });
+    this.socket.addEventListener("close", () => {
+      console.log("Disconnected from Home Assistant WebSocket API");
+    });
+    this.socket.addEventListener("error", (error) => {
+      console.error("WebSocket error:", error);
+    });
+  }
+
+  onMessage(event: any) {
+    const message = JSON.parse(event.data);
+
+    if (message.type === "auth_required") {
+      // Authenticate with Home Assistant
+      this.send(
+        { type: "auth", access_token: HA_ACCESS_TOKEN },
+        // auth forbids ids
+        { suppressId: true }
+      );
+    } else if (message.type === "auth_ok") {
+      console.log("Authentication successful");
+
+      // This should cause message.type "result". We do it to get initial snapshot of events
+      this.send({ type: "get_states" });
+
+      // Subscribe to events
+      this.send({ type: "subscribe_events" });
+    } else if (message.type === "event") {
+      if (message.event.event_type === "state_changed") {
+        this.entityStates.set(
+          message.event.data.entity_id,
+          message.event.data.new_state.state
+        );
+        this.refresh();
+      } else {
+        console.warn("ignored event", message);
+      }
+    } else if (message.type === "result") {
+      if (message.result) {
+        console.log(message.result);
+        const results: { entity_id: string; state: string }[] = message.result;
+
+        this.entityStates = new Map(
+          results.map((result) => [result.entity_id, result.state])
+        );
+
+        this.refresh();
+      } else {
+        console.warn("message.result is falsy", message);
+      }
+    } else {
+      console.warn("ignored message kind", message);
+    }
   }
 
   refresh() {
