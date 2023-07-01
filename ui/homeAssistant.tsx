@@ -1,7 +1,7 @@
 /* Module for fetching data from home assistant */
 
 import { Data } from "./Data";
-import { remoteTemperature } from "./RemoteTemperature";
+import { remoteTemperature } from "./Weather";
 
 export default class {
   data: Data;
