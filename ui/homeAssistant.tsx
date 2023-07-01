@@ -31,17 +31,28 @@ export default class {
   }
 
   connect() {
+    console.log("Connecting to Home Assistant WebSocket");
     this.socket = new WebSocket(HA_WS_API_URL);
-    this.socket.addEventListener("open", () => {
-      console.log("Connected to Home Assistant WebSocket API");
-      this.socket.addEventListener("message", this.onMessage.bind(this));
-    });
-    this.socket.addEventListener("close", () => {
-      console.log("Disconnected from Home Assistant WebSocket API");
-    });
-    this.socket.addEventListener("error", (error) => {
-      console.error("WebSocket error:", error);
-    });
+    this.socket.addEventListener("open", this.onOpen.bind(this));
+    this.socket.addEventListener("close", this.onClose.bind(this));
+    this.socket.addEventListener("error", this.onError.bind(this));
+  }
+
+  onOpen() {
+    console.log("Connected to Home Assistant WebSocket API");
+    this.socket.addEventListener("message", this.onMessage.bind(this));
+  }
+
+  onClose() {
+    console.error(
+      "Disconnected from Home Assistant WebSocket API. Reconnecting"
+    );
+    setTimeout(this.connect.bind(this), 1000);
+  }
+
+  onError(error: Event) {
+    console.error("WebSocket error:", error);
+    this.socket.close();
   }
 
   onMessage(event: any) {
