@@ -9,21 +9,6 @@ html {
   color: #fff;
   overflow: hidden;
 }
-.weather {
-  font-size: 140px;
-  font-weight: 300;
-  text-align: center;
-}
-.weather .icon {
-  display: inline-block;
-}
-.weather .description {
-  font-size: 30px;
-  display: inline-block;
-  transform: rotate(-70deg);
-  transform-origin: top left;
-  display: none; /* long descripitons destroy layout */
-}
 .tvSocket {
   text-align: center;
 }

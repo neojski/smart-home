@@ -11,7 +11,13 @@ export function Weather({
   weather: remoteTemperature | string;
 }) {
   return (
-    <div className="weather">
+    <div
+      style={{
+        fontSize: "140px",
+        fontWeight: 300,
+        textAlign: "center",
+      }}
+    >
       <span style={{ display: "inline-block", margin: "0 50px" }}>
         <span
           style={{
