@@ -7,10 +7,15 @@ import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
-import { errorSpan } from "./errorSpan";
 
 export function Main() {
-  const [data, setData] = useState<Data | undefined>(undefined);
+  const [data, setData] = useState<Data>({
+    aqi: undefined,
+    power: undefined,
+    upTemperature: undefined,
+    downTemperature: undefined,
+    weather: undefined,
+  });
 
   useEffect(() => {
     const homeAssistant = new HomeAssistant(setData);
@@ -19,9 +24,6 @@ export function Main() {
     };
   }, []);
 
-  if (!data) {
-    return errorSpan();
-  }
   return (
     <div>
       <Aqi aqi={data.aqi} />

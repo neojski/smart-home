@@ -21,10 +21,8 @@ export default class {
   }
 
   constructor(update: { (data: Data): void }) {
-    // CR: actually read data from websockets
     this.update = update;
 
-    // CR: not sure about this error handling
     this.data = {
       aqi: undefined,
       power: undefined,
