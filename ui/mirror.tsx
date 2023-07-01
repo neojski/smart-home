@@ -27,7 +27,7 @@ export function Main() {
         <div>
           <Clock />
         </div>
-        {Weather(data)}
+        <div>{Weather(data)}</div>
         <div className="octopus">
           <Octopus power={data.power} />
         </div>
