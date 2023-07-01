@@ -19,23 +19,22 @@ export function Main() {
     };
   }, []);
 
-  if (data) {
-    return (
-      <div>
-        <Aqi aqi={data.aqi} />
-        <Clock />
-        <Weather
-          upTemperature={data.upTemperature}
-          downTemperature={data.downTemperature}
-          weather={data.weather}
-        />
-        <Octopus power={data.power} />
-        <Tfl />
-      </div>
-    );
-  } else {
+  if (!data) {
     return errorSpan();
   }
+  return (
+    <div>
+      <Aqi aqi={data.aqi} />
+      <Clock />
+      <Weather
+        upTemperature={data.upTemperature}
+        downTemperature={data.downTemperature}
+        weather={data.weather}
+      />
+      <Octopus power={data.power} />
+      <Tfl />
+    </div>
+  );
 }
 
 ReactDOM.render(<Main />, document.getElementById("contents"));
