@@ -6,6 +6,7 @@ export default class {
   update: { (data: Data): void };
   socket: WebSocket;
   nextId: number;
+  entityStates: Map<string, string>; // map from entity id to state
 
   send(
     query: any,
@@ -22,6 +23,8 @@ export default class {
     this.update = update;
 
     this.nextId = 1;
+
+    this.entityStates = new Map();
 
     const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
     const HA_ACCESS_TOKEN =
@@ -47,15 +50,29 @@ export default class {
           // This should cause message.type "result". We do it to get initial snapshot of events
           this.send({ type: "get_states" });
 
-          // CR Also subscribe to events
-          //this.send({ type: "subscribe_events" });
-        } else if (message.type === "message") {
-          // CR this is untested
-          this.refresh(message);
+          // Subscribe to events
+          this.send({ type: "subscribe_events" });
+        } else if (message.type === "event") {
+          if (message.event.event_type === "state_changed") {
+            this.entityStates.set(
+              message.event.data.entity_id,
+              message.event.data.new_state.state
+            );
+            this.refresh();
+          } else {
+            console.warn("ignored event", message);
+          }
         } else if (message.type === "result") {
           if (message.result) {
             console.log(message.result);
-            this.refresh(message.result);
+            const results: { entity_id: string; state: string }[] =
+              message.result;
+
+            this.entityStates = new Map(
+              results.map((result) => [result.entity_id, result.state])
+            );
+
+            this.refresh();
           } else {
             console.warn("message.result is falsy", message);
           }
@@ -72,11 +89,7 @@ export default class {
     });
   }
 
-  refresh(results: { entity_id: string; state: string }[]) {
-    const sensors = new Map(
-      results.map((result) => [result.entity_id, result.state])
-    );
-
+  refresh() {
     function noise(n: number) {
       return n + Math.floor((n / 5) * Math.random());
     }
@@ -98,14 +111,14 @@ export default class {
 
     const data: Y<X<Data>> = {
       weather: {
-        temp: sensors.get("sensor.openweathermap_temperature"),
-        icon: sensors.get("sensor.openweathermap_weather_code"),
+        temp: this.entityStates.get("sensor.openweathermap_temperature"),
+        icon: this.entityStates.get("sensor.openweathermap_weather_code"),
       },
       power,
       aqi,
       upTemperature,
       downTemperature,
-      button: sensors.get("input_boolean.my_button"),
+      button: this.entityStates.get("input_boolean.my_button"),
     };
     this.update(data);
   }
