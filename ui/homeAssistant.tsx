@@ -88,7 +88,7 @@ export default class {
       if (result.entity_id === "sensor.openweathermap_temperature") {
         this.data.weather = {
           temp: Number(result.state),
-          icon: "01d",
+          icon: 200,
           // CR fix
         };
       }
