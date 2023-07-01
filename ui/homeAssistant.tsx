@@ -4,17 +4,16 @@ import { Data } from "./Data";
 import { temperatureWithIcon } from "./Weather";
 
 export default class {
-  data: Data;
   update: { (data: Data): void };
   socket: WebSocket;
-  next: number;
+  nextId: number;
 
   send(
     query: any,
     { suppressId }: { suppressId: boolean } = { suppressId: false }
   ) {
     if (!suppressId) {
-      const id = this.next++;
+      const id = this.nextId++;
       query.id = id;
     }
     this.socket.send(JSON.stringify(query));
@@ -23,8 +22,7 @@ export default class {
   constructor(update: { (data: Data): void }) {
     this.update = update;
 
-    this.data = {};
-    this.next = 1;
+    this.nextId = 1;
 
     const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
     const HA_ACCESS_TOKEN =
@@ -86,16 +84,25 @@ export default class {
         weather.icon = Number(result.state);
       }
     }
-    this.data.weather = weather;
 
     function noise(n: number) {
-      return n + Math.floor(100 * Math.random());
+      return n + Math.floor((n / 5) * Math.random());
     }
 
-    // CR other bits
-    this.data.power = noise(500);
+    // CR actually fetch from home assistant
+    const power = noise(500);
+    const aqi = noise(20);
+    const upTemperature = noise(25);
+    const downTemperature = noise(25);
 
-    this.update(this.data);
+    const data: Required<Data> = {
+      weather,
+      power,
+      aqi,
+      upTemperature,
+      downTemperature,
+    };
+    this.update(data);
   }
 
   destroy() {
