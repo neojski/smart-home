@@ -87,15 +87,9 @@ export default class {
     for (const result of results) {
       if (result.entity_id === "sensor.openweathermap_temperature") {
         this.data.weather = {
-          main: {
-            temp: Number(result.state),
-          },
-          weather: [
-            {
-              icon: "01d",
-              // CR fix
-            },
-          ],
+          temp: Number(result.state),
+          icon: "01d",
+          // CR fix
         };
       }
     }

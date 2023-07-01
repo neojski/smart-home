@@ -2,8 +2,8 @@ import React from "react";
 import { errorSpan } from "./errorSpan";
 
 export type remoteTemperature = {
-  main: { temp: number };
-  weather: { icon: string }[];
+  temp: number;
+  icon: string;
 };
 
 export function RemoteTemperature({
@@ -35,12 +35,12 @@ export function RemoteTemperature({
   if (remoteTemperature === undefined) {
     return errorSpan(remoteTemperature);
   } else {
-    const iconKey = remoteTemperature.weather[0].icon;
+    const iconKey = remoteTemperature.icon;
     const icon = (iconMap as { [x: string]: string | undefined })[iconKey];
     const iconEl = icon !== undefined ? <span className={icon}></span> : "?";
     return (
       <span>
-        {Math.round(remoteTemperature.main.temp)}°C{iconEl}
+        {Math.round(remoteTemperature.temp)}°C{iconEl}
       </span>
     );
   }
