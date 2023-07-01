@@ -1,7 +1,7 @@
 /* Module for fetching data from home assistant */
 
 import { Data } from "./Data";
-import { remoteTemperature } from "./Weather";
+import { temperatureWithIcon } from "./Weather";
 
 export default class {
   data: Data;
@@ -85,7 +85,7 @@ export default class {
 
   // CR-someday: sad types
   refresh(results: any[]) {
-    let weather: remoteTemperature = {};
+    let weather: temperatureWithIcon = {};
     for (const result of results) {
       if (result.entity_id === "sensor.openweathermap_temperature") {
         weather.temp = Number(result.state);

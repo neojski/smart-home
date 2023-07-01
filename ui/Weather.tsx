@@ -1,15 +1,15 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
 
-export type remoteTemperature = {
+export type temperatureWithIcon = {
   temp?: number;
   icon?: number;
 };
 
-export function RemoteTemperature({
+export function TemperatureWithIcon({
   remoteTemperature,
 }: {
-  remoteTemperature: remoteTemperature | undefined;
+  remoteTemperature: temperatureWithIcon | undefined;
 }) {
   if (remoteTemperature === undefined) {
     return errorSpan();
@@ -35,7 +35,7 @@ export function Weather({
 }: {
   upTemperature: number | undefined;
   downTemperature: number | undefined;
-  weather: remoteTemperature | undefined;
+  weather: temperatureWithIcon | undefined;
 }) {
   return (
     <div
@@ -75,7 +75,7 @@ export function Weather({
             </span>
           </div>
         </span>{" "}
-        | <RemoteTemperature remoteTemperature={weather} />
+        | <TemperatureWithIcon remoteTemperature={weather} />
       </span>
     </div>
   );
