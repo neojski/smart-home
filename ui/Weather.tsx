@@ -1,8 +1,15 @@
 import React from "react";
-import { RemoteTemperature } from "./RemoteTemperature";
-import { Data } from "./Data";
+import { RemoteTemperature, remoteTemperature } from "./RemoteTemperature";
 
-export function Weather(data: Data) {
+export function Weather({
+  upTemperature,
+  downTemperature,
+  weather,
+}: {
+  upTemperature: number | undefined;
+  downTemperature: number | undefined;
+  weather: remoteTemperature | string;
+}) {
   return (
     <div className="weather">
       <span style={{ display: "inline-block", margin: "0 50px" }}>
@@ -21,7 +28,7 @@ export function Weather(data: Data) {
                 clear: "right",
               }}
             >
-              {data.upTemperature}
+              {upTemperature}
             </span>
           </div>
           <div>
@@ -31,11 +38,11 @@ export function Weather(data: Data) {
                 marginRight: "80px",
               }}
             >
-              {data.downTemperature}
+              {downTemperature}
             </span>
           </div>
         </span>{" "}
-        | <RemoteTemperature remoteTemperature={data.weather} />
+        | <RemoteTemperature remoteTemperature={weather} />
       </span>
     </div>
   );
