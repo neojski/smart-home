@@ -27,7 +27,7 @@ export default class {
     this.update = update;
     this.nextId = 1;
     this.entityStates = new Map();
-    this.connect();
+    this.socket = this.connect();
   }
 
   connect() {
@@ -36,6 +36,7 @@ export default class {
     this.socket.addEventListener("open", this.onOpen.bind(this));
     this.socket.addEventListener("close", this.onClose.bind(this));
     this.socket.addEventListener("error", this.onError.bind(this));
+    return this.socket;
   }
 
   onOpen() {
