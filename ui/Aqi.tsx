@@ -8,7 +8,13 @@ export function Aqi({ aqi }: { aqi: number | undefined }) {
     content = errorSpan();
   }
   return (
-    <div>
+    <div
+      style={{
+        margin: "300px 0 0 700px",
+        textAlign: "center",
+        fontSize: "100px",
+      }}
+    >
       {content}
       <span
         style={{

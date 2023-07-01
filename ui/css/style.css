@@ -9,14 +9,6 @@ html {
   color: #fff;
   overflow: hidden;
 }
-.tvSocket {
-  text-align: center;
-}
-.aqi {
-  font-size: 100px;
-  margin: 300px 0 0 700px;
-  text-align: center;
-}
 .trains {
   font-size: 40px;
 }
