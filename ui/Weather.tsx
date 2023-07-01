@@ -8,7 +8,7 @@ export function Weather({
 }: {
   upTemperature: number | undefined;
   downTemperature: number | undefined;
-  weather: remoteTemperature | string;
+  weather: remoteTemperature | undefined;
 }) {
   return (
     <div

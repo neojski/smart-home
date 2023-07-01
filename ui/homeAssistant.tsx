@@ -27,9 +27,9 @@ export default class {
     this.data = {
       aqi: undefined,
       power: undefined,
-      upTemperature: undefined,
-      downTemperature: undefined,
-      weather: "undefined",
+      upTemperature: 25,
+      downTemperature: 20,
+      weather: undefined,
     };
     this.next = 1;
 

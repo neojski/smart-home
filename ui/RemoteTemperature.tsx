@@ -9,7 +9,7 @@ export type remoteTemperature = {
 export function RemoteTemperature({
   remoteTemperature,
 }: {
-  remoteTemperature: remoteTemperature | string;
+  remoteTemperature: remoteTemperature | undefined;
 }) {
   const iconMap = {
     "01d": "icon-sun",
@@ -32,7 +32,7 @@ export function RemoteTemperature({
     "50n": "icon-fog",
   } as const;
 
-  if (typeof remoteTemperature === "string") {
+  if (remoteTemperature === undefined) {
     return errorSpan(remoteTemperature);
   } else {
     const iconKey = remoteTemperature.weather[0].icon;

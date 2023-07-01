@@ -5,5 +5,5 @@ export type Data = {
   power: number | undefined;
   upTemperature: number | undefined;
   downTemperature: number | undefined;
-  weather: remoteTemperature | string;
+  weather: remoteTemperature | undefined;
 };
