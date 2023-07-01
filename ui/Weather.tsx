@@ -2,8 +2,8 @@ import React from "react";
 import { errorSpan } from "./errorSpan";
 
 export type temperatureWithIcon = {
-  temp?: number;
-  icon?: number;
+  temp?: string;
+  icon?: string;
 };
 
 export function TemperatureWithIcon({
@@ -18,7 +18,7 @@ export function TemperatureWithIcon({
     const iconEl = <i className={iconId}></i>;
     let temp = "?";
     if (remoteTemperature.temp !== undefined) {
-      temp = "" + Math.round(remoteTemperature.temp);
+      temp = "" + Math.round(+remoteTemperature.temp);
     }
     return (
       <span>
