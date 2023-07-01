@@ -8,14 +8,12 @@ import { RemoteTemperature } from "./RemoteTemperature";
 import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 
-export const initialError = "↻";
-
 export type remoteTemperature = {
   main: { temp: number };
   weather: { icon: string }[];
 };
 
-function Main() {
+export function Main() {
   const [data, setData] = useState<Data | undefined>(undefined);
 
   useEffect(() => {

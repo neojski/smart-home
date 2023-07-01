@@ -1,4 +1,6 @@
 import React from "react";
-export function errorSpan(c: Error | string) {
+import { initialError } from "./const";
+
+export function errorSpan(c: Error | string = initialError) {
   return <span className="error">{c.toString()}</span>;
 }
