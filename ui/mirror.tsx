@@ -7,6 +7,7 @@ import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
+import { errorSpan } from "./errorSpan";
 
 export function Main() {
   const [data, setData] = useState<Data | undefined>(undefined);
@@ -21,23 +22,19 @@ export function Main() {
   if (data) {
     return (
       <div>
-        <div className="aqi">
-          <Aqi aqi={data.aqi} />
-        </div>
-        <div>
-          <Clock />
-        </div>
-        <div>{Weather(data)}</div>
-        <div className="octopus">
-          <Octopus power={data.power} />
-        </div>
-        <div className="trains">
-          <Tfl />
-        </div>
+        <Aqi aqi={data.aqi} />
+        <Clock />
+        <Weather
+          upTemperature={data.upTemperature}
+          downTemperature={data.downTemperature}
+          weather={data.weather}
+        />
+        <Octopus power={data.power} />
+        <Tfl />
       </div>
     );
   } else {
-    return <div>Waiting for data</div>;
+    return errorSpan();
   }
 }
 
