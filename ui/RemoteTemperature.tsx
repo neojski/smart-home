@@ -1,6 +1,10 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
-import { remoteTemperature } from "./mirror";
+
+export type remoteTemperature = {
+  main: { temp: number };
+  weather: { icon: string }[];
+};
 
 export function RemoteTemperature({
   remoteTemperature,
