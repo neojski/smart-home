@@ -9,13 +9,7 @@ import { Data } from "./Data";
 import { Weather } from "./Weather";
 
 export function Main() {
-  const [data, setData] = useState<Data>({
-    aqi: undefined,
-    power: undefined,
-    upTemperature: undefined,
-    downTemperature: undefined,
-    weather: undefined,
-  });
+  const [data, setData] = useState<Data>({});
 
   useEffect(() => {
     const homeAssistant = new HomeAssistant(setData);

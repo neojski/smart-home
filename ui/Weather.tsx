@@ -37,6 +37,8 @@ export function Weather({
   downTemperature: number | undefined;
   weather: temperatureWithIcon | undefined;
 }) {
+  let upTemperatureContent = upTemperature ?? errorSpan();
+  let downTemperatureContent = downTemperature ?? errorSpan();
   return (
     <div
       style={{
@@ -61,7 +63,7 @@ export function Weather({
                 clear: "right",
               }}
             >
-              {upTemperature}
+              {upTemperatureContent}
             </span>
           </div>
           <div>
@@ -71,7 +73,7 @@ export function Weather({
                 marginRight: "80px",
               }}
             >
-              {downTemperature}
+              {downTemperatureContent}
             </span>
           </div>
         </span>{" "}
