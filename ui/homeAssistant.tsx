@@ -23,13 +23,7 @@ export default class {
   constructor(update: { (data: Data): void }) {
     this.update = update;
 
-    this.data = {
-      aqi: undefined,
-      power: undefined,
-      upTemperature: 25,
-      downTemperature: 20,
-      weather: undefined,
-    };
+    this.data = {};
     this.next = 1;
 
     const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
