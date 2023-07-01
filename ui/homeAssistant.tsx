@@ -1,7 +1,6 @@
 /* Module for fetching data from home assistant */
 
 import { Data } from "./Data";
-import { temperatureWithIcon } from "./Weather";
 
 export default class {
   update: { (data: Data): void };
@@ -73,17 +72,10 @@ export default class {
     });
   }
 
-  // CR-someday: sad types
-  refresh(results: any[]) {
-    let weather: temperatureWithIcon = {};
-    for (const result of results) {
-      if (result.entity_id === "sensor.openweathermap_temperature") {
-        weather.temp = Number(result.state);
-      }
-      if (result.entity_id === "sensor.openweathermap_weather_code") {
-        weather.icon = Number(result.state);
-      }
-    }
+  refresh(results: { entity_id: string; state: string }[]) {
+    const sensors = new Map(
+      results.map((result) => [result.entity_id, result.state])
+    );
 
     function noise(n: number) {
       return n + Math.floor((n / 5) * Math.random());
@@ -96,7 +88,10 @@ export default class {
     const downTemperature = noise(25);
 
     const data: Required<Data> = {
-      weather,
+      weather: {
+        temp: sensors.get("sensor.openweathermap_temperature"),
+        icon: sensors.get("sensor.openweathermap_weather_code"),
+      },
       power,
       aqi,
       upTemperature,
