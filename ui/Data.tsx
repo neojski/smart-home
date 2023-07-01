@@ -6,4 +6,5 @@ export type Data = {
   upTemperature?: number;
   downTemperature?: number;
   weather?: temperatureWithIcon;
+  button?: string;
 };

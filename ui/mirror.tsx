@@ -7,6 +7,7 @@ import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
+import { Button } from "./Button";
 
 export function Main() {
   const [data, setData] = useState<Data>({});
@@ -21,6 +22,7 @@ export function Main() {
   return (
     <div>
       <Aqi aqi={data.aqi} />
+      <Button data={data.button} />
       <Clock />
       <Weather
         upTemperature={data.upTemperature}

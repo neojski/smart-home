@@ -47,7 +47,7 @@ export default class {
           // This should cause message.type "result". We do it to get initial snapshot of events
           this.send({ type: "get_states" });
 
-          // Also subscribe to events
+          // CR Also subscribe to events
           //this.send({ type: "subscribe_events" });
         } else if (message.type === "message") {
           // CR this is untested
@@ -87,7 +87,16 @@ export default class {
     const upTemperature = noise(25);
     const downTemperature = noise(25);
 
-    const data: Required<Data> = {
+    // A little trick to make sure that we list all the keys of Data
+    // CR-someday: is this a bug in typescript that I can't do this in one go?
+    type X<T> = {
+      [P in keyof T]-?: T[P];
+    };
+    type Y<T> = {
+      [P in keyof T]: T[P] | undefined;
+    };
+
+    const data: Y<X<Data>> = {
       weather: {
         temp: sensors.get("sensor.openweathermap_temperature"),
         icon: sensors.get("sensor.openweathermap_weather_code"),
@@ -96,6 +105,7 @@ export default class {
       aqi,
       upTemperature,
       downTemperature,
+      button: sensors.get("input_boolean.my_button"),
     };
     this.update(data);
   }
