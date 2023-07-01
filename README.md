@@ -36,3 +36,7 @@ https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor
 - On raspberry pi I use `n` for managing node version.
 - Enabled auto-login through `sudo raspi-config` -> `Boot Options` -> `Desktop / CLI` -> `Console Autologin`
 - Copied over `node_modules/@tuyapi/driver/` to raspberry pi. This seems really bad
+
+# Testing websocket disconnections
+
+`sudo tcpkill port 8123 -i lo`
