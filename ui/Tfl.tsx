@@ -58,7 +58,7 @@ export function Tfl() {
   });
 
   return (
-    <div style={{ margin: "40px" }}>
+    <div style={{ margin: "40px", fontSize: "40px" }}>
       Amersham Station: {vehicles.length === 0 ? "no trains" : ""}
       <ul style={{ position: "relative" }}>
         {vehicles
