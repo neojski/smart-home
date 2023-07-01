@@ -1,5 +1,6 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
+import { initialError } from "./const";
 
 export type temperatureWithIcon = {
   temp?: string;
@@ -16,7 +17,7 @@ export function TemperatureWithIcon({
   } else {
     const iconId = "wi wi-owm-" + remoteTemperature.icon;
     const iconEl = <i className={iconId}></i>;
-    let temp = "?";
+    let temp = initialError;
     if (remoteTemperature.temp !== undefined) {
       temp = "" + Math.round(+remoteTemperature.temp);
     }
