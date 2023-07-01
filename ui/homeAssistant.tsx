@@ -25,12 +25,12 @@ export default class {
 
   constructor(update: { (data: Data): void }) {
     this.update = update;
-
     this.nextId = 1;
-
     this.entityStates = new Map();
+    this.connect();
+  }
 
-    // Connect to Home Assistant WebSocket API
+  connect() {
     this.socket = new WebSocket(HA_WS_API_URL);
     this.socket.addEventListener("open", () => {
       console.log("Connected to Home Assistant WebSocket API");
