@@ -1,4 +1,4 @@
-import { remoteTemperature } from "./mirror";
+import { remoteTemperature } from "./RemoteTemperature";
 
 export type Data = {
   aqi: number | undefined;
