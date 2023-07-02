@@ -13,7 +13,6 @@ function Status({ line }: { line: string }) {
   let [status, setStatus] = useState<undefined | string[]>(undefined);
 
   async function update() {
-    console.log("update");
     try {
       const datas = await getJSONData(url, false);
       let results: string[] = [];
