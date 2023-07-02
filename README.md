@@ -17,9 +17,10 @@ UI displays the data:
 
 The server is run using pm2 that's, in turn, started by systemd (http://pm2.keymetrics.io/docs/usage/startup).
 
-# Dev notes
+# Compilation
 
-- useful commands are in package.json
+- run build from vscode
+- then run ui-dev from package.json
 
 # Purifier
 
