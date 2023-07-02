@@ -5,6 +5,8 @@ import { errorSpan } from "./errorSpan";
 
 import { getJSONData } from "./getJSONData";
 
+// CR-someday: should I upload this to home assistant from server module?
+
 function Status({ line }: { line: string }) {
   const url = "https://api.tfl.gov.uk/Line/" + line + "/Status";
 
