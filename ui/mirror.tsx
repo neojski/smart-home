@@ -7,7 +7,6 @@ import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
-import { Button } from "./Button";
 
 export function Main() {
   const [data, setData] = useState<Data>({});
