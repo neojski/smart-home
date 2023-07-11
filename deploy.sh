@@ -33,3 +33,4 @@ rsync -avz dist pi:~/smart-home
 
 info 'Restarting smart-home on pi'
 ssh pi 'pm2 restart smart-home'
+ssh pi 'pm2 restart start_chromium'
