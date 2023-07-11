@@ -122,9 +122,7 @@ export default class {
       ),
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5"),
       upTemperature: this.entityStates.get("sensor.air_purifier_temperature"),
-      downTemperature: this.entityStates.get(
-        "sensor.mirror_temperature_sensor"
-      ),
+      downTemperature: this.entityStates.get("sensor.home_temperature"),
     };
     this.update(data);
   }
