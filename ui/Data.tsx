@@ -1,10 +1,9 @@
 import { temperatureWithIcon } from "./Weather";
 
 export type Data = {
-  aqi?: number;
-  power?: number;
-  upTemperature?: number;
-  downTemperature?: number;
+  aqi?: string;
+  power?: string;
+  upTemperature?: string;
+  downTemperature?: string;
   weather?: temperatureWithIcon;
-  button?: string;
 };

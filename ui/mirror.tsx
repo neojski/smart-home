@@ -22,7 +22,6 @@ export function Main() {
   return (
     <div>
       <Aqi aqi={data.aqi} />
-      <Button data={data.button} />
       <Clock />
       <Weather
         upTemperature={data.upTemperature}

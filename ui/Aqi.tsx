@@ -1,9 +1,9 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
-export function Aqi({ aqi }: { aqi: number | undefined }) {
+export function Aqi({ aqi }: { aqi: string | undefined }) {
   let content;
   if (aqi !== undefined) {
-    content = Math.round(aqi);
+    content = Math.round(+aqi);
   } else {
     content = errorSpan();
   }

@@ -2,9 +2,9 @@
 
 import { Data } from "./Data";
 
-const HA_WS_API_URL = "ws://192.168.1.232:8123/api/websocket";
+const HA_WS_API_URL = "ws://192.168.0.176:8123/api/websocket";
 const HA_ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiM2IxYzI1ZmViOGI0YzE5OTM2ZDYyZWQwM2E4OTNmYyIsImlhdCI6MTY4ODE1NzA5NywiZXhwIjoyMDAzNTE3MDk3fQ.O6sL-X2bB7ztsEitEhkGtzW6z-O_f75JlVee8dUDq24";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlNTFmMjgzMGEwMDQ0ZTg5YmQ3YmIwNDhhMzAyNDYzZiIsImlhdCI6MTY4OTEwMTk4NywiZXhwIjoyMDA0NDYxOTg3fQ.yOGKRAXrtWfHOwJ4JPdIUUAmyswkuSF9GqfjmtGq-Tc";
 
 export default class {
   update: { (data: Data): void };
@@ -86,7 +86,7 @@ export default class {
       }
     } else if (message.type === "result") {
       if (message.result) {
-        console.log(message.result);
+        console.info("initial states", message.result);
         const results: { entity_id: string; state: string }[] = message.result;
 
         this.entityStates = new Map(
@@ -103,16 +103,6 @@ export default class {
   }
 
   refresh() {
-    function noise(n: number) {
-      return n + Math.floor((n / 5) * Math.random());
-    }
-
-    // CR actually fetch from home assistant
-    const power = noise(500);
-    const aqi = noise(20);
-    const upTemperature = noise(25);
-    const downTemperature = noise(25);
-
     // A little trick to make sure that we list all the keys of Data
     // CR-someday: is this a bug in typescript that I can't do this in one go?
     type X<T> = {
@@ -127,11 +117,14 @@ export default class {
         temp: this.entityStates.get("sensor.openweathermap_temperature"),
         icon: this.entityStates.get("sensor.openweathermap_weather_code"),
       },
-      power,
-      aqi,
-      upTemperature,
-      downTemperature,
-      button: this.entityStates.get("input_boolean.my_button"),
+      power: this.entityStates.get(
+        "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
+      ),
+      aqi: this.entityStates.get("sensor.air_purifier_pm2_5"),
+      upTemperature: this.entityStates.get("sensor.air_purifier_temperature"),
+      downTemperature: this.entityStates.get(
+        "sensor.mirror_temperature_sensor"
+      ),
     };
     this.update(data);
   }
