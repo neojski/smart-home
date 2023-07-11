@@ -34,12 +34,18 @@ export function Weather({
   downTemperature,
   weather,
 }: {
-  upTemperature: number | undefined;
-  downTemperature: number | undefined;
+  upTemperature: string | undefined;
+  downTemperature: string | undefined;
   weather: temperatureWithIcon | undefined;
 }) {
-  let upTemperatureContent = upTemperature ?? errorSpan();
-  let downTemperatureContent = downTemperature ?? errorSpan();
+  function roundOrError(x: string | undefined) {
+    if (x === undefined) {
+      return errorSpan();
+    }
+    return Math.round(+x);
+  }
+  let upTemperatureContent = roundOrError(upTemperature);
+  let downTemperatureContent = roundOrError(downTemperature);
   return (
     <div
       style={{
