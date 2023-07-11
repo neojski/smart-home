@@ -1,6 +1,5 @@
 import fs from "fs";
 import timestamp from "./timestamp";
-import { Temperature } from "../shared/Temperature";
 
 const debug = require("debug")("smart-home:temperature");
 
@@ -47,7 +46,7 @@ export default class {
     }
   }
 
-  get(): Temperature {
+  get() {
     return {
       timestamp: this.lastRead,
       data: average(this.temperatures) || undefined,
