@@ -4,8 +4,6 @@ import express from "express";
 
 /* This module is really just for publishing data to home assistant. */
 
-const debug = require("debug")("smart-home:main");
-
 const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.text());
