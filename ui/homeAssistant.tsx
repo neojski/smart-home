@@ -113,6 +113,7 @@ export default class {
     };
 
     const data: Y<X<Data>> = {
+      sun: this.entityStates.get("sun.sun"),
       weatherIcon: this.entityStates.get("sensor.openweathermap_weather_code"),
       outsideTemperature: this.entityStates.get("sensor.outside_temperature"),
       power: this.entityStates.get(

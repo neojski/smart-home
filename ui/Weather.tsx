@@ -6,11 +6,27 @@ export type temperatureWithIcon = {
   icon?: string;
 };
 
-export function WeatherIcon({ icon }: { icon: string | undefined }) {
-  if (icon === undefined) {
+export function WeatherIcon({
+  icon,
+  sun,
+}: {
+  icon: string | undefined;
+  sun: string | undefined;
+}) {
+  let isDay;
+  if (sun === "above_horizon") {
+    isDay = true;
+  } else if (sun === "below_horizon") {
+    isDay = false;
+  } else {
+    isDay = undefined;
+  }
+
+  if (icon === undefined || isDay === undefined) {
     return errorSpan();
   } else {
-    const iconId = "wi wi-owm-" + icon;
+    const dayOrNight = isDay ? "day" : "night";
+    const iconId = "wi wi-owm-" + dayOrNight + "-" + icon;
     return <i className={iconId}></i>;
   }
 }
@@ -20,11 +36,13 @@ export function Weather({
   downTemperature,
   outsideTemperature,
   weatherIcon,
+  sun,
 }: {
   upTemperature: string | undefined;
   downTemperature: string | undefined;
   outsideTemperature: string | undefined;
   weatherIcon: string | undefined;
+  sun: string | undefined;
 }) {
   function roundOrError(x: string | undefined) {
     if (x === undefined) {
@@ -73,7 +91,8 @@ export function Weather({
             </span>
           </div>
         </span>{" "}
-        | {outsideTemperatureContent} <WeatherIcon icon={weatherIcon} />
+        | {outsideTemperatureContent}{" "}
+        <WeatherIcon icon={weatherIcon} sun={sun} />
       </span>
     </div>
   );

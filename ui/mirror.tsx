@@ -27,6 +27,7 @@ export function Main() {
         downTemperature={data.downTemperature}
         outsideTemperature={data.outsideTemperature}
         weatherIcon={data.weatherIcon}
+        sun={data.sun}
       />
       <Octopus power={data.power} />
       <Tfl />
