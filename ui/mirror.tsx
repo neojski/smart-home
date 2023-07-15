@@ -25,7 +25,8 @@ export function Main() {
       <Weather
         upTemperature={data.upTemperature}
         downTemperature={data.downTemperature}
-        weather={data.weather}
+        outsideTemperature={data.outsideTemperature}
+        weatherIcon={data.weatherIcon}
       />
       <Octopus power={data.power} />
       <Tfl />

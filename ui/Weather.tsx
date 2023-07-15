@@ -1,51 +1,40 @@
 import React from "react";
 import { errorSpan } from "./errorSpan";
-import { initialError } from "./const";
 
 export type temperatureWithIcon = {
   temp?: string;
   icon?: string;
 };
 
-export function TemperatureWithIcon({
-  remoteTemperature,
-}: {
-  remoteTemperature: temperatureWithIcon | undefined;
-}) {
-  if (remoteTemperature === undefined) {
+export function WeatherIcon({ icon }: { icon: string | undefined }) {
+  if (icon === undefined) {
     return errorSpan();
   } else {
-    const iconId = "wi wi-owm-" + remoteTemperature.icon;
-    const iconEl = <i className={iconId}></i>;
-    let temp = initialError;
-    if (remoteTemperature.temp !== undefined) {
-      temp = "" + Math.round(+remoteTemperature.temp);
-    }
-    return (
-      <span>
-        {temp}°C {iconEl}
-      </span>
-    );
+    const iconId = "wi wi-owm-" + icon;
+    return <i className={iconId}></i>;
   }
 }
 
 export function Weather({
   upTemperature,
   downTemperature,
-  weather,
+  outsideTemperature,
+  weatherIcon,
 }: {
   upTemperature: string | undefined;
   downTemperature: string | undefined;
-  weather: temperatureWithIcon | undefined;
+  outsideTemperature: string | undefined;
+  weatherIcon: string | undefined;
 }) {
   function roundOrError(x: string | undefined) {
     if (x === undefined) {
       return errorSpan();
     }
-    return Math.round(+x);
+    return Math.round(+x) + "°C";
   }
   let upTemperatureContent = roundOrError(upTemperature);
   let downTemperatureContent = roundOrError(downTemperature);
+  let outsideTemperatureContent = roundOrError(outsideTemperature);
   return (
     <div
       style={{
@@ -84,7 +73,7 @@ export function Weather({
             </span>
           </div>
         </span>{" "}
-        | <TemperatureWithIcon remoteTemperature={weather} />
+        | {outsideTemperatureContent} <WeatherIcon icon={weatherIcon} />
       </span>
     </div>
   );
