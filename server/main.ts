@@ -17,16 +17,18 @@ console.log(__dirname + "/../");
 app.use(express.static(__dirname + "/../"));
 app.use(express.static(__dirname + "/../../ui"));
 
-const monitor = new Monitor("3");
+const monitor = new Monitor(3, true);
 
 app.get("/monitor", async function (_req, res) {
-  const is_on = await monitor.get();
+  const is_on = monitor.get();
   res.send(is_on ? "ON" : "OFF");
 });
 
-app.post("/monitor", async function (req, _res) {
+app.post("/monitor", async function (req, res) {
   const is_on = req.body === "ON";
+  console.log("Got post request", { is_on });
   monitor.set(is_on);
+  res.send("Ran set " + is_on);
 });
 
 app.listen(port, () => {
