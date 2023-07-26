@@ -3,6 +3,8 @@ import express from "express";
 
 /* This module is really just for publishing data to home assistant. */
 
+const port = 3000;
+
 const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.text());
@@ -25,4 +27,8 @@ app.get("/monitor", async function (_req, res) {
 app.post("/monitor", async function (req, _res) {
   const is_on = req.body === "ON";
   monitor.set(is_on);
+});
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 });
