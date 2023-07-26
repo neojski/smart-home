@@ -6,7 +6,7 @@ declare module "gpio" {
 
   export default class {
     static export: {
-      (pin: number, x: { direction: string; ready: () => void }): Gpio;
+      (pin: string, x: { direction: string; ready: () => void }): Gpio;
     };
   }
 }

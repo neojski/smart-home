@@ -4,7 +4,7 @@ import gpio, { Gpio } from "gpio";
 
 export default class {
   private gpio: Promise<Gpio>;
-  constructor(pin: number) {
+  constructor(pin: string) {
     this.gpio = new Promise(function (resolve) {
       const result = gpio.export(pin, {
         direction: "out",

@@ -15,7 +15,7 @@ console.log(__dirname + "/../");
 app.use(express.static(__dirname + "/../"));
 app.use(express.static(__dirname + "/../../ui"));
 
-const monitor = new Monitor(3);
+const monitor = new Monitor("3");
 
 app.get("/monitor", async function (_req, res) {
   const is_on = await monitor.get();
