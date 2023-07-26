@@ -9,21 +9,17 @@ export default class {
       const result = gpio.export(pin, {
         direction: "out",
         ready: function () {
-          result.set(true);
+          result.set("1");
           resolve(result);
         },
       });
     });
   }
-  async toggle() {
-    debug("toggle");
-    const gpio = await this.gpio;
-    gpio.set(!gpio.value);
-  }
   async set(b: boolean) {
-    debug("set", b);
+    const value = b ? "1" : "0";
+    debug("set", value);
     const gpio = await this.gpio;
-    gpio.set(b);
+    gpio.set(value);
   }
   async get() {
     const gpio = await this.gpio;

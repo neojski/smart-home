@@ -1,7 +1,7 @@
 declare module "gpio" {
   export class Gpio {
-    set: { (value: boolean): void };
-    value: boolean;
+    set: { (value: string): void };
+    value: string;
   }
 
   export default class {
