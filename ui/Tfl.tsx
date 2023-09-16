@@ -15,7 +15,8 @@ function Status({ line }: { line: string }) {
   async function update() {
     try {
       const datas = await getJSONData(url, false);
-      let results: string[] = [];
+      // Tfl has duplicate disruption data so we dedup it using set
+      let results: Set<string> = new Set();
       datas.forEach((data: any) => {
         data.lineStatuses.forEach((lineStatus: any) => {
           // statusSeverityDescription looks like:
@@ -25,13 +26,13 @@ function Status({ line }: { line: string }) {
           const status = lineStatus.statusSeverityDescription;
           const disruption = lineStatus?.disruption?.description;
           if (disruption) {
-            results.push(disruption);
+            results.add(disruption);
           } else {
-            results.push(status);
+            results.add(status);
           }
         });
       });
-      setStatus(results);
+      setStatus([...results]);
     } catch (e) {
       // CR-soon: better error handling?
       console.error(e);
