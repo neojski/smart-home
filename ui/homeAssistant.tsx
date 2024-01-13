@@ -10,7 +10,7 @@ export default class {
   update: { (data: Data): void };
   socket: WebSocket;
   nextId: number;
-  entityStates: Map<string, string>; // map from entity id to state
+  entityStates: Map<string, { state: string }>; // map from entity id to state
 
   send(
     query: any,
@@ -78,7 +78,7 @@ export default class {
       if (message.event.event_type === "state_changed") {
         this.entityStates.set(
           message.event.data.entity_id,
-          message.event.data.new_state.state
+          message.event.data.new_state
         );
         this.refresh();
       } else {
@@ -90,7 +90,7 @@ export default class {
         const results: { entity_id: string; state: string }[] = message.result;
 
         this.entityStates = new Map(
-          results.map((result) => [result.entity_id, result.state])
+          results.map((result) => [result.entity_id, result])
         );
 
         this.refresh();
@@ -113,17 +113,18 @@ export default class {
     };
 
     const data: Y<X<Data>> = {
-      sun: this.entityStates.get("sun.sun"),
-      weatherIcon: this.entityStates.get("sensor.openweathermap_weather_code"),
-      outsideTemperature: this.entityStates.get("sensor.outside_temperature"),
+      sun: this.entityStates.get("sun.sun")?.state,
+      weatherIcon: this.entityStates.get("sensor.openweathermap_weather_code")
+        ?.state,
+      outsideTemperature: this.entityStates.get("sensor.outside_temperature")
+        ?.state,
       power: this.entityStates.get(
         "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
-      ),
-      aqi: this.entityStates.get("sensor.air_purifier_pm2_5"),
-      upTemperature: this.entityStates.get(
-        "sensor.shellyht_007c72_temperature"
-      ),
-      downTemperature: this.entityStates.get("sensor.home_temperature"),
+      )?.state,
+      aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
+      upTemperature: this.entityStates.get("sensor.shellyht_007c72_temperature")
+        ?.state,
+      downTemperature: this.entityStates.get("sensor.home_temperature")?.state,
     };
     this.update(data);
   }
