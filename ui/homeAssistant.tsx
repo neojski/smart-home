@@ -120,7 +120,9 @@ export default class {
         "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
       ),
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5"),
-      upTemperature: this.entityStates.get("sensor.air_purifier_temperature"),
+      upTemperature: this.entityStates.get(
+        "sensor.shellyht_007c72_temperature"
+      ),
       downTemperature: this.entityStates.get("sensor.home_temperature"),
     };
     this.update(data);
