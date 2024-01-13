@@ -1,11 +1,24 @@
 import React from "react";
-import { errorSpan } from "./errorSpan";
 export function Aqi({ aqi }: { aqi: string | undefined }) {
   let content;
-  if (aqi !== undefined) {
-    content = Math.round(+aqi);
+  if (aqi === "unavailable" || aqi === undefined) {
+    content = <div>&nbsp;</div>;
   } else {
-    content = errorSpan();
+    content = (
+      <div>
+        {Math.round(+aqi)}
+        <span
+          style={{
+            fontSize: "16px",
+            transform: "translate(16px, 0px) rotate(-90deg)",
+            display: "inline-block",
+            transformOrigin: "bottom left",
+          }}
+        >
+          PM2.5
+        </span>
+      </div>
+    );
   }
   return (
     <div
@@ -16,16 +29,6 @@ export function Aqi({ aqi }: { aqi: string | undefined }) {
       }}
     >
       {content}
-      <span
-        style={{
-          fontSize: "16px",
-          transform: "translate(16px, 0px) rotate(-90deg)",
-          display: "inline-block",
-          transformOrigin: "bottom left",
-        }}
-      >
-        PM2.5
-      </span>
     </div>
   );
 }
