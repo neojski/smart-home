@@ -10,7 +10,10 @@ export default class {
   update: { (data: Data): void };
   socket: WebSocket;
   nextId: number;
-  entityStates: Map<string, { state: string }>; // map from entity id to state
+  entityStates: Map<
+    string,
+    { state: string; attributes?: { media_title?: string } }
+  >; // map from entity id to state
 
   send(
     query: any,
@@ -125,6 +128,7 @@ export default class {
       upTemperature: this.entityStates.get("sensor.shellyht_007c72_temperature")
         ?.state,
       downTemperature: this.entityStates.get("sensor.home_temperature")?.state,
+      kitchenMusic: this.entityStates.get("media_player.kitchen"),
     };
     this.update(data);
   }

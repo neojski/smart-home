@@ -1,3 +1,5 @@
+import { device } from "./Sonos";
+
 export type Data = {
   sun?: string;
   aqi?: string;
@@ -6,4 +8,5 @@ export type Data = {
   downTemperature?: string;
   outsideTemperature?: string;
   weatherIcon?: string;
+  kitchenMusic?: device;
 };
