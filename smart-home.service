@@ -1,0 +1,13 @@
+[Unit]
+Description=starts smart-home
+After=network.target graphical.target
+
+[Service]
+Type=forking
+User=your_user # Replace with the user running the script
+ExecStart=$HOME/smart-home/start_chromium.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
