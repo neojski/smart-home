@@ -9,3 +9,7 @@ Most data is fetched from my local instance of home assistant
 2. sudo systemctl daemon-reload
 3. sudo systemctl start kiosk
 4. sudo systemctl enable kiosk
+
+# TODO
+- for some reason x11vnc doesn't work anymore
+- mega and restic
