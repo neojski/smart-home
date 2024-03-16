@@ -1,13 +1,17 @@
 [Unit]
-Description=starts smart-home
-After=network.target graphical.target
+Description=Chromium Kiosk
+Wants=graphical.target
+After=graphical.target
 
 [Service]
-Type=forking
-User=your_user # Replace with the user running the script
-ExecStart=$HOME/smart-home/start_chromium.sh
-Restart=on-failure
+Environment=DISPLAY=:0.0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+Type=exec
+ExecStart=/home/pi/smart-home/start_chromium.sh
+Restart=always
+User=pi
+Group=pi
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=graphical.target
 
