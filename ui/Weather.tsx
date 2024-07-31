@@ -22,6 +22,8 @@ export function WeatherIcon({
     isDay = undefined;
   }
 
+  console.log({ icon, isDay });
+
   // FIXME: I tried having icons but it's hard as I don't know what exactly the current API would return
   // https://erikflowers.github.io/weather-icons/api-list.html
   //if (icon === undefined || isDay === undefined) {
@@ -31,6 +33,8 @@ export function WeatherIcon({
   //  const iconId = "wi wi-day-" + icon;
   //  return <i className={iconId}></i>;
   //}
+
+  return null;
 }
 
 export function Weather({
