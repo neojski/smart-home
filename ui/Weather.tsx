@@ -22,13 +22,15 @@ export function WeatherIcon({
     isDay = undefined;
   }
 
-  if (icon === undefined || isDay === undefined) {
-    return errorSpan();
-  } else {
-    const dayOrNight = isDay ? "day" : "night";
-    const iconId = "wi wi-owm-" + dayOrNight + "-" + icon;
-    return <i className={iconId}></i>;
-  }
+  // FIXME: I tried having icons but it's hard as I don't know what exactly the current API would return
+  // https://erikflowers.github.io/weather-icons/api-list.html
+  //if (icon === undefined || isDay === undefined) {
+  //  return errorSpan();
+  //} else {
+  //  //const dayOrNight = isDay ? "day" : "night";
+  //  const iconId = "wi wi-day-" + icon;
+  //  return <i className={iconId}></i>;
+  //}
 }
 
 export function Weather({
