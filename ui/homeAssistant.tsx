@@ -12,7 +12,10 @@ export default class {
   nextId: number;
   entityStates: Map<
     string,
-    { state: string; attributes?: { media_title?: string } }
+    {
+      state: string;
+      attributes?: { media_title?: string; current_temperature?: string };
+    }
   >; // map from entity id to state
 
   send(
@@ -124,8 +127,9 @@ export default class {
         "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
       )?.state,
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
-      upTemperature: this.entityStates.get("sensor.shellyht_007c72_temperature")
-        ?.state,
+      upTemperature:
+        this.entityStates.get("climate.bed_front")?.attributes
+          ?.current_temperature,
       downTemperature: this.entityStates.get("sensor.home_temperature")?.state,
       kitchenMusic: this.entityStates.get("media_player.kitchen"),
     };
