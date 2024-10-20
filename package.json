@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "check-compilation": "tsc -p tsconfig.ui.json",
-    "ui-dev": "tsc -w -p tsconfig.ui.json & watchify dist/ui/mirror.js -o dist/bundle.js & xdg-open ui/index.html",
+    "check-compilation": "tsc -p tsconfig.json",
+    "ui-dev": "tsc -w -p tsconfig.json & watchify dist/ui/mirror.js -o dist/bundle.js & xdg-open ui/index.html",
     "test": "jest"
   },
   "dependencies": {
