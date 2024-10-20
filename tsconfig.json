@@ -16,5 +16,10 @@
     "jsx": "react",
 
     "skipLibCheck": true,
-  }
+
+    "outDir": "dist/ui",
+    "module": "CommonJS",
+  },
+
+  "include": ["ui"],
 }
