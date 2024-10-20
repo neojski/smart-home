@@ -1,8 +1,6 @@
 {
   "scripts": {
-    "start": "node dist/server/main.js",
-    "server-dev": "tsc -w -p tsconfig.server.json & nodemon dist/server/main.js",
-    "ui-dev": "tsc -w -p tsconfig.ui.json & watchify dist/ui/mirror.js -o dist/bundle.js",
+    "ui-dev": "tsc -w -p tsconfig.ui.json & watchify dist/ui/mirror.js -o dist/bundle.js & xdg-open ui/index.html",
     "test": "jest",
     "prettier": "prettier --write **/*.ts*"
   },
