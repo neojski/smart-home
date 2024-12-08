@@ -2,7 +2,7 @@
 
 import { Data } from "./Data";
 
-const HA_WS_API_URL = "ws://192.168.0.176:8123/api/websocket";
+const HA_WS_API_URL = "ws://homeassistant:8123/api/websocket";
 const HA_ACCESS_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlNTFmMjgzMGEwMDQ0ZTg5YmQ3YmIwNDhhMzAyNDYzZiIsImlhdCI6MTY4OTEwMTk4NywiZXhwIjoyMDA0NDYxOTg3fQ.yOGKRAXrtWfHOwJ4JPdIUUAmyswkuSF9GqfjmtGq-Tc";
 
