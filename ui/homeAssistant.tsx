@@ -121,16 +121,15 @@ export default class {
     const data: Y<X<Data>> = {
       sun: this.entityStates.get("sun.sun")?.state,
       weatherIcon: this.entityStates.get("weather.home")?.state,
-      outsideTemperature: this.entityStates.get("sensor.outside_temperature")
+      outsideTemperature: this.entityStates.get("sensor.mirror_outside_temperature")
         ?.state,
       power: this.entityStates.get(
         "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
       )?.state,
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
       upTemperature:
-        this.entityStates.get("climate.bed_front")?.attributes
-          ?.current_temperature,
-      downTemperature: this.entityStates.get("sensor.home_temperature")?.state,
+        this.entityStates.get("sensor.mirror_upstairs_temperature")?.state,
+      downTemperature: this.entityStates.get("sensor.mirror_downstairs_temperature")?.state,
       kitchenMusic: this.entityStates.get("media_player.kitchen"),
     };
     this.update(data);
