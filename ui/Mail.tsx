@@ -11,7 +11,7 @@ export function Mail({ mail }: { mail: string | undefined }) {
 
   return (
     <div style={{
-      marginTop: "300px", fontSize: "200px", textAlign: "center", visibility: visibility
+      marginTop: "200px", fontSize: "200px", textAlign: "center", visibility: visibility
     }
     }>
       {content}
