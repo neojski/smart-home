@@ -1,6 +1,6 @@
 module.exports = {
   preset: "ts-jest",
   testPathIgnorePatterns: ["dist/"],
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   prettierPath: "prettier",
 };
