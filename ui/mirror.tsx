@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { Clock } from "./Clock";
 import { Aqi } from "./Aqi";
 import { Tfl } from "./Tfl";
@@ -8,6 +7,7 @@ import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
 import { Sonos } from "./Sonos";
+import { createRoot } from 'react-dom/client';
 
 export function Main() {
   const [data, setData] = useState<Data>({});
@@ -37,4 +37,5 @@ export function Main() {
   );
 }
 
-ReactDOM.render(<Main />, document.getElementById("contents"));
+const root = createRoot(document.getElementById("contents")!);
+root.render(<Main />);
