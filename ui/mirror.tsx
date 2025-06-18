@@ -8,6 +8,7 @@ import { Data } from "./Data";
 import { Weather } from "./Weather";
 import { Sonos } from "./Sonos";
 import { createRoot } from 'react-dom/client';
+import { Mail } from "./Mail";
 
 export function Main() {
   const [data, setData] = useState<Data>({});
@@ -21,6 +22,7 @@ export function Main() {
 
   return (
     <div>
+      <Mail mail={data.mail} />
       <Aqi aqi={data.aqi} />
       <Clock />
       <Weather

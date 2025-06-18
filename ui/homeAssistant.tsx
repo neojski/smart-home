@@ -119,6 +119,7 @@ export default class {
     };
 
     const data: Y<X<Data>> = {
+      mail: this.entityStates.get("input_boolean.mail")?.state,
       sun: this.entityStates.get("sun.sun")?.state,
       weatherIcon: this.entityStates.get("weather.home")?.state,
       outsideTemperature: this.entityStates.get("sensor.mirror_outside_temperature")

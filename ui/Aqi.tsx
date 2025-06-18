@@ -23,7 +23,7 @@ export function Aqi({ aqi }: { aqi: string | undefined }) {
   return (
     <div
       style={{
-        margin: "300px 0 0 700px",
+        margin: "10px 0 0 700px",
         textAlign: "center",
         fontSize: "100px",
       }}
