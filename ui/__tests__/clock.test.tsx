@@ -1,90 +1,67 @@
-import React from "react";
-import renderer, { act } from "react-test-renderer";
+import React, { act } from "react";
 import { Clock } from "../Clock";
+import { render } from '@testing-library/react'
 
-jest.useFakeTimers();
-it("renders correctly", async () => {
-  jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
+beforeAll(() => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date("2020-01-01"));
+});
 
-  const testRenderer = renderer.create(<Clock />);
+afterAll(() => {
+  jest.useRealTimers();
+});
 
-  expect(Date.now()).toMatchInlineSnapshot(`1577836800000`);
+it("renders correctly and updates over time", () => {
+  render(<Clock />);
 
-  expect(testRenderer.toJSON()).toMatchInlineSnapshot(`
-    <div
-      style={
-        {
-          "fontSize": "300px",
-          "fontWeight": 300,
-          "textAlign": "center",
-        }
-      }
+  expect(Date.now()).toBe(1577836800000);
+
+  expect(document.body.firstChild).toMatchInlineSnapshot(`
+<div>
+  <div
+    style="font-size: 300px; font-weight: 300; text-align: center;"
+  >
+    00
+    <span
+      style="visibility: hidden;"
+    >
+      :
+    </span>
+    00
+    <span
+      style="font-size: 30%; display: inline-block; transform: translate(0, -30px) rotate(-90deg);"
     >
       00
-      <span
-        style={
-          {
-            "visibility": "hidden",
-          }
-        }
-      >
-        :
-      </span>
-      00
-      <span
-        style={
-          {
-            "display": "inline-block",
-            "fontSize": "30%",
-            "transform": "translate(0, -30px) rotate(-90deg)",
-          }
-        }
-      >
-        00
-      </span>
-    </div>
-  `);
+    </span>
+  </div>
+</div>
+`);
 
   act(() => {
     jest.advanceTimersByTime(1000);
   });
-  expect(Date.now()).toMatchInlineSnapshot(`1577836801000`);
 
-  // TODO: the advance time doesn't seem to work for the react component: the visibility is still hidden and seconds have not advanced
-  expect(testRenderer.toJSON()).toMatchInlineSnapshot(`
-    <div
-      style={
-        {
-          "fontSize": "300px",
-          "fontWeight": 300,
-          "textAlign": "center",
-        }
-      }
+  expect(Date.now()).toBe(1577836801000);
+
+  // TODO: ensure the Clock component updates its state and rerenders when time advances
+  expect(document.body.firstChild).toMatchInlineSnapshot(`
+<div>
+  <div
+    style="font-size: 300px; font-weight: 300; text-align: center;"
+  >
+    00
+    <span
+      style="visibility: visible;"
     >
-      00
-      <span
-        style={
-          {
-            "visibility": "hidden",
-          }
-        }
-      >
-        :
-      </span>
-      00
-      <span
-        style={
-          {
-            "display": "inline-block",
-            "fontSize": "30%",
-            "transform": "translate(0, -30px) rotate(-90deg)",
-          }
-        }
-      >
-        00
-      </span>
-    </div>
-  `);
-
-  testRenderer.unmount();
+      :
+    </span>
+    00
+    <span
+      style="font-size: 30%; display: inline-block; transform: translate(0, -30px) rotate(-90deg);"
+    >
+      01
+    </span>
+  </div>
+</div>
+`);
 });
