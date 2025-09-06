@@ -16,7 +16,7 @@
     "@types/react-dom": "^19.1.7",
     "browserify": "^17.0.1",
     "jest": "^30.1.2",
-    "jest-environment-jsdom": "^30.0.5",
+    "jest-environment-jsdom": "^30.1.2",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2",
     "watchify": "^4.0.0"
