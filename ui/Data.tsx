@@ -10,4 +10,5 @@ export type Data = {
   outsideTemperature?: string;
   weatherIcon?: string;
   kitchenMusic?: device;
+  teslaBattery?: string;
 };

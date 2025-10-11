@@ -135,6 +135,7 @@ export default class {
         "sensor.mirror_downstairs_temperature",
       )?.state,
       kitchenMusic: this.entityStates.get("media_player.kitchen"),
+      teslaBattery: this.entityStates.get("sensor.battery_level")?.state,
     };
     this.update(data);
   }

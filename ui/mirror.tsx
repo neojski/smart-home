@@ -23,6 +23,11 @@ export function Main() {
   return (
     <div>
       <Mail mail={data.mail} />
+      <div
+        style={{ textAlign: "right", fontSize: "50px", marginRight: "80px" }}
+      >
+        tesla {data.teslaBattery}%
+      </div>
       <Aqi aqi={data.aqi} />
       <Clock />
       <Weather
