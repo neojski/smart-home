@@ -74,7 +74,7 @@ export function Tfl() {
   let previousData: vehicle[] | undefined;
 
   let [allVehicles, setAllVehicles] = useState(
-    new Error(initialError) as vehicle[] | Error
+    new Error(initialError) as vehicle[] | Error,
   );
   useEffect(() => {
     async function update() {

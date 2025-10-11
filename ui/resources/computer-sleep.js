@@ -25,7 +25,7 @@
 
  */
 var sleep = {
-  prevent: function() {
+  prevent: function () {
     if (!this._video) {
       this._init();
     }
@@ -33,7 +33,7 @@ var sleep = {
     this._video.setAttribute("loop", "loop");
     this._video.play();
   },
-  allow: function() {
+  allow: function () {
     if (!this._video) {
       return;
     }
@@ -41,7 +41,7 @@ var sleep = {
     this._video.removeAttribute("loop");
     this._video.pause();
   },
-  _init: function() {
+  _init: function () {
     this._video = document.createElement("video");
     this._video.setAttribute("width", "10");
     this._video.setAttribute("height", "10");
@@ -61,5 +61,5 @@ var sleep = {
 
     document.body.appendChild(this._video);
   },
-  _video: null
+  _video: null,
 };

@@ -7,7 +7,7 @@ import HomeAssistant from "./homeAssistant";
 import { Data } from "./Data";
 import { Weather } from "./Weather";
 import { Sonos } from "./Sonos";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 import { Mail } from "./Mail";
 
 export function Main() {

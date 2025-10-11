@@ -23,5 +23,5 @@
     "module": "node16",
   },
 
-  "include": ["ui"],
+  "include": ["ui"]
 }

@@ -20,7 +20,7 @@ export default class {
 
   send(
     query: any,
-    { suppressId }: { suppressId: boolean } = { suppressId: false }
+    { suppressId }: { suppressId: boolean } = { suppressId: false },
   ) {
     if (!suppressId) {
       const id = this.nextId++;
@@ -52,7 +52,7 @@ export default class {
 
   onClose() {
     console.error(
-      "Disconnected from Home Assistant WebSocket API. Reconnecting"
+      "Disconnected from Home Assistant WebSocket API. Reconnecting",
     );
     setTimeout(this.connect.bind(this), 1000);
   }
@@ -70,7 +70,7 @@ export default class {
       this.send(
         { type: "auth", access_token: HA_ACCESS_TOKEN },
         // auth forbids ids
-        { suppressId: true }
+        { suppressId: true },
       );
     } else if (message.type === "auth_ok") {
       console.log("Authentication successful");
@@ -84,7 +84,7 @@ export default class {
       if (message.event.event_type === "state_changed") {
         this.entityStates.set(
           message.event.data.entity_id,
-          message.event.data.new_state
+          message.event.data.new_state,
         );
         this.refresh();
       } else {
@@ -96,7 +96,7 @@ export default class {
         const results: { entity_id: string; state: string }[] = message.result;
 
         this.entityStates = new Map(
-          results.map((result) => [result.entity_id, result])
+          results.map((result) => [result.entity_id, result]),
         );
 
         this.refresh();
@@ -122,15 +122,18 @@ export default class {
       mail: this.entityStates.get("input_boolean.mail")?.state,
       sun: this.entityStates.get("sun.sun")?.state,
       weatherIcon: this.entityStates.get("weather.home")?.state,
-      outsideTemperature: this.entityStates.get("sensor.mirror_outside_temperature")
-        ?.state,
+      outsideTemperature: this.entityStates.get(
+        "sensor.mirror_outside_temperature",
+      )?.state,
       power: this.entityStates.get(
-        "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand"
+        "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand",
       )?.state,
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
-      upTemperature:
-        this.entityStates.get("sensor.mirror_upstairs_temperature")?.state,
-      downTemperature: this.entityStates.get("sensor.mirror_downstairs_temperature")?.state,
+      upTemperature: this.entityStates.get("sensor.mirror_upstairs_temperature")
+        ?.state,
+      downTemperature: this.entityStates.get(
+        "sensor.mirror_downstairs_temperature",
+      )?.state,
       kitchenMusic: this.entityStates.get("media_player.kitchen"),
     };
     this.update(data);
