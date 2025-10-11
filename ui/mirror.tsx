@@ -26,7 +26,7 @@ export function Main() {
       <div
         style={{ textAlign: "right", fontSize: "50px", marginRight: "80px" }}
       >
-        tesla {data.teslaBattery}%
+        🚗 {data.teslaBattery}%
       </div>
       <Aqi aqi={data.aqi} />
       <Clock />
