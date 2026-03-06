@@ -126,7 +126,7 @@ export default class {
         "sensor.mirror_outside_temperature",
       )?.state,
       power: this.entityStates.get(
-        "sensor.octopus_energy_electricity_22l3251891_1012955180798_current_demand",
+        "sensor.octopus_energy_electricity_21l4161923_1012954708140_current_demand",
       )?.state,
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
       upTemperature: this.entityStates.get("sensor.mirror_upstairs_temperature")
