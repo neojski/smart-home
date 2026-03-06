@@ -1,5 +1,6 @@
 import React from "react";
 
+// TODO: Source this from the Tesla Wall Connector for faster, more reliable charging status.
 function isPluggedIn(state: string | undefined) {
   return (
     state === "SMART_CONTROL_CAPABLE" ||
