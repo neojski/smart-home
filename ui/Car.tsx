@@ -5,7 +5,7 @@ function BatteryDisplay({ level }: { level: number }) {
   // Clamp level between 0 and 100
   const clampedLevel = Math.max(0, Math.min(100, level));
 
-  const batteryStyle = {
+  const batteryStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
     height: "60px",
@@ -14,7 +14,7 @@ function BatteryDisplay({ level }: { level: number }) {
     overflow: "hidden",
   };
 
-  const terminalStyle = {
+  const terminalStyle: React.CSSProperties = {
     position: "absolute",
     right: "-24px",
     top: "50%",
@@ -25,7 +25,7 @@ function BatteryDisplay({ level }: { level: number }) {
     borderRadius: "0 8px 8px 0",
   };
 
-  const fillStyle = {
+  const fillStyle: React.CSSProperties = {
     position: "absolute",
     top: 0,
     left: 0,
@@ -35,7 +35,7 @@ function BatteryDisplay({ level }: { level: number }) {
     transition: "width 0.3s ease-out",
   };
 
-  const textContainerStyle = {
+  const textContainerStyle: React.CSSProperties = {
     position: "absolute",
     inset: 0,
     display: "flex",
@@ -43,7 +43,7 @@ function BatteryDisplay({ level }: { level: number }) {
     justifyContent: "center",
   };
 
-  const textStyle = {
+  const textStyle: React.CSSProperties = {
     fontSize: "40px",
     fontWeight: "bold",
     color: "white",
