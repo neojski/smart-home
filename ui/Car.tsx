@@ -2,12 +2,20 @@ import React from "react";
 
 function isPluggedIn(state: string | undefined) {
   return (
-    state === "SMART_CONTROL_CAPABLE" || state === "SMART_CONTROL_IN_PROGRESS"
+    state === "SMART_CONTROL_CAPABLE" ||
+    state === "SMART_CONTROL_IN_PROGRESS" ||
+    state === "BOOSTING"
   );
 }
 
-function isCharging(state: string | undefined) {
-  return state === "on";
+function isCharging({
+  intelligentState,
+  intelligentDispatching,
+}: {
+  intelligentState: string | undefined;
+  intelligentDispatching: string | undefined;
+}) {
+  return intelligentDispatching === "on" || intelligentState === "BOOSTING";
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
@@ -82,7 +90,10 @@ export function Car({
 }) {
   if (battery === undefined) return <></>;
   const showPlugTail = isPluggedIn(intelligentState);
-  const showChargingBolt = isCharging(intelligentDispatching);
+  const showChargingBolt = isCharging({
+    intelligentState,
+    intelligentDispatching,
+  });
 
   return (
     <div
