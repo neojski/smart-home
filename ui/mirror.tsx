@@ -24,7 +24,10 @@ export function Main() {
   return (
     <div>
       <Mail mail={data.mail} />
-      <Car battery={data.teslaBattery} />
+      <Car
+        battery={data.teslaBattery}
+        intelligentState={data.octopusIntelligentState}
+      />
       <Aqi aqi={data.aqi} />
       <Clock />
       <Weather

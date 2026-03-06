@@ -5,6 +5,7 @@ export type Data = {
   sun?: string;
   aqi?: string;
   power?: string;
+  octopusIntelligentState?: string;
   upTemperature?: string;
   downTemperature?: string;
   outsideTemperature?: string;

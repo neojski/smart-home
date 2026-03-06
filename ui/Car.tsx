@@ -1,5 +1,12 @@
 import React from "react";
 
+function intelligentStateIcon(state: string | undefined) {
+  if (state === "SMART_CONTROL_CAPABLE") return "🔌";
+  if (state === "SMART_CONTROL_IN_PROGRESS") return "⚡";
+  if (state === "SMART_CONTROL_NOT_AVAILABLE") return "🔌❌";
+  return null;
+}
+
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
 function BatteryDisplay({ level }: { level: number }) {
   // Clamp level between 0 and 100
@@ -61,8 +68,15 @@ function BatteryDisplay({ level }: { level: number }) {
   );
 }
 
-export function Car({ battery }: { battery: string | undefined }) {
+export function Car({
+  battery,
+  intelligentState,
+}: {
+  battery: string | undefined;
+  intelligentState: string | undefined;
+}) {
   if (battery === undefined) return <></>;
+  const icon = intelligentStateIcon(intelligentState);
 
   return (
     <div
@@ -76,7 +90,10 @@ export function Car({ battery }: { battery: string | undefined }) {
         alignItems: "center",
       }}
     >
-      <div>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+        {icon ? (
+          <span style={{ fontSize: "40px", lineHeight: 1 }}>{icon}</span>
+        ) : null}
         {
           // https://tabler.io/icons/icon/car
         }
