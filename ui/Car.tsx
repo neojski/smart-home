@@ -1,10 +1,13 @@
 import React from "react";
 
-function intelligentStateIcon(state: string | undefined) {
-  if (state === "SMART_CONTROL_CAPABLE") return "🔌";
-  if (state === "SMART_CONTROL_IN_PROGRESS") return "⚡";
-  if (state === "SMART_CONTROL_NOT_AVAILABLE") return "🔌❌";
-  return null;
+function isPluggedIn(state: string | undefined) {
+  return (
+    state === "SMART_CONTROL_CAPABLE" || state === "SMART_CONTROL_IN_PROGRESS"
+  );
+}
+
+function isCharging(state: string | undefined) {
+  return state === "SMART_CONTROL_IN_PROGRESS";
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
@@ -76,7 +79,8 @@ export function Car({
   intelligentState: string | undefined;
 }) {
   if (battery === undefined) return <></>;
-  const icon = intelligentStateIcon(intelligentState);
+  const showPlugTail = isPluggedIn(intelligentState);
+  const showChargingBolt = isCharging(intelligentState);
 
   return (
     <div
@@ -91,9 +95,6 @@ export function Car({
       }}
     >
       <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-        {icon ? (
-          <span style={{ fontSize: "40px", lineHeight: 1 }}>{icon}</span>
-        ) : null}
         {
           // https://tabler.io/icons/icon/car
         }
@@ -105,8 +106,39 @@ export function Car({
           fill="none"
           stroke="currentColor"
           strokeWidth="1.4"
-          style={{ verticalAlign: "middle" }}
+          style={{ verticalAlign: "middle", overflow: "visible" }}
         >
+          <g>
+            <g>
+              <rect x="-22.6" y="6" width="8" height="13" rx="0.8" />
+              <line x1="-18.6" y1="6" x2="-18.6" y2="4.8" />
+              {showChargingBolt ? (
+                <path
+                  d="M-18.2 8.4 L-20 12.1 H-18.4 L-19.2 15.9 L-16.8 11.8 H-18.5 Z"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              ) : null}
+              {showPlugTail ? (
+                <path
+                  d="M5 14 C2 12 0 15 -4 14 C-7 13 -9 13 -12.3 13"
+                  strokeLinecap="round"
+                />
+              ) : (
+                <path d="M-12.3 13 L-11 13.8 L-11 18" strokeLinecap="round" />
+              )}
+              <rect x="-14.6" y="12" width="2.3" height="2.1" rx="0.4" />
+            </g>
+            {showPlugTail ? (
+              <circle
+                cx="5"
+                cy="14"
+                r="0.8"
+                fill="currentColor"
+                stroke="none"
+              />
+            ) : null}
+          </g>
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
           <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
