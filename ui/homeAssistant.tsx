@@ -131,6 +131,9 @@ export default class {
       octopusIntelligentState: this.entityStates.get(
         "sensor.octopus_energy_00000000_0002_4000_8020_0000000f2948_intelligent_state",
       )?.state,
+      octopusIntelligentDispatching: this.entityStates.get(
+        "binary_sensor.octopus_energy_00000000_0002_4000_8020_0000000f2948_intelligent_dispatching",
+      )?.state,
       aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
       upTemperature: this.entityStates.get("sensor.mirror_upstairs_temperature")
         ?.state,

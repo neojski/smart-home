@@ -7,7 +7,7 @@ function isPluggedIn(state: string | undefined) {
 }
 
 function isCharging(state: string | undefined) {
-  return state === "SMART_CONTROL_IN_PROGRESS";
+  return state === "on";
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
@@ -74,13 +74,15 @@ function BatteryDisplay({ level }: { level: number }) {
 export function Car({
   battery,
   intelligentState,
+  intelligentDispatching,
 }: {
   battery: string | undefined;
   intelligentState: string | undefined;
+  intelligentDispatching: string | undefined;
 }) {
   if (battery === undefined) return <></>;
   const showPlugTail = isPluggedIn(intelligentState);
-  const showChargingBolt = isCharging(intelligentState);
+  const showChargingBolt = isCharging(intelligentDispatching);
 
   return (
     <div

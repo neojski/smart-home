@@ -27,6 +27,7 @@ export function Main() {
       <Car
         battery={data.teslaBattery}
         intelligentState={data.octopusIntelligentState}
+        intelligentDispatching={data.octopusIntelligentDispatching}
       />
       <Aqi aqi={data.aqi} />
       <Clock />
