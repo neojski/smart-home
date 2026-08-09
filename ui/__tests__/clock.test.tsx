@@ -43,7 +43,9 @@ it("renders correctly and updates over time", () => {
 
   expect(Date.now()).toBe(1577836801000);
 
-  // TODO: ensure the Clock component updates its state and rerenders when time advances
+  // A second on from the snapshot above: the seconds read 01 rather than 00
+  // and the colon has blinked back to visible, so this covers the state
+  // update and rerender on the setInterval tick.
   expect(document.body.firstChild).toMatchInlineSnapshot(`
 <div>
   <div
