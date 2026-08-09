@@ -1,6 +1,6 @@
 /* Module for fetching data from home assistant */
 
-import { Data } from "./Data";
+import type { Data } from "./Data";
 
 const HA_WS_API_URL = "ws://homeassistant:8123/api/websocket";
 const HA_ACCESS_TOKEN =

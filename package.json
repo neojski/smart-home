@@ -1,7 +1,8 @@
 {
   "scripts": {
     "check-compilation": "tsc -p tsconfig.json",
-    "ui-dev": "xdg-open ui/index.html && concurrently -k -n TS,JS --prefix-colors auto \"tsc -w -p tsconfig.json --pretty\" \"watchify dist/ui/mirror.js -o dist/bundle.js\"",
+    "ui-build": "esbuild ui/mirror.tsx --bundle --outfile=dist/bundle.js --target=es2020",
+    "ui-dev": "xdg-open ui/index.html && npm run ui-build -- --watch",
     "test": "npm run check-compilation && prettier '**/*.{ts,tsx}' --check && vitest run",
     "prettier": "prettier --write '**/*.{ts,tsx}'"
   },
@@ -14,12 +15,10 @@
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "browserify": "^17.0.1",
-    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.2",
     "jsdom": "^30.0.1",
     "prettier": "^3.6.2",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.10",
-    "watchify": "^4.0.0"
+    "vitest": "^4.1.10"
   }
 }

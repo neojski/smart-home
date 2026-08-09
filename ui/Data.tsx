@@ -1,4 +1,4 @@
-import { device } from "./Sonos";
+import type { device } from "./Sonos";
 
 export type Data = {
   mail?: string;

@@ -4,6 +4,9 @@ set -e -u -o pipefail
 echo 'Running test'
 npm test
 
+echo 'Building UI bundle'
+npm run ui-build
+
 echo 'Deploying to pi'
 rsync -avz --exclude .git --exclude node_modules . pi:~/smart-home
 

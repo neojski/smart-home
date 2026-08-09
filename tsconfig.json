@@ -1,5 +1,4 @@
 {
-  "compileOnSave": true,
   "compilerOptions": {
     "strict": true,
     "strictNullChecks": true,
@@ -12,15 +11,17 @@
     "lib": ["es5", "es6", "dom"],
     "target": "ES2015",
 
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "types": ["vitest/globals"],
     "jsx": "react",
 
     "skipLibCheck": true,
 
-    "outDir": "dist/ui",
-    "rootDir": "ui",
-    "module": "node16",
+    // esbuild bundles; tsc only typechecks.
+    "noEmit": true,
+    "module": "ESNext",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
   },
 
   "include": ["ui"]
