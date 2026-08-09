@@ -3,12 +3,12 @@ import { Clock } from "../Clock";
 import { render } from '@testing-library/react'
 
 beforeAll(() => {
-  jest.useFakeTimers();
-  jest.setSystemTime(new Date("2020-01-01"));
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2020-01-01"));
 });
 
 afterAll(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 it("renders correctly and updates over time", () => {
@@ -38,7 +38,7 @@ it("renders correctly and updates over time", () => {
 `);
 
   act(() => {
-    jest.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(1000);
   });
 
   expect(Date.now()).toBe(1577836801000);
