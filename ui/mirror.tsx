@@ -4,7 +4,7 @@ import { Aqi } from "./Aqi";
 import { Tfl } from "./Tfl";
 import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
-import { Data } from "./Data";
+import type { Data } from "./Data";
 import { Weather } from "./Weather";
 import { Sonos } from "./Sonos";
 import { createRoot } from "react-dom/client";
