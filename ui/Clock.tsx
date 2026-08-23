@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { pad } from "./pad";
 export function Clock() {
   const [date, setDate] = useState(new Date());

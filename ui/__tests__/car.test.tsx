@@ -2,7 +2,6 @@
    the goldens committed under __screenshots__. After an intentional visual
    change, regenerate them with: npx vitest run --update */
 
-import React from "react";
 import { render } from "vitest-browser-react";
 import { Car } from "../Car";
 import "../css/style.css";

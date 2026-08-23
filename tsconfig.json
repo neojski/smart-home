@@ -14,7 +14,7 @@
 
     "moduleResolution": "bundler",
     "types": ["vitest/globals"],
-    "jsx": "react",
+    "jsx": "react-jsx",
 
     "skipLibCheck": true,
 

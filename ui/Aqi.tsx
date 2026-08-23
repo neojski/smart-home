@@ -1,4 +1,3 @@
-import React from "react";
 export function Aqi({ aqi }: { aqi: string | undefined }) {
   let content;
   if (aqi === "unavailable" || aqi === undefined) {
