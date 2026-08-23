@@ -20,14 +20,17 @@ function isCharging({
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
-function BatteryDisplay({ level, limits }: { level: number; limits: number[] }) {
+function BatteryDisplay({
+  level,
+  teslaLimit,
+  octopusLimit,
+}: {
+  level: number;
+  teslaLimit?: number;
+  octopusLimit?: number;
+}) {
   // Clamp level between 0 and 100
   const clampedLevel = Math.max(0, Math.min(100, level));
-
-  // Dedupe: overlapping lines cancel out under mix-blend-mode difference
-  const uniqueLimits = [...new Set(limits)].filter(
-    (limit) => limit > 0 && limit < 100,
-  );
 
   const batteryStyle: React.CSSProperties = {
     position: "relative",
@@ -74,26 +77,36 @@ function BatteryDisplay({ level, limits }: { level: number; limits: number[] }) 
     mixBlendMode: "difference",
   };
 
-  const limitStyle = (limit: number): React.CSSProperties => ({
+  const limitStyle = (
+    limit: number,
+    side: "top" | "bottom",
+  ): React.CSSProperties => ({
     position: "absolute",
-    top: 0,
-    left: `${limit}%`,
-    height: "100%",
-    borderLeft: "6px dashed white",
-    marginLeft: "-3px",
-    mixBlendMode: "difference",
+    [side]: 0,
+    left: `${Math.max(0, Math.min(100, limit))}%`,
+    transform: "translateX(-50%)",
+    width: 0,
+    height: 0,
+    borderLeft: "14px solid transparent",
+    borderRight: "14px solid transparent",
+    [side === "top" ? "borderTop" : "borderBottom"]: "16px solid white",
   });
 
   return (
-    <div style={batteryStyle}>
-      <div style={terminalStyle}></div>
-      <div style={fillStyle}></div>
-      {uniqueLimits.map((limit) => (
-        <div key={limit} style={limitStyle(limit)}></div>
-      ))}
-      <div style={textContainerStyle}>
-        <div style={textStyle}>{Math.round(clampedLevel)}%</div>
+    <div style={{ position: "relative", padding: "20px 0" }}>
+      {teslaLimit !== undefined ? (
+        <div style={limitStyle(teslaLimit, "top")}></div>
+      ) : null}
+      <div style={batteryStyle}>
+        <div style={terminalStyle}></div>
+        <div style={fillStyle}></div>
+        <div style={textContainerStyle}>
+          <div style={textStyle}>{Math.round(clampedLevel)}%</div>
+        </div>
       </div>
+      {octopusLimit !== undefined ? (
+        <div style={limitStyle(octopusLimit, "bottom")}></div>
+      ) : null}
     </div>
   );
 }
@@ -112,9 +125,10 @@ export function Car({
   intelligentDispatching: string | undefined;
 }) {
   if (battery === undefined) return <></>;
-  const limits = [teslaChargeLimit, octopusChargeTarget]
-    .map(Number)
-    .filter((limit) => Number.isFinite(limit));
+  const parseLimit = (state: string | undefined) => {
+    const limit = Number(state);
+    return Number.isFinite(limit) && limit > 0 ? limit : undefined;
+  };
   const showPlugTail = isPluggedIn(intelligentState);
   const showChargingBolt = isCharging({
     intelligentState,
@@ -185,7 +199,11 @@ export function Car({
         </svg>
       </div>
       <div style={{ width: "160px" }}>
-        <BatteryDisplay level={+battery} limits={limits} />
+        <BatteryDisplay
+          level={+battery}
+          teslaLimit={parseLimit(teslaChargeLimit)}
+          octopusLimit={parseLimit(octopusChargeTarget)}
+        />
       </div>
     </div>
   );
