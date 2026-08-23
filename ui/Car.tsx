@@ -32,11 +32,16 @@ function BatteryDisplay({
   // Clamp level between 0 and 100
   const clampedLevel = Math.max(0, Math.min(100, level));
 
+  // With default content-box sizing the battery's border sits outside its
+  // width, so everything inside (the fill, and thus the limit markers) is
+  // shifted right by this amount relative to the outer wrapper.
+  const borderWidth = 6;
+
   const batteryStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
     height: "60px",
-    border: "6px solid white",
+    border: `${borderWidth}px solid white`,
     borderRadius: "24px",
     overflow: "hidden",
   };
@@ -83,10 +88,7 @@ function BatteryDisplay({
   ): React.CSSProperties => ({
     position: "absolute",
     [side]: 0,
-    // With default content-box sizing, the battery content is exactly as wide
-    // as this wrapper and the fill's percentage resolves against it; the 6px
-    // left border just shifts everything right.
-    left: `calc(${Math.max(0, Math.min(100, limit))}% + 6px)`,
+    left: `calc(${Math.max(0, Math.min(100, limit))}% + ${borderWidth}px)`,
     transform: "translateX(-50%)",
     width: 0,
     height: 0,
