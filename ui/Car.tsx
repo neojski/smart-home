@@ -44,6 +44,9 @@ function BatteryDisplay({
     border: `${borderWidth}px solid white`,
     borderRadius: "24px",
     overflow: "hidden",
+    // White under the border so antialiasing gaps at the rounded corners
+    // don't let the black page background seep through.
+    backgroundColor: "white",
   };
 
   const terminalStyle: React.CSSProperties = {
@@ -57,13 +60,14 @@ function BatteryDisplay({
     borderRadius: "0 8px 8px 0",
   };
 
-  const fillStyle: React.CSSProperties = {
+  // The battery itself is white; this overlay draws the empty portion.
+  const emptyStyle: React.CSSProperties = {
     position: "absolute",
     top: 0,
-    left: 0,
+    right: 0,
     height: "100%",
-    width: `${clampedLevel}%`,
-    backgroundColor: "white",
+    width: `${100 - clampedLevel}%`,
+    backgroundColor: "#000",
     transition: "width 0.3s ease-out",
   };
 
@@ -104,7 +108,7 @@ function BatteryDisplay({
       ) : null}
       <div style={batteryStyle}>
         <div style={terminalStyle}></div>
-        <div style={fillStyle}></div>
+        <div style={emptyStyle}></div>
         <div style={textContainerStyle}>
           <div style={textStyle}>{Math.round(clampedLevel)}%</div>
         </div>
