@@ -83,7 +83,10 @@ function BatteryDisplay({
   ): React.CSSProperties => ({
     position: "absolute",
     [side]: 0,
-    left: `${Math.max(0, Math.min(100, limit))}%`,
+    // With default content-box sizing, the battery content is exactly as wide
+    // as this wrapper and the fill's percentage resolves against it; the 6px
+    // left border just shifts everything right.
+    left: `calc(${Math.max(0, Math.min(100, limit))}% + 6px)`,
     transform: "translateX(-50%)",
     width: 0,
     height: 0,
