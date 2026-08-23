@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Clock } from "../Clock";
 import { render } from "@testing-library/react";
 
@@ -12,30 +12,30 @@ afterAll(() => {
 });
 
 it("renders correctly and updates over time", () => {
-  render(<Clock />);
+  const { container } = render(<Clock />);
 
   expect(Date.now()).toBe(1577836800000);
 
-  expect(document.body.firstChild).toMatchInlineSnapshot(`
-<div>
-  <div
-    style="font-size: 300px; font-weight: 300; text-align: center;"
-  >
-    00
-    <span
-      style="visibility: hidden;"
-    >
-      :
-    </span>
-    00
-    <span
-      style="font-size: 30%; display: inline-block; transform: translate(0, -30px) rotate(-90deg);"
-    >
-      00
-    </span>
-  </div>
-</div>
-`);
+  expect(container).toMatchInlineSnapshot(`
+    <div>
+      <div
+        style="font-size: 300px; font-weight: 300; text-align: center;"
+      >
+        00
+        <span
+          style="visibility: hidden;"
+        >
+          :
+        </span>
+        00
+        <span
+          style="font-size: 30%; display: inline-block; transform: translate(0px, -30px) rotate(-90deg);"
+        >
+          00
+        </span>
+      </div>
+    </div>
+  `);
 
   act(() => {
     vi.advanceTimersByTime(1000);
@@ -46,24 +46,24 @@ it("renders correctly and updates over time", () => {
   // A second on from the snapshot above: the seconds read 01 rather than 00
   // and the colon has blinked back to visible, so this covers the state
   // update and rerender on the setInterval tick.
-  expect(document.body.firstChild).toMatchInlineSnapshot(`
-<div>
-  <div
-    style="font-size: 300px; font-weight: 300; text-align: center;"
-  >
-    00
-    <span
-      style="visibility: visible;"
-    >
-      :
-    </span>
-    00
-    <span
-      style="font-size: 30%; display: inline-block; transform: translate(0, -30px) rotate(-90deg);"
-    >
-      01
-    </span>
-  </div>
-</div>
-`);
+  expect(container).toMatchInlineSnapshot(`
+    <div>
+      <div
+        style="font-size: 300px; font-weight: 300; text-align: center;"
+      >
+        00
+        <span
+          style="visibility: visible;"
+        >
+          :
+        </span>
+        00
+        <span
+          style="font-size: 30%; display: inline-block; transform: translate(0px, -30px) rotate(-90deg);"
+        >
+          01
+        </span>
+      </div>
+    </div>
+  `);
 });

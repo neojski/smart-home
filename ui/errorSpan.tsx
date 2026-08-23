@@ -1,4 +1,3 @@
-import React from "react";
 import { initialError } from "./const";
 
 export function errorSpan(c: Error | string = initialError) {

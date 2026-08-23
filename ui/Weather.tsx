@@ -1,4 +1,3 @@
-import React from "react";
 import { errorSpan } from "./errorSpan";
 
 export type temperatureWithIcon = {

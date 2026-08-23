@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface device {
   attributes?: {
     media_title?: string;

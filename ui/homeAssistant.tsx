@@ -142,6 +142,10 @@ export default class {
       )?.state,
       kitchenMusic: this.entityStates.get("media_player.kitchen"),
       teslaBattery: this.entityStates.get("sensor.battery_level")?.state,
+      teslaChargeLimit: this.entityStates.get("number.charge_limit")?.state,
+      octopusChargeTarget: this.entityStates.get(
+        "number.octopus_energy_00000000_0002_4000_8020_0000000f2948_intelligent_charge_target",
+      )?.state,
     };
     this.update(data);
   }

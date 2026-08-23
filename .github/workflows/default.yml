@@ -15,10 +15,37 @@ jobs:
       - name: check compilation
         run: npm run check-compilation
 
-      - name: test
-        run: npm test
+      - name: check prettier
+        run: npm run check-prettier
 
       # Runs esbuild, so a bump to esbuild or typescript that leaves the two
       # unable to parse the same source fails here rather than during deploy.
       - name: build
         run: npm run ui-build
+
+  test:
+    runs-on: ubuntu-latest
+
+    # Same image as `npm test`, so screenshots are byte-identical between a
+    # dev machine and CI and need no comparison tolerance. Must be kept in
+    # step with the playwright version in package.json.
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install
+        run: npm ci
+
+      - name: Run tests
+        # Already inside the playwright image, so run vitest directly;
+        # `npm test` is the docker wrapper meant for dev machines.
+        run: npm run test:vitest
+
+      - name: upload test diffs
+        uses: actions/upload-artifact@v5
+        if: failure()
+        with:
+          name: screenshot-diffs
+          path: .vitest-attachments
+          if-no-files-found: warn

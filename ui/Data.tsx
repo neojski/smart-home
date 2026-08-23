@@ -13,4 +13,6 @@ export type Data = {
   weatherIcon?: string;
   kitchenMusic?: device;
   teslaBattery?: string;
+  teslaChargeLimit?: string;
+  octopusChargeTarget?: string;
 };

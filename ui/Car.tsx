@@ -20,17 +20,33 @@ function isCharging({
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
-function BatteryDisplay({ level }: { level: number }) {
+function BatteryDisplay({
+  level,
+  teslaLimit,
+  octopusLimit,
+}: {
+  level: number;
+  teslaLimit?: number;
+  octopusLimit?: number;
+}) {
   // Clamp level between 0 and 100
   const clampedLevel = Math.max(0, Math.min(100, level));
+
+  // With default content-box sizing the battery's border sits outside its
+  // width, so everything inside (the fill, and thus the limit markers) is
+  // shifted right by this amount relative to the outer wrapper.
+  const borderWidth = 6;
 
   const batteryStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
     height: "60px",
-    border: "6px solid white",
+    border: `${borderWidth}px solid white`,
     borderRadius: "24px",
     overflow: "hidden",
+    // White under the border so antialiasing gaps at the rounded corners
+    // don't let the black page background seep through.
+    backgroundColor: "white",
   };
 
   const terminalStyle: React.CSSProperties = {
@@ -44,13 +60,14 @@ function BatteryDisplay({ level }: { level: number }) {
     borderRadius: "0 8px 8px 0",
   };
 
-  const fillStyle: React.CSSProperties = {
+  // The battery itself is white; this overlay draws the empty portion.
+  const emptyStyle: React.CSSProperties = {
     position: "absolute",
     top: 0,
-    left: 0,
+    right: 0,
     height: "100%",
-    width: `${clampedLevel}%`,
-    backgroundColor: "white",
+    width: `${100 - clampedLevel}%`,
+    backgroundColor: "#000",
     transition: "width 0.3s ease-out",
   };
 
@@ -69,27 +86,58 @@ function BatteryDisplay({ level }: { level: number }) {
     mixBlendMode: "difference",
   };
 
+  const limitStyle = (
+    limit: number,
+    side: "top" | "bottom",
+  ): React.CSSProperties => ({
+    position: "absolute",
+    [side]: 0,
+    left: `calc(${Math.max(0, Math.min(100, limit))}% + ${borderWidth}px)`,
+    transform: "translateX(-50%)",
+    width: 0,
+    height: 0,
+    borderLeft: "14px solid transparent",
+    borderRight: "14px solid transparent",
+    [side === "top" ? "borderTop" : "borderBottom"]: "16px solid white",
+  });
+
   return (
-    <div style={batteryStyle}>
-      <div style={terminalStyle}></div>
-      <div style={fillStyle}></div>
-      <div style={textContainerStyle}>
-        <div style={textStyle}>{Math.round(clampedLevel)}%</div>
+    <div style={{ position: "relative", padding: "20px 0" }}>
+      {teslaLimit !== undefined ? (
+        <div style={limitStyle(teslaLimit, "top")}></div>
+      ) : null}
+      <div style={batteryStyle}>
+        <div style={terminalStyle}></div>
+        <div style={emptyStyle}></div>
+        <div style={textContainerStyle}>
+          <div style={textStyle}>{Math.round(clampedLevel)}%</div>
+        </div>
       </div>
+      {octopusLimit !== undefined ? (
+        <div style={limitStyle(octopusLimit, "bottom")}></div>
+      ) : null}
     </div>
   );
 }
 
 export function Car({
   battery,
+  teslaChargeLimit,
+  octopusChargeTarget,
   intelligentState,
   intelligentDispatching,
 }: {
   battery: string | undefined;
+  teslaChargeLimit: string | undefined;
+  octopusChargeTarget: string | undefined;
   intelligentState: string | undefined;
   intelligentDispatching: string | undefined;
 }) {
   if (battery === undefined) return <></>;
+  const parseLimit = (state: string | undefined) => {
+    const limit = Number(state);
+    return Number.isFinite(limit) && limit > 0 ? limit : undefined;
+  };
   const showPlugTail = isPluggedIn(intelligentState);
   const showChargingBolt = isCharging({
     intelligentState,
@@ -160,7 +208,11 @@ export function Car({
         </svg>
       </div>
       <div style={{ width: "160px" }}>
-        <BatteryDisplay level={+battery} />
+        <BatteryDisplay
+          level={+battery}
+          teslaLimit={parseLimit(teslaChargeLimit)}
+          octopusLimit={parseLimit(octopusChargeTarget)}
+        />
       </div>
     </div>
   );
