@@ -1,6 +1,6 @@
 /* Screenshot tests: render Car in a real chromium and compare pixels against
    the goldens committed under __screenshots__. After an intentional visual
-   change, regenerate them with: npm run test-screenshots -- --update */
+   change, regenerate them with: npx vitest run --update */
 
 import React from "react";
 import { render } from "vitest-browser-react";
