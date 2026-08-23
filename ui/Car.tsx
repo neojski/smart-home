@@ -20,9 +20,14 @@ function isCharging({
 }
 
 // https://claude.ai/chat/e399feab-5969-4470-960f-3e9c7b1f19f0
-function BatteryDisplay({ level }: { level: number }) {
+function BatteryDisplay({ level, limits }: { level: number; limits: number[] }) {
   // Clamp level between 0 and 100
   const clampedLevel = Math.max(0, Math.min(100, level));
+
+  // Dedupe: overlapping lines cancel out under mix-blend-mode difference
+  const uniqueLimits = [...new Set(limits)].filter(
+    (limit) => limit > 0 && limit < 100,
+  );
 
   const batteryStyle: React.CSSProperties = {
     position: "relative",
@@ -69,10 +74,23 @@ function BatteryDisplay({ level }: { level: number }) {
     mixBlendMode: "difference",
   };
 
+  const limitStyle = (limit: number): React.CSSProperties => ({
+    position: "absolute",
+    top: 0,
+    left: `${limit}%`,
+    height: "100%",
+    borderLeft: "6px dashed white",
+    marginLeft: "-3px",
+    mixBlendMode: "difference",
+  });
+
   return (
     <div style={batteryStyle}>
       <div style={terminalStyle}></div>
       <div style={fillStyle}></div>
+      {uniqueLimits.map((limit) => (
+        <div key={limit} style={limitStyle(limit)}></div>
+      ))}
       <div style={textContainerStyle}>
         <div style={textStyle}>{Math.round(clampedLevel)}%</div>
       </div>
@@ -82,14 +100,21 @@ function BatteryDisplay({ level }: { level: number }) {
 
 export function Car({
   battery,
+  teslaChargeLimit,
+  octopusChargeTarget,
   intelligentState,
   intelligentDispatching,
 }: {
   battery: string | undefined;
+  teslaChargeLimit: string | undefined;
+  octopusChargeTarget: string | undefined;
   intelligentState: string | undefined;
   intelligentDispatching: string | undefined;
 }) {
   if (battery === undefined) return <></>;
+  const limits = [teslaChargeLimit, octopusChargeTarget]
+    .map(Number)
+    .filter((limit) => Number.isFinite(limit));
   const showPlugTail = isPluggedIn(intelligentState);
   const showChargingBolt = isCharging({
     intelligentState,
@@ -160,7 +185,7 @@ export function Car({
         </svg>
       </div>
       <div style={{ width: "160px" }}>
-        <BatteryDisplay level={+battery} />
+        <BatteryDisplay level={+battery} limits={limits} />
       </div>
     </div>
   );

@@ -26,6 +26,8 @@ export function Main() {
       <Mail mail={data.mail} />
       <Car
         battery={data.teslaBattery}
+        teslaChargeLimit={data.teslaChargeLimit}
+        octopusChargeTarget={data.octopusChargeTarget}
         intelligentState={data.octopusIntelligentState}
         intelligentDispatching={data.octopusIntelligentDispatching}
       />
