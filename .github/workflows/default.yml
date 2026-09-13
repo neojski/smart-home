@@ -47,5 +47,5 @@ jobs:
         if: failure()
         with:
           name: screenshot-diffs
-          path: .vitest-attachments
+          path: .vitest/attachments
           if-no-files-found: warn
