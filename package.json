@@ -1,8 +1,9 @@
 {
   "scripts": {
     "check-compilation": "tsc -p tsconfig.json",
-    "ui-build": "esbuild ui/mirror.tsx --bundle --outfile=dist/bundle.js --target=es2020",
-    "ui-dev": "xdg-open ui/index.html && npm run ui-build -- --watch",
+    "ui-assets": "mkdir -p dist/css dist/font dist/resources && cp ui/index.html start_chromium.sh smart-home.service dist/ && cp -r ui/css/. dist/css/ && cp -r ui/font/. dist/font/ && cp -r ui/resources/. dist/resources/",
+    "ui-build": "npm run ui-assets && esbuild ui/mirror.tsx --bundle --outfile=dist/bundle.js --target=es2020",
+    "ui-dev": "npm run ui-assets && xdg-open dist/index.html && npm run ui-build -- --watch",
     "test": "docker run --rm -v \"$PWD\":/work -w /work --ipc=host --user \"$(id -u):$(id -g)\" -e HOME=/tmp mcr.microsoft.com/playwright:v1.62.1-noble npx vitest run",
     "test:vitest": "vitest run",
     "test:update": "docker run --rm -v \"$PWD\":/work -w /work --ipc=host --user \"$(id -u):$(id -g)\" -e HOME=/tmp mcr.microsoft.com/playwright:v1.62.1-noble npx vitest run --update",

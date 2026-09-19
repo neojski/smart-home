@@ -8,7 +8,7 @@ echo 'Building UI bundle'
 npm run ui-build
 
 echo 'Deploying to pi'
-rsync -avz --exclude .git --exclude node_modules . pi:~/smart-home
+rsync -avz dist/ pi:~/smart-home/
 
 echo 'Restarting smart-home'
 ssh pi pkill -f chromium
