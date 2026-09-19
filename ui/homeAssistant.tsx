@@ -119,7 +119,6 @@ export default class {
     };
 
     const data: Y<X<Data>> = {
-      mail: this.entityStates.get("input_boolean.mail")?.state,
       sun: this.entityStates.get("sun.sun")?.state,
       weatherIcon: this.entityStates.get("weather.home")?.state,
       outsideTemperature: this.entityStates.get(
@@ -134,7 +133,6 @@ export default class {
       octopusIntelligentDispatching: this.entityStates.get(
         "binary_sensor.octopus_energy_00000000_0002_4000_8020_0000000f2948_intelligent_dispatching",
       )?.state,
-      aqi: this.entityStates.get("sensor.air_purifier_pm2_5")?.state,
       upTemperature: this.entityStates.get("sensor.mirror_upstairs_temperature")
         ?.state,
       downTemperature: this.entityStates.get(
