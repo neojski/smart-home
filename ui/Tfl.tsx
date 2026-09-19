@@ -7,8 +7,53 @@ import { getJSONData } from "./getJSONData";
 
 // CR-someday: should I upload this to home assistant from server module?
 
+// A Metropolitan line S8 car, drawn from published side elevations of LU
+// stock: the cab front is a vertical face with only a small radius where the
+// roof turns down, plus a chin cut back at the bottom. The real car is longer
+// than this and has three double doors a side with a pair of windows between
+// each; two doors is as much as stays legible at a stroke weight matching the
+// car icon.
+export function TubeTrain() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="164"
+      height="90"
+      viewBox="0 0 40 22"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      // Without this the flex row squashes the train to fit the status text.
+      style={{ verticalAlign: "middle", flexShrink: 0 }}
+    >
+      {
+        // Cab end on the right; the coupled end on the left is square.
+      }
+      <path d="M2.2 3.4 H35.4 A1.8 1.8 0 0 1 37.2 5.2 V12.6 L35.4 14.8 H2.2 A0.8 0.8 0 0 1 1.4 14 V4.2 A0.8 0.8 0 0 1 2.2 3.4 Z" />
+      {
+        // Doors are full-height panels, so they read as two plain edges.
+      }
+      <line x1="4" y1="3.4" x2="4" y2="14.8" />
+      <line x1="8" y1="3.4" x2="8" y2="14.8" />
+      <rect x="10.4" y="5.4" width="5" height="4.6" rx="0.8" />
+      <line x1="17.8" y1="3.4" x2="17.8" y2="14.8" />
+      <line x1="21.8" y1="3.4" x2="21.8" y2="14.8" />
+      <rect x="24.2" y="5.4" width="5" height="4.6" rx="0.8" />
+      <rect x="31.4" y="5" width="3.6" height="5.4" rx="1" />
+      <circle cx="5.5" cy="18.6" r="2" />
+      <circle cx="11.5" cy="18.6" r="2" />
+      <circle cx="25" cy="18.6" r="2" />
+      <circle cx="31" cy="18.6" r="2" />
+      <line x1="0.5" y1="20.6" x2="39.5" y2="20.6" />
+    </svg>
+  );
+}
+
 function Status({ line }: { line: string }) {
   const url = "https://api.tfl.gov.uk/Line/" + line + "/Status";
+  const linePrefix = new RegExp("^" + line + "\\s+line:\\s*", "i");
 
   let [status, setStatus] = useState<undefined | string[]>(undefined);
 
@@ -26,7 +71,9 @@ function Status({ line }: { line: string }) {
           const status = lineStatus.statusSeverityDescription;
           const disruption = lineStatus?.disruption?.description;
           if (disruption) {
-            results.add(disruption);
+            // The train says which line this is, so drop Tfl's leading
+            // "Metropolitan Line: " and start on what actually happened.
+            results.add(disruption.replace(linePrefix, ""));
           } else {
             results.add(status);
           }
@@ -47,11 +94,9 @@ function Status({ line }: { line: string }) {
   }, []);
 
   return (
-    <div>
-      {line} line:
-      <div style={{ marginLeft: "50px" }}>
-        {status === undefined ? errorSpan() : status}
-      </div>
+    <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+      <TubeTrain />
+      <div>{status === undefined ? errorSpan() : status}</div>
     </div>
   );
 }
