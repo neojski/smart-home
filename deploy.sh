@@ -8,7 +8,8 @@ echo 'Building UI bundle'
 npm run ui-build
 
 echo 'Deploying to pi'
-rsync -avz dist/ pi:~/smart-home/
+# --delete so the pi mirrors dist exactly and old files don't pile up
+rsync -avz --delete dist/ pi:~/smart-home/
 
 echo 'Restarting smart-home'
 ssh pi pkill -f chromium
