@@ -20,14 +20,31 @@ export function Main() {
   }, []);
 
   return (
-    <div>
-      <Car
-        battery={data.teslaBattery}
-        teslaChargeLimit={data.teslaChargeLimit}
-        octopusChargeTarget={data.octopusChargeTarget}
-        intelligentState={data.octopusIntelligentState}
-        intelligentDispatching={data.octopusIntelligentDispatching}
-      />
+    // Breathing room at the top, so the strip isn't jammed against the bezel.
+    // Bounded by the Tfl block at the bottom: a disruption renders four lines
+    // there, and html sets `overflow: hidden`, so anything past 1280px is lost
+    // silently. 200px is about the most that still fits on a disruption day.
+    <div style={{ paddingTop: "200px" }}>
+      {
+        // Status strip: house power at one end, the car at the other. They are
+        // pushed apart so the two energy readings can't be read as one pair.
+      }
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Octopus power={data.power} />
+        <Car
+          battery={data.teslaBattery}
+          teslaChargeLimit={data.teslaChargeLimit}
+          octopusChargeTarget={data.octopusChargeTarget}
+          intelligentState={data.octopusIntelligentState}
+          intelligentDispatching={data.octopusIntelligentDispatching}
+        />
+      </div>
       <Clock />
       <Weather
         upTemperature={data.upTemperature}
@@ -36,7 +53,6 @@ export function Main() {
         weatherCondition={data.weatherCondition}
         sun={data.sun}
       />
-      <Octopus power={data.power} />
       <Sonos device={data.kitchenMusic} />
       <Tfl />
     </div>
