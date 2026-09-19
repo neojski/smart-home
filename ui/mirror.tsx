@@ -20,56 +20,45 @@ export function Main() {
   }, []);
 
   return (
-    // Full-height column: the strip, clock and weather sit under a fixed top
-    // margin, and Sonos + Tfl are pushed to the bottom edge by the auto margin
-    // below. All the slack therefore collects in one gap, between the weather
-    // and Sonos, instead of pooling uselessly under the train.
-    //
-    // This also absorbs growth: a disruption renders four lines instead of one,
-    // and the bottom group expands upward into that gap rather than off the
-    // screen. html sets `overflow: hidden`, so anything past the viewport is
-    // lost silently -- the gap is the buffer that keeps that from happening.
-    //
-    // border-box matters: without it the 200px padding would be added to 100vh
-    // and push the train off the bottom on every render.
-    <div
-      style={{
-        boxSizing: "border-box",
-        minHeight: "100vh",
-        paddingTop: "200px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       {
-        // Status strip: house power at one end, the car at the other. They are
-        // pushed apart so the two energy readings can't be read as one pair.
+        // A preferred amount of breathing room. It is a flex item rather than
+        // padding so a long Tfl disruption consumes it before the page itself
+        // overflows below the bezel.
       }
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Octopus power={data.power} />
-        <Car
-          battery={data.teslaBattery}
-          teslaChargeLimit={data.teslaChargeLimit}
-          octopusChargeTarget={data.octopusChargeTarget}
-          intelligentState={data.octopusIntelligentState}
-          intelligentDispatching={data.octopusIntelligentDispatching}
+      <div style={{ height: "200px", flexShrink: 1 }} />
+      <div style={{ flexShrink: 0 }}>
+        {
+          // Status strip: house power at one end, the car at the other. They
+          // are pushed apart so the two energy readings can't be read as one
+          // pair.
+        }
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Octopus power={data.power} />
+          <Car
+            battery={data.teslaBattery}
+            teslaChargeLimit={data.teslaChargeLimit}
+            octopusChargeTarget={data.octopusChargeTarget}
+            intelligentState={data.octopusIntelligentState}
+            intelligentDispatching={data.octopusIntelligentDispatching}
+          />
+        </div>
+        <Clock />
+        <Weather
+          upTemperature={data.upTemperature}
+          downTemperature={data.downTemperature}
+          outsideTemperature={data.outsideTemperature}
+          weatherCondition={data.weatherCondition}
+          sun={data.sun}
         />
       </div>
-      <Clock />
-      <Weather
-        upTemperature={data.upTemperature}
-        downTemperature={data.downTemperature}
-        outsideTemperature={data.outsideTemperature}
-        weatherCondition={data.weatherCondition}
-        sun={data.sun}
-      />
-      <div style={{ marginTop: "auto" }}>
+      <div style={{ display: "flow-root", marginTop: "auto", flexShrink: 0 }}>
         <Sonos device={data.kitchenMusic} />
         <Tfl />
       </div>
