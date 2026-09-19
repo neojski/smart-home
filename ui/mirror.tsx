@@ -20,11 +20,27 @@ export function Main() {
   }, []);
 
   return (
-    // Breathing room at the top, so the strip isn't jammed against the bezel.
-    // Bounded by the Tfl block at the bottom: a disruption renders four lines
-    // there, and html sets `overflow: hidden`, so anything past 1280px is lost
-    // silently. 200px is about the most that still fits on a disruption day.
-    <div style={{ paddingTop: "200px" }}>
+    // Full-height column: the strip, clock and weather sit under a fixed top
+    // margin, and Sonos + Tfl are pushed to the bottom edge by the auto margin
+    // below. All the slack therefore collects in one gap, between the weather
+    // and Sonos, instead of pooling uselessly under the train.
+    //
+    // This also absorbs growth: a disruption renders four lines instead of one,
+    // and the bottom group expands upward into that gap rather than off the
+    // screen. html sets `overflow: hidden`, so anything past the viewport is
+    // lost silently -- the gap is the buffer that keeps that from happening.
+    //
+    // border-box matters: without it the 200px padding would be added to 100vh
+    // and push the train off the bottom on every render.
+    <div
+      style={{
+        boxSizing: "border-box",
+        minHeight: "100vh",
+        paddingTop: "200px",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {
         // Status strip: house power at one end, the car at the other. They are
         // pushed apart so the two energy readings can't be read as one pair.
@@ -53,8 +69,10 @@ export function Main() {
         weatherCondition={data.weatherCondition}
         sun={data.sun}
       />
-      <Sonos device={data.kitchenMusic} />
-      <Tfl />
+      <div style={{ marginTop: "auto" }}>
+        <Sonos device={data.kitchenMusic} />
+        <Tfl />
+      </div>
     </div>
   );
 }
