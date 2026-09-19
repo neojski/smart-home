@@ -33,7 +33,7 @@ export function Main() {
         upTemperature={data.upTemperature}
         downTemperature={data.downTemperature}
         outsideTemperature={data.outsideTemperature}
-        weatherIcon={data.weatherIcon}
+        weatherCondition={data.weatherCondition}
         sun={data.sun}
       />
       <Octopus power={data.power} />

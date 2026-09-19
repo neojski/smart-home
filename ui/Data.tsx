@@ -8,7 +8,7 @@ export type Data = {
   upTemperature?: string;
   downTemperature?: string;
   outsideTemperature?: string;
-  weatherIcon?: string;
+  weatherCondition?: string;
   kitchenMusic?: device;
   teslaBattery?: string;
   teslaChargeLimit?: string;

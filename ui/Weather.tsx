@@ -1,52 +1,42 @@
 import { errorSpan } from "./errorSpan";
-
-export type temperatureWithIcon = {
-  temp?: string;
-  icon?: string;
-};
+import { parseCondition, weatherIconClass } from "./weatherIcons";
 
 export function WeatherIcon({
-  icon,
+  condition,
   sun,
 }: {
-  icon: string | undefined;
+  condition: string | undefined;
   sun: string | undefined;
 }) {
-  let isDay;
-  if (sun === "above_horizon") {
-    isDay = true;
-  } else if (sun === "below_horizon") {
-    isDay = false;
-  } else {
-    isDay = undefined;
+  const parsed = parseCondition(condition);
+  if (parsed === undefined) {
+    if (condition !== undefined) {
+      // Not merely missing (it is undefined until the first state arrives):
+      // unavailable, or a condition Home Assistant has added since. The
+      // mirror shows the usual error glyph either way, so say which it was.
+      console.warn("no icon for weather condition", condition);
+    }
+    return errorSpan();
   }
-
-  console.log({ icon, isDay });
-
-  // FIXME: I tried having icons but it's hard as I don't know what exactly the current API would return
-  // https://erikflowers.github.io/weather-icons/api-list.html
-  //if (icon === undefined || isDay === undefined) {
-  //  return errorSpan();
-  //} else {
-  //  //const dayOrNight = isDay ? "day" : "night";
-  //  const iconId = "wi wi-day-" + icon;
-  //  return <i className={iconId}></i>;
-  //}
-
-  return null;
+  return (
+    <i
+      className={`wi ${weatherIconClass(parsed, sun)}`}
+      style={{ fontSize: "0.8em", verticalAlign: "-0.05em" }}
+    />
+  );
 }
 
 export function Weather({
   upTemperature,
   downTemperature,
   outsideTemperature,
-  weatherIcon,
+  weatherCondition,
   sun,
 }: {
   upTemperature: string | undefined;
   downTemperature: string | undefined;
   outsideTemperature: string | undefined;
-  weatherIcon: string | undefined;
+  weatherCondition: string | undefined;
   sun: string | undefined;
 }) {
   function roundOrError(x: string | undefined) {
@@ -97,7 +87,7 @@ export function Weather({
           </div>
         </span>{" "}
         | {outsideTemperatureContent}{" "}
-        <WeatherIcon icon={weatherIcon} sun={sun} />
+        <WeatherIcon condition={weatherCondition} sun={sun} />
       </span>
     </div>
   );
