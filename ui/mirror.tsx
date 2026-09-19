@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Clock } from "./Clock";
-import { Aqi } from "./Aqi";
 import { Tfl } from "./Tfl";
 import { Octopus } from "./Octopus";
 import HomeAssistant from "./homeAssistant";
@@ -8,7 +7,6 @@ import type { Data } from "./Data";
 import { Weather } from "./Weather";
 import { Sonos } from "./Sonos";
 import { createRoot } from "react-dom/client";
-import { Mail } from "./Mail";
 import { Car } from "./Car";
 
 export function Main() {
@@ -23,7 +21,6 @@ export function Main() {
 
   return (
     <div>
-      <Mail mail={data.mail} />
       <Car
         battery={data.teslaBattery}
         teslaChargeLimit={data.teslaChargeLimit}
@@ -31,7 +28,6 @@ export function Main() {
         intelligentState={data.octopusIntelligentState}
         intelligentDispatching={data.octopusIntelligentDispatching}
       />
-      <Aqi aqi={data.aqi} />
       <Clock />
       <Weather
         upTemperature={data.upTemperature}
