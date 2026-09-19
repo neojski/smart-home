@@ -120,7 +120,7 @@ export default class {
 
     const data: Y<X<Data>> = {
       sun: this.entityStates.get("sun.sun")?.state,
-      weatherIcon: this.entityStates.get("weather.home")?.state,
+      weatherCondition: this.entityStates.get("weather.home")?.state,
       outsideTemperature: this.entityStates.get(
         "sensor.mirror_outside_temperature",
       )?.state,
