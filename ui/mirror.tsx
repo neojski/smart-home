@@ -27,28 +27,45 @@ export function Main() {
         // overflows below the bezel.
       }
       <div style={{ height: "160px", flexShrink: 1 }} />
-      <div style={{ flexShrink: 0 }}>
-        {
-          // Status strip: house power at one end, the car at the other. They
-          // are pushed apart so the two energy readings can't be read as one
-          // pair.
-        }
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Octopus power={data.power} />
-          <Car
-            battery={data.teslaBattery}
-            teslaChargeLimit={data.teslaChargeLimit}
-            octopusChargeTarget={data.octopusChargeTarget}
-            intelligentState={data.octopusIntelligentState}
-            intelligentDispatching={data.octopusIntelligentDispatching}
-          />
-        </div>
+      {
+        // Status strip: house power at one end, the car at the other. They
+        // are pushed apart so the two energy readings can't be read as one
+        // pair.
+      }
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexShrink: 0,
+        }}
+      >
+        <Octopus power={data.power} />
+        <Car
+          battery={data.teslaBattery}
+          teslaChargeLimit={data.teslaChargeLimit}
+          octopusChargeTarget={data.octopusChargeTarget}
+          intelligentState={data.octopusIntelligentState}
+          intelligentDispatching={data.octopusIntelligentDispatching}
+        />
+      </div>
+      {
+        // The clock and weather take all the slack and sit centred in it, so
+        // the clock is spaced evenly between the strip above and Sonos below
+        // rather than crowding the strip with the whole void beneath it.
+        //
+        // This is also where a Tfl disruption is absorbed: flex items floor at
+        // their content height, so the group gives up its padding first, and
+        // only then does the breathing room above the strip start to shrink.
+      }
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         <Clock />
         <Weather
           upTemperature={data.upTemperature}
@@ -58,7 +75,7 @@ export function Main() {
           sun={data.sun}
         />
       </div>
-      <div style={{ display: "flow-root", marginTop: "auto", flexShrink: 0 }}>
+      <div style={{ display: "flow-root", flexShrink: 0 }}>
         <Sonos device={data.kitchenMusic} />
         <Tfl />
       </div>
