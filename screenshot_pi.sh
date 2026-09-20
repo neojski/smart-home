@@ -7,7 +7,7 @@ out="${1:-/tmp/mirror.png}"
 # pointed at the compositor explicitly. The socket is wayland-1 today, but the
 # number changes if wayfire restarts, so look it up rather than hardcoding it.
 # scrot is no use here: under Wayland it only sees XWayland's root window.
-# -c includes the mouse cursor, so the capture matches what is on the glass.
+# -c includes the mouse cursor, so the capture matches what is on the screen.
 tmp=$(mktemp)
 trap 'rm -f "$tmp"' EXIT
 

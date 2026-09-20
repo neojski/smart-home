@@ -3,8 +3,8 @@
 
 Wayfire draws the pointer, and chromium only applies the page's `cursor: none`
 once it has seen a pointer event. After a kiosk restart nothing has moved the
-mouse, so the desktop arrow sits on the glass until something does. There is no
-mouse on the wall to wiggle, so make one: /dev/uinput gives us a virtual device,
+mouse, so the desktop arrow stays on the screen until something does. There is
+no mouse to move by hand, so make one: /dev/uinput gives us a virtual device,
 and a one pixel jiggle is enough. Needs root, hence the sudo in start_chromium.
 """
 
