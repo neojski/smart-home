@@ -50,22 +50,13 @@ export function Main() {
         />
       </div>
       {
-        // The clock and weather take all the slack and sit centred in it, so
-        // the clock is spaced evenly between the strip above and Sonos below
-        // rather than crowding the strip with the whole void beneath it.
-        //
-        // This is also where a Tfl disruption is absorbed: flex items floor at
-        // their content height, so the group gives up its padding first, and
-        // only then does the breathing room above the strip start to shrink.
+        // The clock sits a fixed distance under the status strip rather than
+        // centred in the slack, so it does not jump when Sonos starts or a Tfl
+        // disruption appears. 223px is where centring put it with nothing
+        // playing and a good service, which is the mirror's resting state.
       }
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      <div style={{ height: "223px", flexShrink: 1 }} />
+      <div style={{ flexShrink: 0 }}>
         <Clock />
         <Weather
           upTemperature={data.upTemperature}
@@ -75,6 +66,13 @@ export function Main() {
           sun={data.sun}
         />
       </div>
+      {
+        // All the remaining slack pools here, below the weather, so whatever
+        // the bottom group needs comes out of this gap and nothing above it
+        // moves. Only once this is used up do the two spacers start to shrink
+        // and the clock ride up -- lots of Sonos and a long disruption at once.
+      }
+      <div style={{ flex: 1 }} />
       <div style={{ display: "flow-root", flexShrink: 0 }}>
         <Sonos device={data.kitchenMusic} />
         <Tfl />
