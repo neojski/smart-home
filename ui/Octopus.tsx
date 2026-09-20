@@ -6,5 +6,5 @@ import { errorSpan } from "./errorSpan";
 // here would read as the car's charge rate rather than the house total.
 export function Octopus({ power }: { power: string | undefined }) {
   const content = power === undefined ? errorSpan() : "" + Math.round(+power);
-  return <div style={{ marginLeft: "80px", fontSize: "50px" }}>{content}W</div>;
+  return <div style={{ marginLeft: "64px", fontSize: "40px" }}>{content}W</div>;
 }

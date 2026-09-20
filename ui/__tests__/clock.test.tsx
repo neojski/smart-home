@@ -19,7 +19,7 @@ it("renders correctly and updates over time", () => {
   expect(container).toMatchInlineSnapshot(`
     <div>
       <div
-        style="font-size: 300px; font-weight: 300; text-align: center;"
+        style="font-size: 240px; font-weight: 300; text-align: center;"
       >
         00
         <span
@@ -29,7 +29,7 @@ it("renders correctly and updates over time", () => {
         </span>
         00
         <span
-          style="font-size: 30%; display: inline-block; transform: translate(0px, -30px) rotate(-90deg);"
+          style="font-size: 30%; display: inline-block; transform: translate(0px, -24px) rotate(-90deg);"
         >
           00
         </span>
@@ -49,7 +49,7 @@ it("renders correctly and updates over time", () => {
   expect(container).toMatchInlineSnapshot(`
     <div>
       <div
-        style="font-size: 300px; font-weight: 300; text-align: center;"
+        style="font-size: 240px; font-weight: 300; text-align: center;"
       >
         00
         <span
@@ -59,7 +59,7 @@ it("renders correctly and updates over time", () => {
         </span>
         00
         <span
-          style="font-size: 30%; display: inline-block; transform: translate(0px, -30px) rotate(-90deg);"
+          style="font-size: 30%; display: inline-block; transform: translate(0px, -24px) rotate(-90deg);"
         >
           01
         </span>

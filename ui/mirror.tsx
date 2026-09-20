@@ -26,7 +26,7 @@ export function Main() {
         // padding so a long Tfl disruption consumes it before the page itself
         // overflows below the bezel.
       }
-      <div style={{ height: "200px", flexShrink: 1 }} />
+      <div style={{ height: "160px", flexShrink: 1 }} />
       <div style={{ flexShrink: 0 }}>
         {
           // Status strip: house power at one end, the car at the other. They

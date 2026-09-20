@@ -51,12 +51,12 @@ export function Weather({
   return (
     <div
       style={{
-        fontSize: "140px",
+        fontSize: "112px",
         fontWeight: 300,
         textAlign: "center",
       }}
     >
-      <span style={{ display: "inline-block", margin: "0 50px" }}>
+      <span style={{ display: "inline-block", margin: "0 40px" }}>
         <span
           style={{
             display: "inline-block",
@@ -79,7 +79,7 @@ export function Weather({
             <span
               style={{
                 display: "inline-block",
-                marginRight: "80px",
+                marginRight: "64px",
               }}
             >
               {downTemperatureContent}

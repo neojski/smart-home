@@ -12,7 +12,7 @@ export function Clock() {
   return (
     <div
       style={{
-        fontSize: "300px",
+        fontSize: "240px",
         fontWeight: 300,
         textAlign: "center",
       }}
@@ -30,7 +30,7 @@ export function Clock() {
         style={{
           fontSize: "30%",
           display: "inline-block",
-          transform: "translate(0, -30px) rotate(-90deg)",
+          transform: "translate(0, -24px) rotate(-90deg)",
         }}
       >
         {pad(date.getSeconds())}

@@ -17,8 +17,8 @@ export function TubeTrain() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="164"
-      height="90"
+      width="131"
+      height="72"
       viewBox="0 0 40 22"
       fill="none"
       stroke="currentColor"
@@ -94,7 +94,7 @@ function Status({ line }: { line: string }) {
   }, []);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "19px" }}>
       <TubeTrain />
       <div>{status === undefined ? errorSpan() : status}</div>
     </div>
@@ -154,7 +154,7 @@ export function Tfl() {
   });
 
   return (
-    <div style={{ margin: "40px", fontSize: "40px" }}>
+    <div style={{ margin: "32px", fontSize: "32px" }}>
       <div>
         <Status line="metropolitan" />
       </div>

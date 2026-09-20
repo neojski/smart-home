@@ -35,14 +35,14 @@ function BatteryDisplay({
   // With default content-box sizing the battery's border sits outside its
   // width, so everything inside (the fill, and thus the limit markers) is
   // shifted right by this amount relative to the outer wrapper.
-  const borderWidth = 6;
+  const borderWidth = 5;
 
   const batteryStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
-    height: "60px",
+    height: "48px",
     border: `${borderWidth}px solid white`,
-    borderRadius: "24px",
+    borderRadius: "19px",
     overflow: "hidden",
     // White under the border so antialiasing gaps at the rounded corners
     // don't let the black page background seep through.
@@ -51,13 +51,13 @@ function BatteryDisplay({
 
   const terminalStyle: React.CSSProperties = {
     position: "absolute",
-    right: "-24px",
+    right: "-19px",
     top: "50%",
     transform: "translateY(-50%)",
-    width: "16px",
+    width: "13px",
     height: "100%",
     backgroundColor: "white",
-    borderRadius: "0 8px 8px 0",
+    borderRadius: "0 6px 6px 0",
   };
 
   // The battery itself is white; this overlay draws the empty portion.
@@ -80,7 +80,7 @@ function BatteryDisplay({
   };
 
   const textStyle: React.CSSProperties = {
-    fontSize: "40px",
+    fontSize: "32px",
     fontWeight: "bold",
     color: "white",
     mixBlendMode: "difference",
@@ -96,13 +96,13 @@ function BatteryDisplay({
     transform: "translateX(-50%)",
     width: 0,
     height: 0,
-    borderLeft: "14px solid transparent",
-    borderRight: "14px solid transparent",
-    [side === "top" ? "borderTop" : "borderBottom"]: "16px solid white",
+    borderLeft: "11px solid transparent",
+    borderRight: "11px solid transparent",
+    [side === "top" ? "borderTop" : "borderBottom"]: "13px solid white",
   });
 
   return (
-    <div style={{ position: "relative", padding: "20px 0" }}>
+    <div style={{ position: "relative", padding: "16px 0" }}>
       {teslaLimit !== undefined ? (
         <div style={limitStyle(teslaLimit, "top")}></div>
       ) : null}
@@ -148,22 +148,22 @@ export function Car({
     <div
       style={{
         textAlign: "right",
-        fontSize: "50px",
-        marginRight: "80px",
+        fontSize: "40px",
+        marginRight: "64px",
         display: "flex",
-        gap: "20px",
+        gap: "16px",
         justifyContent: "flex-end",
         alignItems: "center",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
         {
           // https://tabler.io/icons/icon/car
         }
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="110"
-          height="110"
+          width="88"
+          height="88"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -207,7 +207,7 @@ export function Car({
           <path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5" />
         </svg>
       </div>
-      <div style={{ width: "160px" }}>
+      <div style={{ width: "128px" }}>
         <BatteryDisplay
           level={+battery}
           teslaLimit={parseLimit(teslaChargeLimit)}

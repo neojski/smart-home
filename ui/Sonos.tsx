@@ -19,7 +19,7 @@ export function Sonos({ device }: { device?: device }) {
     return null;
   }
   return (
-    <div style={{ margin: "40px", fontSize: "40px" }}>
+    <div style={{ margin: "32px", fontSize: "32px" }}>
       Playing: {device.attributes.media_title} by{" "}
       {device.attributes.media_artist}
     </div>
