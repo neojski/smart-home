@@ -1,6 +1,5 @@
 dist
 node_modules
 *.swp
-data.log
 .vitest
 .claude/worktrees/
