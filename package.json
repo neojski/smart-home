@@ -21,7 +21,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitest/browser-playwright": "^5.0.0",
     "esbuild": "^0.28.2",
-    "prettier": "^3.6.2",
+    "prettier": "^3.9.8",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0",
     "vitest-browser-react": "^2.3.0"
