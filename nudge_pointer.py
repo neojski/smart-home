@@ -25,7 +25,8 @@ SYN_REPORT, REL_X, REL_Y, BTN_LEFT = 0x00, 0x00, 0x01, 0x110
 
 # Chromium takes a few seconds to put its window up, and a nudge that lands
 # before then is wasted: the arrow comes back with the window. So keep trying.
-NUDGE_AFTER_SECONDS = (5, 10, 20)
+# A cold boot is the slow case: chromium took over 30s to draw its first frame.
+NUDGE_AFTER_SECONDS = (5, 10, 20, 40, 60, 90)
 
 uinput = open("/dev/uinput", "wb", buffering=0)
 
