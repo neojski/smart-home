@@ -10,4 +10,7 @@ sudo python3 ~/smart-home/nudge_pointer.py &
 # at boot, a kiosk window still has no tabs or address bar.
 # --disable-gpu: the page is static text, and after the GPU process crashed
 # overnight (twice in a minute) chromium never recovered and drew only black.
-sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences && /usr/bin/chromium-browser --kiosk --disable-gpu --no-daemon ~/smart-home/index.html
+# --disable-renderer-accessibility: the Debian wrapper forces accessibility on,
+# but nothing here reads it and it only adds work to a page that re-renders
+# every second. This flag wins over the wrapper's --force-renderer-accessibility.
+sed -i 's/"exited_cleanly":false/"exited_cleanly":true/; s/"exit_type":"[^"]\+"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences && /usr/bin/chromium-browser --kiosk --disable-gpu --disable-renderer-accessibility --no-daemon ~/smart-home/index.html
